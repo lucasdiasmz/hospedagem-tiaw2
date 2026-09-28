@@ -1,4 +1,4 @@
-[⬅ Voltar ao índice](../README.md)
+
 
 # Metodologia
 
@@ -49,6 +49,3 @@ A gestão visual de tarefas é conduzida no **GitHub Projects**, utilizando um q
 * **In Review / Test (Em Revisão):** Artefatos, documentos ou códigos concluídos aguardando revisão e validação do grupo.
 * **Done (Concluído):** Tarefas finalizadas e devidamente integradas ao repositório principal.
 
----
-
-[⬅ Anterior: Minimundo](4_minimundo.md) | [⬅ Voltar ao índice](../README.md) | [Próximo: Solução Implementada ➡](6_solucao_implementada.md)
