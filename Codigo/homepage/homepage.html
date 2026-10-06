@@ -4,41 +4,45 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hoje</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="homepage.css">
 </head>
 <body>
   <div class="layout">
 
-    <!-- Menu lateral -->
-    <nav class="menu">
+    <!-- Menu inferior -->
+    <nav class="menu" aria-label="Navegação principal">
       <ul>
         <li>
           <a href="#" class="menu-item ativo">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="#222"><path d="M12 2.5l10 9h-3v9.5h-5v-6h-4v6H5v-9.5H2z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l10 9h-3v9.5h-5v-6h-4v6H5v-9.5H2z"/></svg>
             <span>Hoje</span>
           </a>
         </li>
         <li>
           <a href="#" class="menu-item">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
             <span>Agenda</span>
           </a>
         </li>
         <li>
           <a href="#" class="menu-item">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-4 3-6 6.5-6s6.5 2 6.5 6"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14c3 0 4.5 2 4.5 5"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-4 3-6 6.5-6s6.5 2 6.5 6"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14c3 0 4.5 2 4.5 5"/></svg>
             <span>Cuidadores</span>
           </a>
         </li>
         <li>
           <a href="#" class="menu-item">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12l3 3 5-6"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12l3 3 5-6"/></svg>
             <span>Tarefas</span>
           </a>
         </li>
         <li>
           <a href="#" class="menu-item">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>
+            <!-- livro -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v15H6a2 2 0 0 0-2 2z"/><path d="M4 20a2 2 0 0 0 2 2h13v-4"/><path d="M9 8h6"/></svg>
             <span>Diário</span>
           </a>
         </li>
@@ -50,8 +54,8 @@
       <!-- Cabeçalho -->
       <header class="topo">
         <div class="avatar">
-          <svg viewBox="0 0 48 48" width="56" height="56">
-            <circle cx="24" cy="24" r="24" fill="#d9d9d9"/>
+          <svg viewBox="0 0 48 48">
+            <circle cx="24" cy="24" r="24" fill="#CAD6EF"/>
             <path d="M8 46c2-10 9-14 16-14s14 4 16 14z" fill="#f3f3f3"/>
             <path d="M13 22c0-9 5-14 11-14s11 5 11 14c0 3-1 6-2 8H15c-1-2-2-5-2-8z" fill="#5a5a5a"/>
             <ellipse cx="24" cy="23" rx="8" ry="10" fill="#e8c9b4"/>
@@ -62,32 +66,38 @@
           <h1>Olá, Maria!</h1>
           <p>Que bom te ver hoje! <span class="emoji">😊</span></p>
         </div>
+        <span class="data-hoje" id="data-hoje">Hoje</span>
         <button class="icone-btn" aria-label="Configurações">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="#333"><path d="M19.4 13a7.7 7.7 0 0 0 0-2l2.1-1.6a.5.5 0 0 0 .1-.6l-2-3.5a.5.5 0 0 0-.6-.2l-2.5 1a7.4 7.4 0 0 0-1.7-1l-.4-2.6a.5.5 0 0 0-.5-.4h-4a.5.5 0 0 0-.5.4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1a.5.5 0 0 0-.6.2l-2 3.5a.5.5 0 0 0 .1.6L4.6 11a7.7 7.7 0 0 0 0 2l-2.1 1.6a.5.5 0 0 0-.1.6l2 3.5c.1.2.4.3.6.2l2.5-1c.5.4 1.1.7 1.7 1l.4 2.6c0 .2.2.4.5.4h4c.3 0 .5-.2.5-.4l.4-2.6c.6-.3 1.2-.6 1.7-1l2.5 1c.2.1.5 0 .6-.2l2-3.5a.5.5 0 0 0-.1-.6L19.4 13zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></svg>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M19.4 13a7.7 7.7 0 0 0 0-2l2.1-1.6a.5.5 0 0 0 .1-.6l-2-3.5a.5.5 0 0 0-.6-.2l-2.5 1a7.4 7.4 0 0 0-1.7-1l-.4-2.6a.5.5 0 0 0-.5-.4h-4a.5.5 0 0 0-.5.4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1a.5.5 0 0 0-.6.2l-2 3.5a.5.5 0 0 0 .1.6L4.6 11a7.7 7.7 0 0 0 0 2l-2.1 1.6a.5.5 0 0 0-.1.6l2 3.5c.1.2.4.3.6.2l2.5-1c.5.4 1.1.7 1.7 1l.4 2.6c0 .2.2.4.5.4h4c.3 0 .5-.2.5-.4l.4-2.6c.6-.3 1.2-.6 1.7-1l2.5 1c.2.1.5 0 .6-.2l2-3.5a.5.5 0 0 0-.1-.6L19.4 13zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></svg>
         </button>
       </header>
 
       <main class="grade">
 
-        <!-- Próximo medicamento -->
+        <!-- Próximo medicamento (card de destaque) -->
         <section class="card card-remedio">
-          <div class="remedio-info">
-            <svg class="pilula" width="52" height="52" viewBox="0 0 44 44" fill="none" stroke="#444" stroke-width="2">
-              <g transform="rotate(-45 22 22)">
-                <rect x="4" y="12" width="36" height="20" rx="10" fill="#fff"/>
-                <path d="M22 12h8a10 10 0 0 1 0 20h-8z" fill="#cfcfcf"/>
-                <line x1="22" y1="12" x2="22" y2="32"/>
-              </g>
-            </svg>
+          <div class="remedio-topo">
+            <div class="pilula-chip">
+              <svg viewBox="0 0 44 44" fill="none" stroke="#406399" stroke-width="2">
+                <g transform="rotate(-45 22 22)">
+                  <rect x="4" y="12" width="36" height="20" rx="10" fill="#fff"/>
+                  <path d="M22 12h8a10 10 0 0 1 0 20h-8z" fill="#CAD6EF"/>
+                  <line x1="22" y1="12" x2="22" y2="32"/>
+                </g>
+              </svg>
+            </div>
             <div class="remedio-texto">
               <small>Próximo medicamento</small>
               <strong>Losartana 50mg</strong>
               <span>Hoje • 08:00</span>
             </div>
-            <svg class="seta" width="12" height="18" viewBox="0 0 10 16" fill="none" stroke="#444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2l6 6-6 6"/></svg>
+            <svg class="seta" width="14" height="22" viewBox="0 0 10 16" fill="none" stroke="#406399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2l6 6-6 6"/></svg>
           </div>
           <div class="botoes">
-            <button class="btn btn-primario">Tomei</button>
+            <button class="btn btn-primario">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+              Tomei
+            </button>
             <button class="btn">Recusou</button>
             <button class="btn">Adiar</button>
           </div>
@@ -96,28 +106,32 @@
         <!-- Cuidados de hoje -->
         <section class="card card-cuidados">
           <div class="cuidados-topo">
-            <h2>Seus cuidados de hoje</h2>
-            <span>3 de 5</span>
+            <div class="cuidados-texto">
+              <h2>Seus cuidados de hoje</h2>
+              <p>3 de 5 concluídos</p>
+            </div>
+            <div class="anel" role="img" aria-label="60% concluído"><span>60%</span></div>
           </div>
-          <div class="progresso"><div class="progresso-barra"></div></div>
           <div class="resumo">
             <div class="resumo-item">
-              <svg width="26" height="26" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#333"/><path d="M12 12V2a10 10 0 0 1 10 10z" fill="#fff"/><circle cx="12" cy="12" r="10" fill="none" stroke="#333" stroke-width="1.5"/></svg>
+              <!-- cápsula -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g transform="rotate(-45 12 12)"><rect x="2.5" y="8" width="19" height="8" rx="4"/><line x1="12" y1="8" x2="12" y2="16"/></g></svg>
               <span class="rotulo">Medicação</span>
               <span class="valor">3/5</span>
             </div>
             <div class="resumo-item">
-              <svg width="26" height="26" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#333"/><path d="M12 12V2a10 10 0 0 1 10 10z" fill="#fff"/><circle cx="12" cy="12" r="10" fill="none" stroke="#333" stroke-width="1.5"/></svg>
+              <!-- estetoscópio -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h2M13 3h2M6 3v5a4 4 0 0 0 8 0V3"/><path d="M10 12v3a5 5 0 0 0 10 0v-2"/><circle cx="20" cy="11" r="2"/></svg>
               <span class="rotulo">Consulta</span>
               <span class="valor">1/1</span>
             </div>
             <div class="resumo-item">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12l3 3 5-6"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12l3 3 5-6"/></svg>
               <span class="rotulo">Tarefas</span>
               <span class="valor">0/1</span>
             </div>
             <div class="resumo-item">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>
               <span class="rotulo">Visitas</span>
               <span class="valor">0/1</span>
             </div>
@@ -129,48 +143,197 @@
           <div class="timeline-col">
             <h2>Linha do tempo de hoje</h2>
             <ul class="timeline">
-              <li><span class="ponto"></span><span class="hora-item">08:00</span><span class="desc">Losartana 50mg <em>(Tomei)</em></span></li>
-              <li><span class="ponto"></span><span class="hora-item">10:30</span><span class="desc">Consulta médica <em>(Dr. Carlos)</em></span></li>
+              <li class="feito"><span class="ponto"></span><span class="hora-item">08:00</span><span class="desc">Losartana 50mg <em>(Tomei)</em></span></li>
+              <li class="proximo"><span class="ponto"></span><span class="hora-item">10:30</span><span class="desc">Consulta médica <em>(Dr. Carlos)</em></span><span class="tag">Próximo</span></li>
               <li><span class="ponto"></span><span class="hora-item">15:00</span><span class="desc">Visita da cuidadora <em>(Ana Souza)</em></span></li>
               <li><span class="ponto"></span><span class="hora-item">19:00</span><span class="desc">Jantar <em>(Tarefa)</em></span></li>
             </ul>
           </div>
           <aside class="acoes">
-            <button class="registro-rapido">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 10 18.7l1-1"/></svg>
-              <span>Registro<br>rápido</span>
+            <button class="nova-nota" id="abrir-nota" type="button">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-3-3L5 17v3z"/><path d="M13.5 6.5l3 3"/></svg>
+              <span>Adicionar<br>anotação</span>
             </button>
-            <button class="sos">
-              <svg width="22" height="22" viewBox="0 0 24 24" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M12 4v16M4 12h16"/></svg>
-              <span>SOS</span>
-            </button>
+            <div class="sos-area">
+              <button class="sos">
+                <svg width="22" height="22" viewBox="0 0 24 24" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M12 4v16M4 12h16"/></svg>
+                <span>SOS</span>
+              </button>
+            </div>
           </aside>
         </section>
 
         <!-- Humor -->
         <section class="card card-humor">
           <h2>Como você está hoje?</h2>
-          <div class="rostos">
-            <button class="rosto" aria-label="Feliz">
-              <svg viewBox="0 0 40 40" width="52" height="52"><circle cx="20" cy="20" r="18" fill="#c9c9c9" stroke="#444" stroke-width="1.5"/><circle cx="14" cy="16" r="2" fill="#222"/><circle cx="26" cy="16" r="2" fill="#222"/><path d="M11 24c3 6 15 6 18 0z" fill="#222"/></svg>
-            </button>
-            <button class="rosto" aria-label="Bravo">
-              <svg viewBox="0 0 40 40" width="52" height="52"><circle cx="20" cy="20" r="18" fill="#c9c9c9" stroke="#444" stroke-width="1.5"/><path d="M10 13l7 3M30 13l-7 3" stroke="#222" stroke-width="2" stroke-linecap="round"/><circle cx="14" cy="18" r="1.8" fill="#222"/><circle cx="26" cy="18" r="1.8" fill="#222"/><path d="M13 28c4-4 10-4 14 0" fill="none" stroke="#222" stroke-width="2" stroke-linecap="round"/></svg>
-            </button>
-            <button class="rosto" aria-label="Contente">
-              <svg viewBox="0 0 40 40" width="52" height="52"><circle cx="20" cy="20" r="18" fill="#c9c9c9" stroke="#444" stroke-width="1.5"/><circle cx="14" cy="16" r="2" fill="#222"/><circle cx="26" cy="16" r="2" fill="#222"/><path d="M11 24c3 6 15 6 18 0z" fill="#222"/></svg>
-            </button>
-            <button class="rosto" aria-label="Animada">
-              <svg viewBox="0 0 40 40" width="52" height="52"><circle cx="20" cy="20" r="18" fill="#c9c9c9" stroke="#444" stroke-width="1.5"/><circle cx="14" cy="16" r="2" fill="#222"/><circle cx="26" cy="16" r="2" fill="#222"/><path d="M11 24c3 6 15 6 18 0z" fill="#222"/></svg>
-            </button>
-            <button class="rosto" aria-label="Triste">
-              <svg viewBox="0 0 40 40" width="52" height="52"><circle cx="20" cy="20" r="18" fill="#c9c9c9" stroke="#444" stroke-width="1.5"/><circle cx="14" cy="16" r="2" fill="#222"/><circle cx="26" cy="16" r="2" fill="#222"/><path d="M12 28c4-5 12-5 16 0" fill="none" stroke="#222" stroke-width="2" stroke-linecap="round"/></svg>
-            </button>
+          <div class="rostos" role="radiogroup" aria-label="Como você está hoje?">
+
+            <label class="humor-op">
+              <input type="radio" name="humor" value="feliz">
+              <span class="rosto">
+                <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#CAD6EF" stroke="#406399" stroke-width="1.5"/><circle cx="14" cy="16" r="2" fill="#050315"/><circle cx="26" cy="16" r="2" fill="#050315"/><path d="M11 24c3 6 15 6 18 0z" fill="#050315"/></svg>
+                <small>Feliz</small>
+              </span>
+            </label>
+
+            <label class="humor-op">
+              <input type="radio" name="humor" value="irritada">
+              <span class="rosto">
+                <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#CAD6EF" stroke="#406399" stroke-width="1.5"/><path d="M10 13l7 3M30 13l-7 3" stroke="#050315" stroke-width="2" stroke-linecap="round"/><circle cx="14" cy="18" r="1.8" fill="#050315"/><circle cx="26" cy="18" r="1.8" fill="#050315"/><path d="M13 28c4-4 10-4 14 0" fill="none" stroke="#050315" stroke-width="2" stroke-linecap="round"/></svg>
+                <small>Irritada</small>
+              </span>
+            </label>
+
+            <label class="humor-op">
+              <input type="radio" name="humor" value="bem">
+              <span class="rosto">
+                <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#CAD6EF" stroke="#406399" stroke-width="1.5"/><circle cx="14" cy="16" r="2" fill="#050315"/><circle cx="26" cy="16" r="2" fill="#050315"/><path d="M12 24c4 4 12 4 16 0" fill="none" stroke="#050315" stroke-width="2" stroke-linecap="round"/></svg>
+                <small>Bem</small>
+              </span>
+            </label>
+
+            <label class="humor-op">
+              <input type="radio" name="humor" value="animada">
+              <span class="rosto">
+                <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#CAD6EF" stroke="#406399" stroke-width="1.5"/><path d="M10 17c1-3 5-3 6 0M24 17c1-3 5-3 6 0" fill="none" stroke="#050315" stroke-width="2" stroke-linecap="round"/><path d="M10 23c3 8 17 8 20 0z" fill="#050315"/></svg>
+                <small>Animada</small>
+              </span>
+            </label>
+
+            <label class="humor-op">
+              <input type="radio" name="humor" value="triste">
+              <span class="rosto">
+                <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#CAD6EF" stroke="#406399" stroke-width="1.5"/><circle cx="14" cy="16" r="2" fill="#050315"/><circle cx="26" cy="16" r="2" fill="#050315"/><path d="M12 28c4-5 12-5 16 0" fill="none" stroke="#050315" stroke-width="2" stroke-linecap="round"/></svg>
+                <small>Triste</small>
+              </span>
+            </label>
+
           </div>
         </section>
 
       </main>
     </div>
   </div>
+
+  <!-- Janela para adicionar anotação na linha do tempo -->
+  <dialog class="dialogo" id="dlg-nota" aria-labelledby="dlg-titulo">
+    <form id="form-nota">
+      <h2 id="dlg-titulo">Nova anotação</h2>
+
+      <label class="campo">
+        Horário
+        <input type="time" id="nota-hora" required>
+      </label>
+
+      <label class="campo">
+        Anotação
+        <textarea id="nota-texto" rows="3" maxlength="120" placeholder="Ex.: Pressão medida, 12 por 8" required></textarea>
+      </label>
+
+      <div class="dialogo-botoes">
+        <button type="button" class="btn" id="cancelar-nota">Cancelar</button>
+        <button type="submit" class="btn btn-primario">Salvar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    /* ----- data de hoje no cabeçalho ----- */
+    var hoje = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+    document.getElementById('data-hoje').textContent = hoje.charAt(0).toUpperCase() + hoje.slice(1);
+
+    /* ----- anotações na linha do tempo ----- */
+    (function () {
+      var lista = document.querySelector('.timeline');
+      var dlg = document.getElementById('dlg-nota');
+      var form = document.getElementById('form-nota');
+      var campoHora = document.getElementById('nota-hora');
+      var campoTexto = document.getElementById('nota-texto');
+      var CHAVE = 'anotacoes-linha-do-tempo';
+
+      function carregar() {
+        try { return JSON.parse(localStorage.getItem(CHAVE)) || []; } catch (e) { return []; }
+      }
+
+      function guardar(notas) {
+        try { localStorage.setItem(CHAVE, JSON.stringify(notas)); } catch (e) {}
+      }
+
+      /* cria o item na linha do tempo, já na ordem certa pelo horário */
+      function inserir(nota) {
+        var li = document.createElement('li');
+        li.className = 'nota';
+        li.dataset.id = nota.id;
+
+        var ponto = document.createElement('span');
+        ponto.className = 'ponto';
+
+        var hora = document.createElement('span');
+        hora.className = 'hora-item';
+        hora.textContent = nota.hora;
+
+        var desc = document.createElement('span');
+        desc.className = 'desc';
+        desc.title = nota.texto;
+        desc.textContent = nota.texto + ' ';
+        var rotulo = document.createElement('em');
+        rotulo.textContent = '(Anotação)';
+        desc.appendChild(rotulo);
+
+        var remover = document.createElement('button');
+        remover.type = 'button';
+        remover.className = 'nota-remover';
+        remover.setAttribute('aria-label', 'Remover anotação');
+        remover.textContent = '×';
+        remover.addEventListener('click', function () {
+          li.remove();
+          guardar(carregar().filter(function (n) { return n.id !== nota.id; }));
+        });
+
+        li.appendChild(ponto);
+        li.appendChild(hora);
+        li.appendChild(desc);
+        li.appendChild(remover);
+
+        var antes = null;
+        for (var i = 0; i < lista.children.length; i++) {
+          var h = lista.children[i].querySelector('.hora-item').textContent;
+          if (h > nota.hora) { antes = lista.children[i]; break; }
+        }
+        lista.insertBefore(li, antes);
+        return li;
+      }
+
+      carregar().forEach(inserir);
+
+      document.getElementById('abrir-nota').addEventListener('click', function () {
+        var agora = new Date();
+        campoHora.value = String(agora.getHours()).padStart(2, '0') + ':' + String(agora.getMinutes()).padStart(2, '0');
+        campoTexto.value = '';
+        dlg.showModal();
+        campoTexto.focus();
+      });
+
+      document.getElementById('cancelar-nota').addEventListener('click', function () { dlg.close(); });
+
+      /* clicar fora da janela também fecha */
+      dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var texto = campoTexto.value.trim();
+        if (!texto || !campoHora.value) return;
+
+        var nota = { id: Date.now(), hora: campoHora.value, texto: texto };
+        var notas = carregar();
+        notas.push(nota);
+        guardar(notas);
+
+        var li = inserir(nota);
+        li.scrollIntoView({ block: 'nearest' });
+        dlg.close();
+      });
+    })();
+  </script>
 </body>
 </html>

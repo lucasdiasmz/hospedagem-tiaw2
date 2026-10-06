@@ -1,3 +1,123 @@
+/* =====================================================
+   Design System
+   Cores:       Text #050315 | Background #DDE5E9 | Primary #406399
+                Secondary #CAD6EF | Accent #406399
+   Tipografia:  H1/H2 Lora 40px | H3 Inter 27px | Corpo Inter 24px
+   Espaçamento: 4 / 8 / 16 / 24 / 32 / 48 px
+   ===================================================== */
+:root {
+  /* cores */
+  --cor-texto: #050315;
+  --cor-fundo: #DDE5E9;
+  --cor-primaria: #406399;
+  --cor-secundaria: #CAD6EF;
+  --cor-destaque: #406399;
+  --cor-card: #ffffff;
+  --cor-texto-suave: rgba(5, 3, 21, 0.6);
+
+  /* tipografia */
+  --fonte-titulo: "Lora", Georgia, serif;
+  --fonte-texto: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+  --fs-h1: 40px;
+  --fs-h3: 27px;
+  --fs-corpo: 24px;
+  --fs-pequeno: 16px; /* rótulos e legendas */
+  --fs-nav: 16px;
+
+  /* espaçamento */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 16px;
+  --sp-4: 24px;
+  --sp-5: 32px;
+  --sp-6: 48px;
+
+  /* formas */
+  --raio-card: 12px;
+  --raio-botao: 8px;
+  --raio-nav: 32px;
+
+  /* medidas que se adaptam à altura da tela (tela fixa, sem scroll) */
+  --pad-topo: var(--sp-6);
+  --pad-lados: var(--sp-6);
+  --hdr-mb: var(--sp-5);
+  --pad-card: var(--sp-5);
+  --gap-grade: var(--sp-5);
+  --h2-mb: var(--sp-4);
+  --li-h: 56px;
+  --avatar: 64px;
+  --btn-h: 56px;
+  --pill: 88px;
+  --ring: 88px;
+  --sos: 112px;
+  --face: 56px;
+
+  /* barra inferior */
+  --nav-w: 72px;
+  --nav-h: 40px;
+  --nav-px: 24px;
+  --nav-py: 7px;
+  --nav-pad: var(--sp-3);
+  --nav-bottom: var(--sp-4);
+  --nav-reserva: 152px; /* espaço reservado embaixo para a barra */
+}
+
+/* ----- altura média (ex.: notebook 1080p com barras do navegador) ----- */
+@media (max-height: 1050px) {
+  :root {
+    --fs-h1: 32px;
+    --fs-h3: 22px;
+    --fs-corpo: 18px;
+    --fs-nav: 15px;
+    --pad-topo: var(--sp-4);
+    --pad-lados: var(--sp-5);
+    --hdr-mb: var(--sp-3);
+    --pad-card: var(--sp-4);
+    --gap-grade: var(--sp-4);
+    --h2-mb: var(--sp-3);
+    --li-h: 48px;
+    --avatar: 56px;
+    --btn-h: 48px;
+    --pill: 72px;
+    --ring: 72px;
+    --sos: 96px;
+    --face: 48px;
+    --nav-w: 64px;
+    --nav-h: 36px;
+    --nav-px: 20px;
+    --nav-py: 6px;
+    --nav-pad: var(--sp-2);
+    --nav-bottom: var(--sp-3);
+    --nav-reserva: 116px;
+  }
+}
+
+/* ----- altura pequena (ex.: 720p) ----- */
+@media (max-height: 760px) {
+  :root {
+    --fs-h1: 28px;
+    --fs-h3: 20px;
+    --fs-corpo: 16px;
+    --fs-nav: 14px;
+    --pad-topo: var(--sp-3);
+    --pad-lados: var(--sp-4);
+    --pad-card: var(--sp-3);
+    --gap-grade: var(--sp-3);
+    --li-h: 38px;
+    --avatar: 48px;
+    --btn-h: 44px;
+    --pill: 56px;
+    --ring: 60px;
+    --sos: 80px;
+    --face: 40px;
+    --nav-w: 56px;
+    --nav-h: 32px;
+    --nav-px: 18px;
+    --nav-py: 5px;
+    --nav-reserva: 108px;
+  }
+}
+
 /* ===== Reset e base ===== */
 * {
   margin: 0;
@@ -5,22 +125,17 @@
   box-sizing: border-box;
 }
 
-:root {
-  --fundo: #ececec;
-  --painel: #f7f7f7;
-  --card: #ffffff;
-  --borda: #d6d6d6;
-  --texto: #222;
-  --texto-suave: #777;
-  --escuro: #666;
-  --escuro-forte: #555;
-  --claro: #eeeeee;
+html,
+body {
+  height: 100%;
+  overflow: hidden; /* tela fixa: sem barra de rolagem */
 }
 
 body {
-  font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
-  background: var(--fundo);
-  color: var(--texto);
+  font-family: var(--fonte-texto);
+  font-size: var(--fs-pequeno);
+  background: var(--cor-fundo);
+  color: var(--cor-texto);
 }
 
 button {
@@ -28,196 +143,272 @@ button {
   cursor: pointer;
   border: none;
   background: none;
+  color: inherit;
 }
 
-h1, h2 {
-  font-weight: 700;
+h1 {
+  font-family: var(--fonte-titulo);
+  font-size: var(--fs-h1);
+  font-weight: 600;
+  line-height: 1.2;
 }
 
-/* ===== Estrutura geral: menu lateral + área principal ===== */
+h2 {
+  font-family: var(--fonte-texto);
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+/* ===== Estrutura geral: ocupa exatamente a altura da janela ===== */
 .layout {
-  display: flex;
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
 }
 
 .principal {
-  flex: 1;
-  min-width: 0;
-  padding: 28px 40px 40px;
-  max-width: 1200px;
+  height: 100%;
+  width: 100%;
+  padding: var(--pad-topo) var(--pad-lados) var(--nav-reserva);
+  display: flex;
+  flex-direction: column;
 }
 
-/* ===== Menu lateral ===== */
+/* ===== Navbar / Menu (barra fixa na parte de baixo, mesma largura dos cards) ===== */
 .menu {
-  width: 230px;
-  flex-shrink: 0;
-  background: var(--card);
-  border-right: 1px solid var(--borda);
-  padding: 32px 16px;
-  position: sticky;
-  top: 0;
-  height: 100vh;
+  position: fixed;
+  left: var(--pad-lados);
+  right: var(--pad-lados);
+  bottom: var(--nav-bottom);
+  z-index: 10;
+  padding: var(--nav-pad) var(--sp-4);
+  background: var(--cor-card);
+  border: 1px solid var(--cor-secundaria);
+  border-radius: var(--raio-nav);
+  box-shadow: 0 12px 32px rgba(64, 99, 153, 0.22);
 }
 
+/* os 5 itens dividem a largura da barra por igual */
 .menu ul {
   list-style: none;
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  flex-direction: row;
 }
 
+.menu li {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ícone em cima, texto embaixo */
 .menu-item {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 14px;
-  padding: 12px 16px;
-  border-radius: 12px;
-  font-size: 15px;
-  color: #444;
+  gap: var(--sp-1);
+  padding: var(--sp-1) var(--sp-2);
+  font-size: var(--fs-nav);
+  line-height: 1.2;
+  font-weight: 500;
+  color: var(--cor-texto-suave);
   text-decoration: none;
-  position: relative;
-  transition: background 0.15s;
+  transition: color 0.15s;
 }
 
-.menu-item:hover {
-  background: var(--claro);
+/* o ícone fica dentro de uma "pílula" que acende no item ativo */
+.menu-item svg {
+  width: var(--nav-w);
+  height: var(--nav-h);
+  padding: var(--nav-py) var(--nav-px);
+  border-radius: 999px;
+  color: var(--cor-texto);
+  transition: background 0.2s, color 0.2s;
+}
+
+.menu-item:hover svg {
+  background: var(--cor-fundo);
 }
 
 .menu-item.ativo {
-  background: #e6e6e6;
+  color: var(--cor-primaria);
   font-weight: 700;
-  color: #111;
 }
 
-/* barrinha de destaque do item ativo */
-.menu-item.ativo::before {
-  content: "";
-  position: absolute;
-  left: -16px;
-  top: 10px;
-  bottom: 10px;
-  width: 4px;
-  background: #333;
-  border-radius: 0 3px 3px 0;
+.menu-item.ativo svg {
+  background: var(--cor-secundaria);
+  color: var(--cor-primaria);
 }
 
 /* ===== Cabeçalho ===== */
 .topo {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 28px;
+  gap: var(--sp-3);
+  margin-bottom: var(--hdr-mb);
+  flex-shrink: 0;
 }
 
 .avatar {
-  width: 56px;
-  height: 56px;
+  width: var(--avatar);
+  height: var(--avatar);
   border-radius: 50%;
   overflow: hidden;
   flex-shrink: 0;
-  border: 2px solid #ddd;
+  border: 2px solid var(--cor-card);
+  box-shadow: 0 2px 8px rgba(64, 99, 153, 0.25);
+}
+
+.avatar svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .saudacao {
   flex: 1;
 }
 
-.saudacao h1 {
-  font-size: 24px;
-  line-height: 1.2;
-}
-
 .saudacao p {
-  font-size: 15px;
-  color: #444;
-  margin-top: 3px;
+  font-size: var(--fs-corpo);
+  color: var(--cor-texto-suave);
+  margin-top: var(--sp-1);
 }
 
-.emoji {
-  filter: grayscale(1);
+.data-hoje {
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--cor-secundaria);
+  color: var(--cor-primaria);
+  border-radius: 999px;
+  font-size: var(--fs-pequeno);
+  font-weight: 600;
 }
 
 .icone-btn {
-  padding: 10px;
-  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  padding: var(--sp-2);
+  background: var(--cor-card);
+  border: 1px solid var(--cor-secundaria);
+  border-radius: var(--raio-card);
+  color: var(--cor-primaria);
   transition: background 0.15s;
 }
 
 .icone-btn:hover {
-  background: #e0e0e0;
+  background: var(--cor-secundaria);
 }
 
-/* ===== Grade de cards ===== */
+/* ===== Grade de cards: 3 colunas x 2 linhas que preenchem a tela ===== */
 .grade {
+  flex: 1;
+  min-height: 0;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  align-items: stretch;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: var(--gap-grade);
 }
 
+.card-remedio,
+.card-timeline {
+  grid-column: span 2;
+}
+
+/* Componente Card */
 .card {
-  background: var(--card);
-  border: 1px solid var(--borda);
-  border-radius: 18px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  min-height: 0;
+  overflow: hidden;
+  background: var(--cor-card);
+  border: 1px solid var(--cor-secundaria);
+  border-radius: var(--raio-card);
+  box-shadow: 0 2px 8px rgba(64, 99, 153, 0.08);
 }
 
-/* ===== Próximo medicamento ===== */
+/* ===== Próximo medicamento (card de destaque) =====
+   Segue o componente Card do Design System: área Secondary em cima, corpo branco embaixo */
 .card-remedio {
-  padding: 22px 24px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
-.remedio-info {
+.remedio-topo {
+  flex: 1;
+  min-height: 0;
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: var(--sp-4);
+  padding: var(--pad-card);
+  background: var(--cor-secundaria);
+}
+
+.pilula-chip {
+  width: var(--pill);
+  height: var(--pill);
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: var(--cor-card);
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(64, 99, 153, 0.2);
+}
+
+.pilula-chip svg {
+  width: 62%;
+  height: 62%;
 }
 
 .remedio-texto {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: var(--sp-1);
 }
 
 .remedio-texto small {
-  font-size: 14px;
-  font-weight: 700;
+  font-size: var(--fs-pequeno);
+  font-weight: 600;
+  color: var(--cor-primaria);
 }
 
 .remedio-texto strong {
-  font-size: 18px;
-  font-weight: 500;
+  font-family: var(--fonte-titulo);
+  font-size: var(--fs-h1);
+  font-weight: 600;
+  line-height: 1.15;
 }
 
 .remedio-texto span {
-  font-size: 15px;
+  font-size: var(--fs-corpo);
+  font-weight: 500;
+  color: var(--cor-primaria);
 }
 
 .botoes {
   display: flex;
-  gap: 14px;
-  margin-top: 22px;
+  gap: var(--sp-3);
+  padding: var(--pad-card);
+  background: var(--cor-card);
 }
 
+/* Componente Botão: "Tomei" é Primary; os demais ficam vazados (borda Secondary) */
 .btn {
   flex: 1;
-  height: 46px;
-  border-radius: 14px;
-  background: var(--claro);
-  border: 1px solid var(--borda);
-  font-size: 15px;
+  height: var(--btn-h);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  border-radius: var(--raio-botao);
+  background: var(--cor-card);
+  border: 2px solid var(--cor-secundaria);
+  color: var(--cor-texto);
+  font-size: var(--fs-pequeno);
   font-weight: 600;
-  color: #333;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-  transition: filter 0.15s, transform 0.1s;
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
 }
 
 .btn:hover {
-  filter: brightness(0.95);
+  background: var(--cor-fundo);
 }
 
 .btn:active {
@@ -225,167 +416,354 @@ h1, h2 {
 }
 
 .btn-primario {
-  background: var(--escuro);
-  border-color: var(--escuro-forte);
+  background: var(--cor-primaria);
+  border-color: var(--cor-primaria);
   color: #fff;
+  box-shadow: 0 6px 16px rgba(64, 99, 153, 0.35);
+}
+
+.btn-primario:hover {
+  background: #36558a;
 }
 
 /* ===== Cuidados de hoje ===== */
 .card-cuidados {
-  padding: 22px 24px;
+  padding: var(--pad-card);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: var(--sp-3);
 }
 
 .cuidados-topo {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  font-size: 14px;
+  justify-content: space-between;
+  gap: var(--sp-3);
 }
 
-.cuidados-topo h2 {
-  font-size: 15px;
+.cuidados-texto p {
+  margin-top: var(--sp-1);
+  font-size: var(--fs-pequeno);
+  font-weight: 600;
+  color: var(--cor-primaria);
 }
 
-.progresso {
-  height: 12px;
-  background: #e4e4e4;
-  border-radius: 999px;
-  margin: 12px 0 22px;
-  overflow: hidden;
-}
-
-.progresso-barra {
-  width: 62%;
-  height: 100%;
-  background: #444;
-  border-radius: 999px;
-}
-
-.resumo {
+/* anel de progresso (60% = 3 de 5) */
+.anel {
+  width: var(--ring);
+  height: var(--ring);
+  flex-shrink: 0;
+  position: relative;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  place-items: center;
+  border-radius: 50%;
+  background: conic-gradient(var(--cor-primaria) 0 60%, var(--cor-secundaria) 0);
+}
+
+.anel::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--ring) * 0.13);
+  border-radius: 50%;
+  background: var(--cor-card);
+}
+
+.anel span {
+  position: relative;
+  font-size: calc(var(--ring) * 0.24);
+  font-weight: 700;
+  color: var(--cor-primaria);
+}
+
+/* 2x2 que ocupa o espaço que sobrar no card */
+.resumo {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: var(--sp-2);
 }
 
 .resumo-item {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  align-content: center;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
+  column-gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--cor-fundo);
+  border-radius: var(--raio-card);
+  font-size: var(--fs-pequeno);
 }
 
-.resumo-item + .resumo-item {
-  border-left: 1px solid var(--borda);
+/* ícone dentro de um círculo branco */
+.resumo-item svg {
+  grid-row: 1 / span 2;
+  width: 40px;
+  height: 40px;
+  padding: 9px;
+  border-radius: 50%;
+  background: var(--cor-card);
+  color: var(--cor-primaria);
+}
+
+.resumo-item .rotulo {
+  color: var(--cor-texto-suave);
+}
+
+.resumo-item .valor {
+  font-size: var(--fs-corpo);
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 /* ===== Linha do tempo ===== */
 .card-timeline {
   display: flex;
-  gap: 18px;
-  padding: 22px 18px 22px 24px;
+  gap: var(--sp-4);
+  padding: var(--pad-card);
 }
 
 .timeline-col {
   flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .timeline-col h2 {
-  font-size: 16px;
-  margin-bottom: 16px;
+  margin-bottom: var(--h2-mb);
+  flex-shrink: 0;
 }
 
+/* a lista rola por dentro do card quando tiver muitas anotações (a página continua fixa) */
 .timeline {
   list-style: none;
-  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--cor-secundaria) transparent;
 }
 
-/* linha vertical que liga os pontos */
-.timeline::before {
+/* trecho de linha que liga cada item ao próximo: Primary depois de um item feito, Secondary no resto */
+.timeline li::before {
   content: "";
   position: absolute;
-  left: 6px;
-  top: 14px;
-  bottom: 14px;
-  width: 1.5px;
-  background: #444;
+  z-index: 1;
+  left: 17px;
+  top: 50%;
+  width: 2px;
+  height: 100%;
+  background: var(--cor-secundaria);
+}
+
+.timeline li:last-child::before {
+  display: none;
+}
+
+.timeline li.feito::before {
+  background: var(--cor-primaria);
 }
 
 .timeline li {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 14px;
-  font-size: 15px;
-  height: 42px;
+  gap: var(--sp-3);
+  height: var(--li-h);
+  padding: 0 var(--sp-3) 0 var(--sp-2);
+  border-radius: var(--raio-card);
+  font-size: var(--fs-corpo);
 }
 
 .ponto {
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  background: #fff;
-  border: 1.5px solid #444;
+  position: relative;
   z-index: 1;
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--cor-card);
+  border: 2px solid var(--cor-secundaria);
+}
+
+/* feito: bolinha cheia com check */
+.feito .ponto {
+  background: var(--cor-primaria);
+  border-color: var(--cor-primaria);
+}
+
+.feito .ponto::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 5px;
+  height: 9px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* próximo: linha destacada e bolinha com halo */
+.proximo {
+  background: var(--cor-fundo);
+}
+
+.proximo .ponto {
+  border-color: var(--cor-primaria);
+  box-shadow: 0 0 0 4px var(--cor-secundaria);
 }
 
 .hora-item {
-  width: 48px;
+  width: 4.2em;
   flex-shrink: 0;
+  font-weight: 600;
 }
 
 .desc em {
   font-style: normal;
-  color: var(--texto-suave);
-  font-size: 13px;
+  color: var(--cor-texto-suave);
+  font-size: var(--fs-pequeno);
 }
 
-/* ===== Ações (Registro rápido + SOS) ===== */
+.tag {
+  margin-left: auto;
+  padding: var(--sp-1) var(--sp-2);
+  background: var(--cor-primaria);
+  color: #fff;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* anotações adicionadas pelo usuário: bolinha quadrada para diferenciar dos eventos */
+.nota .ponto {
+  border-radius: 6px;
+  background: var(--cor-secundaria);
+  border-color: var(--cor-primaria);
+}
+
+.nota .desc {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nota-remover {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--cor-texto-suave);
+  opacity: 0;
+  transition: opacity 0.15s, background 0.15s;
+}
+
+.nota:hover .nota-remover,
+.nota-remover:focus-visible {
+  opacity: 1;
+}
+
+.nota-remover:hover {
+  background: var(--cor-secundaria);
+  color: var(--cor-primaria);
+}
+
+/* ===== Ações (Adicionar anotação + SOS) ===== */
 .acoes {
-  width: 130px;
-  background: #e6e6e6;
-  border-radius: 18px;
+  width: 176px;
+  background: var(--cor-secundaria);
+  border-radius: var(--raio-card);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 18px 10px 14px;
+  gap: var(--sp-2);
+  padding: var(--sp-3);
   flex-shrink: 0;
 }
 
-.registro-rapido {
+.nova-nota {
+  width: 100%;
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 700;
+  justify-content: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--cor-card);
+  border-radius: var(--raio-botao);
+  font-size: var(--fs-pequeno);
+  font-weight: 600;
   text-align: left;
   line-height: 1.25;
-  color: #333;
+  color: var(--cor-primaria);
+  transition: transform 0.1s, box-shadow 0.15s;
+}
+
+.nova-nota:hover {
+  box-shadow: 0 4px 12px rgba(64, 99, 153, 0.25);
+}
+
+.sos-area {
+  flex: 1;
+  display: grid;
+  place-items: center;
 }
 
 .sos {
-  width: 98px;
-  height: 98px;
+  position: relative;
+  width: var(--sos);
+  height: var(--sos);
   border-radius: 50%;
-  background: var(--escuro);
+  background: var(--cor-destaque);
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 3px;
-  font-size: 20px;
+  gap: var(--sp-1);
+  font-size: var(--fs-corpo);
   font-weight: 700;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 6px 16px rgba(64, 99, 153, 0.45);
   transition: filter 0.15s, transform 0.1s;
 }
 
+/* anel que pulsa devagar para chamar atenção */
+.sos::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid var(--cor-destaque);
+  animation: pulso 2.4s ease-out infinite;
+}
+
+@keyframes pulso {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.25);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sos::before {
+    animation: none;
+    opacity: 0.3;
+  }
+}
+
 .sos:hover {
-  filter: brightness(0.92);
+  filter: brightness(1.1);
 }
 
 .sos:active {
@@ -394,60 +772,200 @@ h1, h2 {
 
 /* ===== Humor ===== */
 .card-humor {
-  padding: 22px 24px;
+  padding: var(--pad-card);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
 .card-humor h2 {
-  font-size: 16px;
-  margin-bottom: 18px;
+  margin-bottom: var(--h2-mb);
 }
 
 .rostos {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+}
+
+.humor-op {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* o radio fica escondido; o visual é o próprio rosto */
+.humor-op input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .rosto {
-  border-radius: 50%;
-  transition: transform 0.15s;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-2) var(--sp-1);
+  border-radius: var(--raio-card);
+  transition: background 0.15s, transform 0.15s;
 }
 
-.rosto:hover {
-  transform: scale(1.12);
+.rosto svg {
+  display: block;
+  width: 100%;
+  max-width: var(--face);
+  height: auto;
 }
 
-/* ===== Telas menores (notebook pequeno / tablet) ===== */
-@media (max-width: 1000px) {
+.rosto small {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--cor-texto-suave);
+}
+
+.humor-op:hover .rosto {
+  background: var(--cor-fundo);
+  transform: translateY(-2px);
+}
+
+/* selecionado: fundo Secondary e legenda em Primary */
+.humor-op input:checked + .rosto {
+  background: var(--cor-secundaria);
+}
+
+.humor-op input:checked + .rosto small {
+  color: var(--cor-primaria);
+  font-weight: 700;
+}
+
+.humor-op input:focus-visible + .rosto {
+  outline: 2px solid var(--cor-primaria);
+  outline-offset: 2px;
+}
+
+/* ===== Janela de nova anotação ===== */
+.dialogo {
+  margin: auto;
+  width: min(440px, 92vw);
+  padding: var(--sp-5);
+  background: var(--cor-card);
+  border: 1px solid var(--cor-secundaria);
+  border-radius: var(--raio-card);
+  box-shadow: 0 24px 64px rgba(5, 3, 21, 0.3);
+  color: var(--cor-texto);
+  font-family: var(--fonte-texto);
+}
+
+.dialogo::backdrop {
+  background: rgba(5, 3, 21, 0.4);
+}
+
+.dialogo h2 {
+  margin-bottom: var(--sp-4);
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  margin-bottom: var(--sp-3);
+  font-size: var(--fs-pequeno);
+  font-weight: 600;
+}
+
+.campo input,
+.campo textarea {
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--cor-card);
+  border: 2px solid var(--cor-secundaria);
+  border-radius: var(--raio-botao);
+  color: var(--cor-texto);
+  font: inherit;
+  font-weight: 400;
+  resize: none;
+}
+
+.campo input:focus,
+.campo textarea:focus {
+  outline: none;
+  border-color: var(--cor-primaria);
+}
+
+.dialogo-botoes {
+  display: flex;
+  gap: var(--sp-3);
+  margin-top: var(--sp-4);
+}
+
+/* ===== Telas estreitas (tablet / celular): aqui a página volta a rolar ===== */
+@media (max-width: 900px) {
+  html,
+  body {
+    height: auto;
+    overflow: auto;
+  }
+
+  .layout {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+
   .principal {
-    padding: 24px;
+    height: auto;
+    padding: var(--sp-4) var(--sp-3) 140px;
   }
 
   .grade {
     grid-template-columns: 1fr;
+    grid-template-rows: none;
   }
-}
 
-@media (max-width: 760px) {
+  .card-remedio,
+  .card-timeline {
+    grid-column: auto;
+  }
+
+  .remedio-topo {
+    flex: none;
+  }
+
+  .resumo {
+    grid-template-rows: none;
+  }
+
+  .card-timeline {
+    flex-direction: column;
+  }
+
+  .acoes {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .data-hoje {
+    display: none;
+  }
+
   .menu {
-    width: 76px;
-    padding: 24px 10px;
+    left: var(--sp-3);
+    right: var(--sp-3);
+    padding: var(--sp-2);
   }
 
   .menu-item span {
     display: none;
   }
 
-  .menu-item {
-    justify-content: center;
-    padding: 12px 0;
-  }
-
-  .menu-item.ativo::before {
-    left: -10px;
+  .menu-item svg {
+    width: 56px;
+    height: 32px;
+    padding: 5px 16px;
   }
 }
