@@ -1,121 +1,24 @@
 /* =====================================================
-   Design System
-   Cores:       Text #050315 | Background #DDE5E9 | Primary #406399
-                Secondary #CAD6EF | Accent #406399
-   Tipografia:  H1/H2 Lora 40px | H3 Inter 27px | Corpo Inter 24px
-   Espaçamento: 4 / 8 / 16 / 24 / 32 / 48 px
+   Cuidado+ | Tela inicial
    ===================================================== */
 :root {
-  /* cores */
-  --cor-texto: #050315;
-  --cor-fundo: #DDE5E9;
-  --cor-primaria: #406399;
-  --cor-secundaria: #CAD6EF;
-  --cor-destaque: #406399;
-  --cor-card: #ffffff;
-  --cor-texto-suave: rgba(5, 3, 21, 0.6);
+  --sb-bg: #0f2147;
+  --azul: #1d63dc;
+  --azul-hover: #1855c0;
+  --azul-texto: #1b3d7a;
+  --azul-claro: #d3e3fc;
+  --azul-suave: #e4edfb;
+  --azul-linha: #d6e4fb;
 
-  /* tipografia */
-  --fonte-titulo: "Lora", Georgia, serif;
-  --fonte-texto: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
-  --fs-h1: 40px;
-  --fs-h3: 27px;
-  --fs-corpo: 24px;
-  --fs-pequeno: 16px; /* rótulos e legendas */
-  --fs-nav: 16px;
+  --texto: #0c1b3c;
+  --suave: #5c6b87;
+  --fundo: #f4f7fb;
+  --card: #ffffff;
+  --borda: #e5ebf5;
+  --tile: #f1f4f9;
 
-  /* espaçamento */
-  --sp-1: 4px;
-  --sp-2: 8px;
-  --sp-3: 16px;
-  --sp-4: 24px;
-  --sp-5: 32px;
-  --sp-6: 48px;
-
-  /* formas */
-  --raio-card: 12px;
-  --raio-botao: 8px;
-  --raio-nav: 32px;
-
-  /* medidas que se adaptam à altura da tela (tela fixa, sem scroll) */
-  --pad-topo: var(--sp-6);
-  --pad-lados: var(--sp-6);
-  --hdr-mb: var(--sp-5);
-  --pad-card: var(--sp-5);
-  --gap-grade: var(--sp-5);
-  --h2-mb: var(--sp-4);
-  --li-h: 56px;
-  --avatar: 64px;
-  --btn-h: 56px;
-  --pill: 88px;
-  --ring: 88px;
-  --sos: 112px;
-  --face: 56px;
-
-  /* barra inferior */
-  --nav-w: 72px;
-  --nav-h: 40px;
-  --nav-px: 24px;
-  --nav-py: 7px;
-  --nav-pad: var(--sp-3);
-  --nav-bottom: var(--sp-4);
-  --nav-reserva: 152px; /* espaço reservado embaixo para a barra */
-}
-
-/* ----- altura média (ex.: notebook 1080p com barras do navegador) ----- */
-@media (max-height: 1050px) {
-  :root {
-    --fs-h1: 32px;
-    --fs-h3: 22px;
-    --fs-corpo: 18px;
-    --fs-nav: 15px;
-    --pad-topo: var(--sp-4);
-    --pad-lados: var(--sp-5);
-    --hdr-mb: var(--sp-3);
-    --pad-card: var(--sp-4);
-    --gap-grade: var(--sp-4);
-    --h2-mb: var(--sp-3);
-    --li-h: 48px;
-    --avatar: 56px;
-    --btn-h: 48px;
-    --pill: 72px;
-    --ring: 72px;
-    --sos: 96px;
-    --face: 48px;
-    --nav-w: 64px;
-    --nav-h: 36px;
-    --nav-px: 20px;
-    --nav-py: 6px;
-    --nav-pad: var(--sp-2);
-    --nav-bottom: var(--sp-3);
-    --nav-reserva: 116px;
-  }
-}
-
-/* ----- altura pequena (ex.: 720p) ----- */
-@media (max-height: 760px) {
-  :root {
-    --fs-h1: 28px;
-    --fs-h3: 20px;
-    --fs-corpo: 16px;
-    --fs-nav: 14px;
-    --pad-topo: var(--sp-3);
-    --pad-lados: var(--sp-4);
-    --pad-card: var(--sp-3);
-    --gap-grade: var(--sp-3);
-    --li-h: 38px;
-    --avatar: 48px;
-    --btn-h: 44px;
-    --pill: 56px;
-    --ring: 60px;
-    --sos: 80px;
-    --face: 40px;
-    --nav-w: 56px;
-    --nav-h: 32px;
-    --nav-px: 18px;
-    --nav-py: 5px;
-    --nav-reserva: 108px;
-  }
+  --fonte: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+  --sombra: 0 1px 3px rgba(15, 33, 71, 0.06);
 }
 
 /* ===== Reset e base ===== */
@@ -128,437 +31,431 @@
 html,
 body {
   height: 100%;
-  overflow: hidden; /* tela fixa: sem barra de rolagem */
 }
 
 body {
-  font-family: var(--fonte-texto);
-  font-size: var(--fs-pequeno);
-  background: var(--cor-fundo);
-  color: var(--cor-texto);
+  font-family: var(--fonte);
+  font-size: 16px;
+  background: var(--fundo);
+  color: var(--texto);
+  overflow: hidden;
 }
 
 button {
-  font-family: inherit;
+  font: inherit;
   cursor: pointer;
   border: none;
   background: none;
   color: inherit;
 }
 
-h1 {
-  font-family: var(--fonte-titulo);
-  font-size: var(--fs-h1);
-  font-weight: 600;
-  line-height: 1.2;
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--azul);
+  outline-offset: 2px;
 }
 
-h2 {
-  font-family: var(--fonte-texto);
-  font-size: var(--fs-h3);
-  font-weight: 600;
-  line-height: 1.25;
-}
-
-/* ===== Estrutura geral: ocupa exatamente a altura da janela ===== */
-.layout {
+/* ===== Estrutura ===== */
+.app {
+  display: flex;
   height: 100vh;
   height: 100dvh;
-  overflow: hidden;
 }
 
-.principal {
-  height: 100%;
-  width: 100%;
-  padding: var(--pad-topo) var(--pad-lados) var(--nav-reserva);
+.coluna {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
 }
 
-/* ===== Navbar / Menu (barra fixa na parte de baixo, mesma largura dos cards) ===== */
-.menu {
-  position: fixed;
-  left: var(--pad-lados);
-  right: var(--pad-lados);
-  bottom: var(--nav-bottom);
-  z-index: 10;
-  padding: var(--nav-pad) var(--sp-4);
-  background: var(--cor-card);
-  border: 1px solid var(--cor-secundaria);
-  border-radius: var(--raio-nav);
-  box-shadow: 0 12px 32px rgba(64, 99, 153, 0.22);
+/* ===== Barra lateral ===== */
+.sidebar {
+  width: 272px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 15px 68px;
+  background: var(--sb-bg);
+  color: #fff;
 }
 
-/* os 5 itens dividem a largura da barra por igual */
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 32px;
+  margin: 0 0 36px 16px;
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
 .menu ul {
   list-style: none;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  gap: 9.5px;
 }
 
-.menu li {
-  flex: 1;
-  min-width: 0;
-}
-
-/* ícone em cima, texto embaixo */
 .menu-item {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: var(--sp-1);
-  padding: var(--sp-1) var(--sp-2);
-  font-size: var(--fs-nav);
-  line-height: 1.2;
+  gap: 17px;
+  height: 52px;
+  padding: 0 17px;
+  border-radius: 9px;
+  color: #dbe4f5;
+  font-size: 16px;
   font-weight: 500;
-  color: var(--cor-texto-suave);
   text-decoration: none;
-  transition: color 0.15s;
+  transition: background 0.15s, color 0.15s;
 }
 
-/* o ícone fica dentro de uma "pílula" que acende no item ativo */
 .menu-item svg {
-  width: var(--nav-w);
-  height: var(--nav-h);
-  padding: var(--nav-py) var(--nav-px);
-  border-radius: 999px;
-  color: var(--cor-texto);
-  transition: background 0.2s, color 0.2s;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
 }
 
-.menu-item:hover svg {
-  background: var(--cor-fundo);
+.menu-item:hover {
+  background: rgba(255, 255, 255, 0.07);
 }
 
 .menu-item.ativo {
-  color: var(--cor-primaria);
-  font-weight: 700;
+  background: var(--azul);
+  color: #fff;
 }
 
-.menu-item.ativo svg {
-  background: var(--cor-secundaria);
-  color: var(--cor-primaria);
+/* detalhes internos dos ícones preenchidos */
+.furo {
+  stroke: var(--sb-bg);
 }
 
-/* ===== Cabeçalho ===== */
-.topo {
+.furo-cheio {
+  fill: var(--sb-bg);
+}
+
+.ajuda {
+  margin-top: auto;
   display: flex;
   align-items: center;
-  gap: var(--sp-3);
-  margin-bottom: var(--hdr-mb);
-  flex-shrink: 0;
+  gap: 14px;
+  padding: 0 22px;
+  text-align: left;
+  color: #fff;
+  border-radius: 9px;
 }
 
-.avatar {
-  width: var(--avatar);
-  height: var(--avatar);
-  border-radius: 50%;
-  overflow: hidden;
-  flex-shrink: 0;
-  border: 2px solid var(--cor-card);
-  box-shadow: 0 2px 8px rgba(64, 99, 153, 0.25);
-}
-
-.avatar svg {
+.ajuda-texto strong {
   display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.saudacao {
-  flex: 1;
-}
-
-.saudacao p {
-  font-size: var(--fs-corpo);
-  color: var(--cor-texto-suave);
-  margin-top: var(--sp-1);
-}
-
-.data-hoje {
-  padding: var(--sp-2) var(--sp-3);
-  background: var(--cor-secundaria);
-  color: var(--cor-primaria);
-  border-radius: 999px;
-  font-size: var(--fs-pequeno);
+  font-size: 14px;
   font-weight: 600;
 }
 
-.icone-btn {
-  display: grid;
-  place-items: center;
-  padding: var(--sp-2);
-  background: var(--cor-card);
-  border: 1px solid var(--cor-secundaria);
-  border-radius: var(--raio-card);
-  color: var(--cor-primaria);
-  transition: background 0.15s;
+.ajuda-texto small {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: #9fb0d0;
 }
 
-.icone-btn:hover {
-  background: var(--cor-secundaria);
-}
-
-/* ===== Grade de cards: 3 colunas x 2 linhas que preenchem a tela ===== */
-.grade {
-  flex: 1;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-  gap: var(--gap-grade);
-}
-
-.card-remedio,
-.card-timeline {
-  grid-column: span 2;
-}
-
-/* Componente Card */
-.card {
-  min-height: 0;
-  overflow: hidden;
-  background: var(--cor-card);
-  border: 1px solid var(--cor-secundaria);
-  border-radius: var(--raio-card);
-  box-shadow: 0 2px 8px rgba(64, 99, 153, 0.08);
-}
-
-/* ===== Próximo medicamento (card de destaque) =====
-   Segue o componente Card do Design System: área Secondary em cima, corpo branco embaixo */
-.card-remedio {
-  display: flex;
-  flex-direction: column;
-}
-
-.remedio-topo {
-  flex: 1;
-  min-height: 0;
+/* ===== Barra superior ===== */
+.topbar {
+  height: 75px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: var(--sp-4);
-  padding: var(--pad-card);
-  background: var(--cor-secundaria);
+  justify-content: flex-end;
+  padding: 0 32px;
+  background: var(--card);
+  border-bottom: 1px solid var(--borda);
+}
+
+.data-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 40px;
+  margin-right: 20px;
+  padding-right: 26px;
+  border-right: 1px solid var(--borda);
+  font-size: 14.3px;
+}
+
+.perfil {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 6px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.perfil svg {
+  color: var(--suave);
+  margin-left: 6px;
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--azul-suave);
+  color: var(--azul);
+  font-size: 20px;
+  font-weight: 500;
+}
+
+/* ===== Conteúdo: coluna principal + coluna lateral ===== */
+.conteudo {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  grid-template-rows: minmax(650px, 1fr);
+  gap: 32px;
+  padding: 28px 32px 32px 44px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--azul-linha) transparent;
+}
+
+.col-esq {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.col-dir {
+  align-self: start;
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.saudacao {
+  margin-bottom: 0;
+}
+
+.saudacao h1 {
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.saudacao p {
+  margin-top: 8px;
+  font-size: 21px;
+  color: var(--suave);
+}
+
+h2 {
+  font-size: 22.5px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  box-shadow: var(--sombra);
+  animation: entra 0.25s ease-out both;
+}
+
+@keyframes entra {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* ===== Próximo medicamento ===== */
+.card-remedio {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  min-height: 167px;
+  padding: 26px 24px 26px 27px;
+  background: var(--azul-claro);
+  border-radius: 10px;
+  animation: entra 0.25s ease-out both;
 }
 
 .pilula-chip {
-  width: var(--pill);
-  height: var(--pill);
+  width: 90px;
+  height: 90px;
   flex-shrink: 0;
   display: grid;
   place-items: center;
-  background: var(--cor-card);
   border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(64, 99, 153, 0.2);
-}
-
-.pilula-chip svg {
-  width: 62%;
-  height: 62%;
+  background: #fff;
 }
 
 .remedio-texto {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-1);
+  min-width: 0;
 }
 
 .remedio-texto small {
-  font-size: var(--fs-pequeno);
+  display: block;
+  font-size: 14px;
   font-weight: 600;
-  color: var(--cor-primaria);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--azul-texto);
 }
 
 .remedio-texto strong {
-  font-family: var(--fonte-titulo);
-  font-size: var(--fs-h1);
-  font-weight: 600;
-  line-height: 1.15;
-}
-
-.remedio-texto span {
-  font-size: var(--fs-corpo);
-  font-weight: 500;
-  color: var(--cor-primaria);
-}
-
-.botoes {
-  display: flex;
-  gap: var(--sp-3);
-  padding: var(--pad-card);
-  background: var(--cor-card);
-}
-
-/* Componente Botão: "Tomei" é Primary; os demais ficam vazados (borda Secondary) */
-.btn {
-  flex: 1;
-  height: var(--btn-h);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--sp-2);
-  border-radius: var(--raio-botao);
-  background: var(--cor-card);
-  border: 2px solid var(--cor-secundaria);
-  color: var(--cor-texto);
-  font-size: var(--fs-pequeno);
-  font-weight: 600;
-  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
-}
-
-.btn:hover {
-  background: var(--cor-fundo);
-}
-
-.btn:active {
-  transform: translateY(1px);
-}
-
-.btn-primario {
-  background: var(--cor-primaria);
-  border-color: var(--cor-primaria);
-  color: #fff;
-  box-shadow: 0 6px 16px rgba(64, 99, 153, 0.35);
-}
-
-.btn-primario:hover {
-  background: #36558a;
-}
-
-/* ===== Cuidados de hoje ===== */
-.card-cuidados {
-  padding: var(--pad-card);
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-3);
-}
-
-.cuidados-topo {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--sp-3);
-}
-
-.cuidados-texto p {
-  margin-top: var(--sp-1);
-  font-size: var(--fs-pequeno);
-  font-weight: 600;
-  color: var(--cor-primaria);
-}
-
-/* anel de progresso (60% = 3 de 5) */
-.anel {
-  width: var(--ring);
-  height: var(--ring);
-  flex-shrink: 0;
-  position: relative;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: conic-gradient(var(--cor-primaria) 0 60%, var(--cor-secundaria) 0);
-}
-
-.anel::before {
-  content: "";
-  position: absolute;
-  inset: calc(var(--ring) * 0.13);
-  border-radius: 50%;
-  background: var(--cor-card);
-}
-
-.anel span {
-  position: relative;
-  font-size: calc(var(--ring) * 0.24);
-  font-weight: 700;
-  color: var(--cor-primaria);
-}
-
-/* 2x2 que ocupa o espaço que sobrar no card */
-.resumo {
-  flex: 1;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-  gap: var(--sp-2);
-}
-
-.resumo-item {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-rows: auto auto;
-  align-content: center;
-  align-items: center;
-  column-gap: var(--sp-3);
-  padding: var(--sp-2) var(--sp-3);
-  background: var(--cor-fundo);
-  border-radius: var(--raio-card);
-  font-size: var(--fs-pequeno);
-}
-
-/* ícone dentro de um círculo branco */
-.resumo-item svg {
-  grid-row: 1 / span 2;
-  width: 40px;
-  height: 40px;
-  padding: 9px;
-  border-radius: 50%;
-  background: var(--cor-card);
-  color: var(--cor-primaria);
-}
-
-.resumo-item .rotulo {
-  color: var(--cor-texto-suave);
-}
-
-.resumo-item .valor {
-  font-size: var(--fs-corpo);
+  display: block;
+  margin: 4px 0 8px;
+  font-size: 29px;
   font-weight: 700;
   line-height: 1.2;
 }
 
-/* ===== Linha do tempo ===== */
-.card-timeline {
+.med-quando {
   display: flex;
-  gap: var(--sp-4);
-  padding: var(--pad-card);
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--azul);
 }
 
-.timeline-col {
-  flex: 1;
-  min-width: 0;
-  min-height: 0;
+.acao-remedio {
   display: flex;
   flex-direction: column;
-}
-
-.timeline-col h2 {
-  margin-bottom: var(--h2-mb);
+  align-items: center;
+  gap: 8px;
   flex-shrink: 0;
 }
 
-/* a lista rola por dentro do card quando tiver muitas anotações (a página continua fixa) */
+.btn-tomei {
+  height: 57px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 34px;
+  border-radius: 999px;
+  background: var(--azul);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(29, 99, 220, 0.28);
+  transition: background 0.15s, transform 0.1s;
+}
+
+.btn-tomei:hover {
+  background: var(--azul-hover);
+}
+
+.btn-tomei:active {
+  transform: translateY(1px);
+}
+
+.acao-sec {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-link {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--azul-texto);
+  transition: background 0.15s;
+}
+
+.btn-link:hover {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.btn-tomei:disabled,
+.btn-link:disabled {
+  opacity: 0.5;
+  cursor: default;
+  box-shadow: none;
+}
+
+.btn-tomei:disabled:hover {
+  background: var(--azul);
+}
+
+.btn-link:disabled:hover {
+  background: none;
+}
+
+/* ===== Linha do tempo ===== */
+.card-timeline {
+  flex: 1;
+  min-height: 340px;
+  display: flex;
+  flex-direction: column;
+  padding: 22px 26px 14px;
+}
+
+.timeline-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.nova-nota {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1.5px solid var(--azul-linha);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--azul);
+  transition: background 0.15s;
+}
+
+.nova-nota:hover {
+  background: var(--azul-suave);
+}
+
 .timeline {
   list-style: none;
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: var(--cor-secundaria) transparent;
+  scrollbar-color: var(--azul-linha) transparent;
 }
 
-/* trecho de linha que liga cada item ao próximo: Primary depois de um item feito, Secondary no resto */
+.timeline li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 68px;
+  padding: 0 12px 0 10px;
+  border-radius: 8px;
+}
+
+/* trecho de linha que liga cada item ao próximo */
 .timeline li::before {
   content: "";
   position: absolute;
-  z-index: 1;
-  left: 17px;
+  left: 18px;
   top: 50%;
   width: 2px;
   height: 100%;
-  background: var(--cor-secundaria);
+  background: var(--azul-linha);
 }
 
 .timeline li:last-child::before {
@@ -566,91 +463,133 @@ h2 {
 }
 
 .timeline li.feito::before {
-  background: var(--cor-primaria);
-}
-
-.timeline li {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: var(--sp-3);
-  height: var(--li-h);
-  padding: 0 var(--sp-3) 0 var(--sp-2);
-  border-radius: var(--raio-card);
-  font-size: var(--fs-corpo);
+  background: var(--azul);
 }
 
 .ponto {
   position: relative;
   z-index: 1;
-  width: 20px;
-  height: 20px;
   flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  margin: 0 2px;
+  padding: 0;
   border-radius: 50%;
-  background: var(--cor-card);
-  border: 2px solid var(--cor-secundaria);
+  background: var(--azul-claro);
+  transition: background 0.2s;
+}
+
+button.ponto:hover {
+  background: #b5cff7;
+}
+
+.hora-item {
+  flex-shrink: 0;
+  width: 95px;
+  margin-left: 27px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.desc {
+  flex: 1;
+  min-width: 0;
+  font-size: 15.5px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.desc em {
+  display: block;
+  font-style: normal;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--suave);
+}
+
+/* próximo item: linha destacada, bolinha cheia e etiqueta */
+.proximo {
+  background: #f3f6fb;
+}
+
+.proximo .ponto {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  background: var(--azul);
+}
+
+.proximo::after {
+  content: "Próximo";
+  margin-left: 12px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: var(--azul-suave);
+  color: var(--azul);
+  font-size: 14px;
+  font-weight: 500;
 }
 
 /* feito: bolinha cheia com check */
 .feito .ponto {
-  background: var(--cor-primaria);
-  border-color: var(--cor-primaria);
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  background: var(--azul);
 }
 
 .feito .ponto::after {
   content: "";
   position: absolute;
-  left: 5px;
-  top: 1px;
+  left: 6px;
+  top: 2.5px;
   width: 5px;
   height: 9px;
   border: solid #fff;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
+  animation: marca 0.18s ease-out;
 }
 
-/* próximo: linha destacada e bolinha com halo */
-.proximo {
-  background: var(--cor-fundo);
+@keyframes marca {
+  from {
+    transform: rotate(45deg) scale(0.4);
+    opacity: 0;
+  }
 }
 
-.proximo .ponto {
-  border-color: var(--cor-primaria);
-  box-shadow: 0 0 0 4px var(--cor-secundaria);
+/* recusado: bolinha com um traço */
+.recusado .ponto {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  background: var(--azul-claro);
+  box-shadow: inset 0 0 0 2px var(--azul);
 }
 
-.hora-item {
-  width: 4.2em;
-  flex-shrink: 0;
-  font-weight: 600;
+.recusado .ponto::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+  background: var(--azul);
 }
 
-.desc em {
-  font-style: normal;
-  color: var(--cor-texto-suave);
-  font-size: var(--fs-pequeno);
+.recusado .desc {
+  color: var(--suave);
 }
 
-.tag {
-  margin-left: auto;
-  padding: var(--sp-1) var(--sp-2);
-  background: var(--cor-primaria);
-  color: #fff;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-/* anotações adicionadas pelo usuário: bolinha quadrada para diferenciar dos eventos */
+/* anotações adicionadas pelo usuário: bolinha quadrada */
 .nota .ponto {
-  border-radius: 6px;
-  background: var(--cor-secundaria);
-  border-color: var(--cor-primaria);
+  border-radius: 4px;
+  background: var(--azul-suave);
+  box-shadow: inset 0 0 0 2px var(--azul);
 }
 
 .nota .desc {
-  flex: 1;
-  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -663,7 +602,7 @@ h2 {
   border-radius: 50%;
   font-size: 20px;
   line-height: 1;
-  color: var(--cor-texto-suave);
+  color: var(--suave);
   opacity: 0;
   transition: opacity 0.15s, background 0.15s;
 }
@@ -674,124 +613,131 @@ h2 {
 }
 
 .nota-remover:hover {
-  background: var(--cor-secundaria);
-  color: var(--cor-primaria);
+  background: var(--azul-suave);
+  color: var(--azul);
 }
 
-/* ===== Ações (Adicionar anotação + SOS) ===== */
-.acoes {
-  width: 176px;
-  background: var(--cor-secundaria);
-  border-radius: var(--raio-card);
+/* ===== Cuidados de hoje ===== */
+.card-cuidados {
+  padding: 26px;
+}
+
+.cuidados-topo {
   display: flex;
-  flex-direction: column;
-  gap: var(--sp-2);
-  padding: var(--sp-3);
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.cuidados-topo h2 {
+  font-size: 24.5px;
+}
+
+.cuidados-topo p {
+  margin-top: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--azul);
+}
+
+/* anel de progresso (o valor vem de --pct, definido pelo JS) */
+.anel {
+  position: relative;
+  width: 80px;
+  height: 80px;
   flex-shrink: 0;
-}
-
-.nova-nota {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--sp-2);
-  padding: var(--sp-2) var(--sp-3);
-  background: var(--cor-card);
-  border-radius: var(--raio-botao);
-  font-size: var(--fs-pequeno);
-  font-weight: 600;
-  text-align: left;
-  line-height: 1.25;
-  color: var(--cor-primaria);
-  transition: transform 0.1s, box-shadow 0.15s;
-}
-
-.nova-nota:hover {
-  box-shadow: 0 4px 12px rgba(64, 99, 153, 0.25);
-}
-
-.sos-area {
-  flex: 1;
   display: grid;
   place-items: center;
-}
-
-.sos {
-  position: relative;
-  width: var(--sos);
-  height: var(--sos);
+  margin-top: -6px;
   border-radius: 50%;
-  background: var(--cor-destaque);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--sp-1);
-  font-size: var(--fs-corpo);
-  font-weight: 700;
-  box-shadow: 0 6px 16px rgba(64, 99, 153, 0.45);
-  transition: filter 0.15s, transform 0.1s;
+  background: conic-gradient(var(--azul) 0 var(--pct, 0%), var(--azul-suave) 0);
 }
 
-/* anel que pulsa devagar para chamar atenção */
-.sos::before {
+.anel::before {
   content: "";
   position: absolute;
-  inset: -6px;
+  inset: 9px;
   border-radius: 50%;
-  border: 2px solid var(--cor-destaque);
-  animation: pulso 2.4s ease-out infinite;
+  background: var(--card);
 }
 
-@keyframes pulso {
-  0% {
-    transform: scale(0.95);
-    opacity: 0.7;
-  }
-  100% {
-    transform: scale(1.25);
-    opacity: 0;
-  }
+.anel span {
+  position: relative;
+  font-size: 16px;
+  font-weight: 700;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .sos::before {
-    animation: none;
-    opacity: 0.3;
-  }
+.resumo {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px 21px;
+  margin-top: 22px;
 }
 
-.sos:hover {
-  filter: brightness(1.1);
+.resumo-item {
+  height: 92px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 16px;
+  border-radius: 8px;
+  background: var(--tile);
 }
 
-.sos:active {
-  transform: scale(0.97);
+.resumo-item .icone {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--azul);
+}
+
+.resumo-item .icone svg {
+  width: 28px;
+  height: 28px;
+}
+
+.resumo-item .rotulo {
+  display: block;
+  font-size: 15.5px;
+}
+
+.resumo-item .valor {
+  display: block;
+  margin-top: 2px;
+  font-size: 19px;
+  font-weight: 700;
 }
 
 /* ===== Humor ===== */
 .card-humor {
-  padding: var(--pad-card);
-  display: flex;
-  flex-direction: column;
+  padding: 26px 26px 40px;
 }
 
-.card-humor h2 {
-  margin-bottom: var(--h2-mb);
+.humor-topo {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.humor-status {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--azul);
 }
 
 .rostos {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: var(--sp-1);
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin: 44px -10px 0;
 }
 
 .humor-op {
   position: relative;
-  flex: 1;
-  min-width: 0;
   display: flex;
   justify-content: center;
   cursor: pointer;
@@ -805,86 +751,115 @@ h2 {
 }
 
 .rosto {
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--sp-1);
-  padding: var(--sp-2) var(--sp-1);
-  border-radius: var(--raio-card);
-  transition: background 0.15s, transform 0.15s;
+  gap: 12px;
+  font-size: 18px;
 }
 
 .rosto svg {
   display: block;
-  width: 100%;
-  max-width: var(--face);
-  height: auto;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  transition: transform 0.15s;
 }
 
-.rosto small {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--cor-texto-suave);
+.rosto .fundo {
+  fill: var(--azul-suave);
+  transition: fill 0.15s;
 }
 
-.humor-op:hover .rosto {
-  background: var(--cor-fundo);
+.humor-op:hover .rosto svg {
   transform: translateY(-2px);
 }
 
-/* selecionado: fundo Secondary e legenda em Primary */
-.humor-op input:checked + .rosto {
-  background: var(--cor-secundaria);
+.humor-op input:checked + .rosto .fundo {
+  fill: #b9d1f7;
 }
 
 .humor-op input:checked + .rosto small {
-  color: var(--cor-primaria);
   font-weight: 700;
+  color: var(--azul);
 }
 
-.humor-op input:focus-visible + .rosto {
-  outline: 2px solid var(--cor-primaria);
+.humor-op input:focus-visible + .rosto svg {
+  outline: 2px solid var(--azul);
   outline-offset: 2px;
 }
 
-/* ===== Janela de nova anotação ===== */
+/* ===== Botões das janelas ===== */
+.btn {
+  flex: 1;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--azul-linha);
+  border-radius: 10px;
+  background: var(--card);
+  font-size: 16px;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+
+.btn:hover {
+  background: var(--fundo);
+}
+
+.btn-primario {
+  background: var(--azul);
+  border-color: var(--azul);
+  color: #fff;
+}
+
+.btn-primario:hover {
+  background: var(--azul-hover);
+}
+
+/* ===== Janelas (anotação e ajuda) ===== */
 .dialogo {
   margin: auto;
   width: min(440px, 92vw);
-  padding: var(--sp-5);
-  background: var(--cor-card);
-  border: 1px solid var(--cor-secundaria);
-  border-radius: var(--raio-card);
-  box-shadow: 0 24px 64px rgba(5, 3, 21, 0.3);
-  color: var(--cor-texto);
-  font-family: var(--fonte-texto);
+  padding: 32px;
+  background: var(--card);
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  box-shadow: 0 24px 64px rgba(12, 27, 60, 0.3);
+  color: var(--texto);
+  font-family: var(--fonte);
 }
 
 .dialogo::backdrop {
-  background: rgba(5, 3, 21, 0.4);
+  background: rgba(12, 27, 60, 0.45);
 }
 
 .dialogo h2 {
-  margin-bottom: var(--sp-4);
+  margin-bottom: 20px;
+}
+
+.dialogo p {
+  font-size: 18px;
+  color: var(--suave);
 }
 
 .campo {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-1);
-  margin-bottom: var(--sp-3);
-  font-size: var(--fs-pequeno);
+  gap: 4px;
+  margin-bottom: 16px;
+  font-size: 15px;
   font-weight: 600;
 }
 
 .campo input,
 .campo textarea {
-  padding: var(--sp-2) var(--sp-3);
-  background: var(--cor-card);
-  border: 2px solid var(--cor-secundaria);
-  border-radius: var(--raio-botao);
-  color: var(--cor-texto);
+  padding: 8px 14px;
+  border: 2px solid var(--azul-linha);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--texto);
   font: inherit;
   font-weight: 400;
   resize: none;
@@ -893,79 +868,199 @@ h2 {
 .campo input:focus,
 .campo textarea:focus {
   outline: none;
-  border-color: var(--cor-primaria);
+  border-color: var(--azul);
 }
 
 .dialogo-botoes {
   display: flex;
-  gap: var(--sp-3);
-  margin-top: var(--sp-4);
+  gap: 16px;
+  margin-top: 24px;
 }
 
-/* ===== Telas estreitas (tablet / celular): aqui a página volta a rolar ===== */
-@media (max-width: 900px) {
-  html,
-  body {
-    height: auto;
-    overflow: auto;
-  }
+/* ===== Aviso rápido ===== */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 32px;
+  z-index: 20;
+  max-width: 90vw;
+  padding: 10px 24px;
+  border-radius: 8px;
+  background: var(--texto);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  box-shadow: 0 4px 16px rgba(12, 27, 60, 0.25);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 8px);
+  transition: opacity 0.2s, transform 0.2s;
+}
 
-  .layout {
-    height: auto;
-    min-height: 100vh;
-    overflow: visible;
-  }
+.toast.visivel {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
 
-  .principal {
-    height: auto;
-    padding: var(--sp-4) var(--sp-3) 140px;
-  }
-
-  .grade {
-    grid-template-columns: 1fr;
+/* ===== Telas médias: uma coluna só ===== */
+@media (max-width: 1100px) {
+  .conteudo {
+    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: none;
+    padding: 24px 24px 32px;
   }
 
-  .card-remedio,
+  .col-dir {
+    align-self: auto;
+    margin-top: 0;
+  }
+
   .card-timeline {
-    grid-column: auto;
-  }
-
-  .remedio-topo {
     flex: none;
   }
 
-  .resumo {
-    grid-template-rows: none;
+  .timeline {
+    overflow: visible;
+  }
+}
+
+/* ===== Telas estreitas: barra lateral vira barra inferior ===== */
+@media (max-width: 900px) {
+  body {
+    overflow: auto;
   }
 
-  .card-timeline {
-    flex-direction: column;
+  .app {
+    height: auto;
+    min-height: 100vh;
   }
 
-  .acoes {
-    width: 100%;
+  .sidebar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    width: auto;
     flex-direction: row;
     align-items: center;
+    padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+    box-shadow: 0 -4px 16px rgba(12, 27, 60, 0.2);
   }
 
-  .data-hoje {
+  .marca,
+  .ajuda-texto {
     display: none;
   }
 
   .menu {
-    left: var(--sp-3);
-    right: var(--sp-3);
-    padding: var(--sp-2);
+    flex: 1;
   }
 
-  .menu-item span {
-    display: none;
+  .menu ul {
+    flex-direction: row;
+    gap: 2px;
+  }
+
+  .menu li {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .menu-item {
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    height: auto;
+    padding: 8px 2px;
+    font-size: 11px;
   }
 
   .menu-item svg {
-    width: 56px;
-    height: 32px;
-    padding: 5px 16px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .ajuda {
+    margin: 0 0 0 4px;
+    padding: 0 10px;
+  }
+
+  .topbar {
+    padding: 0 16px;
+  }
+
+  .data-wrap {
+    margin-right: 12px;
+    padding-right: 12px;
+    font-size: 13px;
+  }
+
+  .perfil-nome {
+    display: none;
+  }
+
+  .conteudo {
+    overflow: visible;
+    padding: 20px 16px 110px;
+  }
+
+  .saudacao h1 {
+    font-size: 30px;
+  }
+
+  .saudacao p {
+    font-size: 17px;
+  }
+
+  .card-remedio {
+    flex-wrap: wrap;
+    gap: 16px 20px;
+    padding: 20px;
+  }
+
+  .pilula-chip {
+    width: 72px;
+    height: 72px;
+  }
+
+  .remedio-texto strong {
+    font-size: 24px;
+  }
+
+  .acao-remedio {
+    width: 100%;
+  }
+
+  .btn-tomei {
+    width: 100%;
+  }
+
+  .timeline li {
+    padding-right: 4px;
+  }
+
+  .hora-item {
+    width: 62px;
+    margin-left: 16px;
+    font-size: 16px;
+  }
+
+  .proximo::after {
+    display: none;
+  }
+
+  .toast {
+    bottom: 96px;
+  }
+}
+
+/* quem prefere menos movimento não vê animações nem transições */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
   }
 }
