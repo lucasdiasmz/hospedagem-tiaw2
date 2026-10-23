@@ -837,7 +837,7 @@ button.ponto:hover {
   color: var(--azul);
 }
 
-/* anel de progresso (o valor vem de --pct, definido pelo JS) */
+/* anel de progresso (o valor vem de --pct, definido pelo componente CardCuidados) */
 .anel {
   position: relative;
   width: 72px;
