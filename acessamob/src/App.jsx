@@ -4,6 +4,7 @@ import idosoImg from './assets/imgs/1761366.png';
 import familiarImg from './assets/imgs/11126155.png';
 import cuidadorImg from './assets/imgs/images.jpg';
 import PerfilAcessibilidade from './telas/PerfilAcessibilidade';
+import CuidadorProfissional from './telas/CuidadorProfissional';
 
 const perfis = [
   {
@@ -28,7 +29,7 @@ const perfis = [
     descricao: 'Oferecer meus serviços e fazer a diferença',
     imagem: cuidadorImg,
     alt: 'Ícone de cuidador ou profissional',
-    proximaTela: null, // ainda sem tela
+    proximaTela: 'cuidador',
   },
 ];
 
@@ -65,6 +66,15 @@ function App() {
       <PerfilAcessibilidade
         onVoltar={() => setTela('perfil')}
         onProximo={(dados) => console.log(perfilEscolhido, dados)}
+      />
+    );
+  }
+
+  if (tela === 'cuidador') {
+    return (
+      <CuidadorProfissional
+        onVoltar={() => setTela('perfil')}
+        onFinalizar={(dados) => console.log(perfilEscolhido, dados)}
       />
     );
   }

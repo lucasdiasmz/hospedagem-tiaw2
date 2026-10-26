@@ -261,3 +261,131 @@ body.alto-contraste {
     --color-primary: #1f3a6b;
     --color-secondary: #8aa0c8;
 }
+/* ===== Tela de cuidador / profissional ===== */
+.tela-cuidador {
+    max-width: 420px;
+    margin: 0 auto;
+    text-align: left;
+    font-size: 16px;
+}
+
+.tela-cuidador h1 {
+    font-size: 32px;
+    margin: 0 0 var(--space-2);
+}
+
+.tela-cuidador .subtitulo {
+    margin: 0 0 var(--space-5);
+}
+
+/* Select */
+.campo-select {
+    width: 100%;
+    padding: var(--space-3);
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--color-text);
+    background-color: var(--color-white);
+    border: 2px solid var(--color-secondary);
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.campo-select:focus-visible,
+.campo-texto:focus-visible,
+.campo-disponibilidade:focus-visible,
+.checkbox:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Serviços (checkboxes) */
+.lista-servicos {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.servico {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    position: relative;
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    margin: 0;
+    background-color: var(--color-white);
+    border: 2px solid var(--color-primary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.checkbox:checked {
+    background-color: var(--color-primary);
+}
+
+.checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 6px;
+    height: 12px;
+    border: solid var(--color-white);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Disponibilidade */
+.campo-disponibilidade {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--space-3);
+    background-color: var(--color-white);
+    color: var(--color-text);
+    border: 2px solid var(--color-secondary);
+    border-radius: 12px;
+    font-size: 16px;
+    text-align: left;
+}
+
+.campo-disponibilidade:hover {
+    opacity: 1;
+    border-color: var(--color-accent);
+}
+
+.seta {
+    font-size: 24px;
+    line-height: 1;
+    color: var(--color-primary);
+}
+
+.campo-texto {
+    width: 100%;
+    margin-top: var(--space-3);
+    padding: var(--space-3);
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--color-text);
+    background-color: var(--color-white);
+    border: 2px solid var(--color-secondary);
+    border-radius: 12px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+/* Fonte maior também vale para esta tela */
+body.fonte-maior .tela-cuidador {
+    font-size: 20px;
+}
