@@ -145,10 +145,25 @@ export function IconeSol() {
   );
 }
 
+/* sol nascendo no horizonte (manhã) */
+export function IconeSolNascente() {
+  return (
+    <svg width="50" height="50" viewBox="0 0 48 48">
+      <path d="M13.5 34a10.5 10.5 0 0 1 21 0z" fill="#fbbf24" />
+      <g stroke="#f5a524" strokeWidth="3.2" strokeLinecap="round">
+        <path d="M24 10v6M7.8 19.8l4.2 4.2M40.2 19.8 36 24M4 34h4M40 34h4M6 41h36" />
+      </g>
+    </svg>
+  );
+}
+
+/* lua com estrelas (noite) */
 export function IconeLua() {
   return (
-    <svg width="46" height="46" viewBox="0 0 48 48">
-      <path d="M31 6a18 18 0 1 0 11 29A15 15 0 0 1 31 6z" fill="#a9c4f2" />
+    <svg width="50" height="50" viewBox="0 0 48 48">
+      <path d="M28 8a17 17 0 1 0 12 27A14 14 0 0 1 28 8z" fill="#a9c4f2" />
+      <path d="M38 6l1.3 3.2L42.5 10.5l-3.2 1.3L38 15l-1.3-3.2-3.2-1.3 3.2-1.3z" fill="#fbbf24" />
+      <circle cx="43" cy="20" r="1.8" fill="#fbbf24" />
     </svg>
   );
 }

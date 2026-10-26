@@ -504,8 +504,41 @@ h2 {
   letter-spacing: -0.02em;
 }
 
-.contador.palavra .contador-valor {
-  font-size: 22px;
+/* na hora (sino) ou atrasado (despertador): ícone animado no lugar do número */
+.contador-icone {
+  display: grid;
+  place-items: center;
+}
+
+.contador.agora .contador-icone svg {
+  transform-origin: 50% 10%;
+  animation: balanca 1.6s ease-in-out infinite;
+}
+
+.contador.atrasado {
+  color: #c2410c;
+}
+
+.contador.atrasado .contador-icone svg {
+  animation: treme 1.4s ease-in-out infinite;
+}
+
+.contador.atrasado .contador-base {
+  margin-top: 4px;
+}
+
+@keyframes balanca {
+  0%, 50%, 100% { transform: rotate(0); }
+  10% { transform: rotate(14deg); }
+  20% { transform: rotate(-12deg); }
+  30% { transform: rotate(8deg); }
+  40% { transform: rotate(-4deg); }
+}
+
+@keyframes treme {
+  0%, 40%, 100% { transform: rotate(0) scale(1); }
+  5%, 15%, 25% { transform: rotate(-10deg) scale(1.06); }
+  10%, 20%, 30% { transform: rotate(10deg) scale(1.06); }
 }
 
 .contador-base {
@@ -1175,8 +1208,13 @@ h2 {
     font-size: 30px;
   }
 
-  .contador.palavra .contador-valor {
-    font-size: 17px;
+  .contador-icone svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .contador-base {
+    font-size: 13px;
   }
 
   .compromisso-texto strong {
