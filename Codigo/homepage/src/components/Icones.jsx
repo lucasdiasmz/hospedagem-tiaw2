@@ -153,15 +153,6 @@ export function IconeLua() {
   );
 }
 
-export function IconeRelogio() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="12" cy="12" r="11" fill="currentColor" />
-      <path d="M12 6.5V12l3.5 2.2" fill="none" stroke="#d3e3fc" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
 export function IconeCheck() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" strokeWidth="3" {...traco}>
@@ -195,50 +186,3 @@ export const ICONES_RESUMO = {
     </svg>
   ),
 };
-
-/* rostos do card de humor (só o desenho interno muda entre eles) */
-const ROSTOS = {
-  feliz: (
-    <>
-      <circle cx="26" cy="28" r="1.8" fill="#1f5fcf" stroke="none" /><circle cx="38" cy="28" r="1.8" fill="#1f5fcf" stroke="none" />
-      <path d="M24.5 36c3.5 5.5 12.5 5.5 15 0" />
-    </>
-  ),
-  irritada: (
-    <>
-      <path d="M22 23l7 4M42 23l-7 4" />
-      <circle cx="26" cy="31" r="1.8" fill="#1f5fcf" stroke="none" /><circle cx="38" cy="31" r="1.8" fill="#1f5fcf" stroke="none" />
-      <path d="M25 42c3-4.5 11-4.5 14 0" />
-    </>
-  ),
-  bem: (
-    <>
-      <circle cx="26" cy="28" r="1.8" fill="#1f5fcf" stroke="none" /><circle cx="38" cy="28" r="1.8" fill="#1f5fcf" stroke="none" />
-      <path d="M26 37c3 3 9 3 12 0" />
-    </>
-  ),
-  animada: (
-    <>
-      <path d="M22.5 29q3.5-5 7 0M34.5 29q3.5-5 7 0" />
-      <path d="M23.5 35c2 9 15 9 17 0z" fill="#1f5fcf" />
-    </>
-  ),
-  triste: (
-    <>
-      <circle cx="26" cy="28" r="1.8" fill="#1f5fcf" stroke="none" /><circle cx="38" cy="28" r="1.8" fill="#1f5fcf" stroke="none" />
-      <path d="M25 41c3-4.5 11-4.5 14 0" />
-    </>
-  ),
-};
-
-export function Rosto({ tipo }) {
-  return (
-    <svg viewBox="0 0 64 64" aria-hidden="true">
-      <circle className="fundo" cx="32" cy="32" r="32" />
-      <g fill="none" stroke="#1f5fcf" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="32" cy="32" r="19" />
-        {ROSTOS[tipo]}
-      </g>
-    </svg>
-  );
-}
