@@ -86,35 +86,11 @@ export function SetaDireita() {
   );
 }
 
-export function SetaBaixo() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" strokeWidth="2" {...traco}>
-      <path d="M6 9l6 6 6-6" />
-    </svg>
-  );
-}
-
 export function Ondas() {
   return (
     <svg className="ondas" viewBox="0 0 313 150" preserveAspectRatio="none" aria-hidden="true">
       <path d="M0 70C50 20 110 10 170 40s100 30 143-10v120H0z" fill="rgba(70,130,255,.12)" />
       <path d="M0 100C60 60 120 70 190 90s90 0 123-20v80H0z" fill="rgba(70,130,255,.1)" />
-    </svg>
-  );
-}
-
-export function IconeBusca() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" strokeWidth="2" {...traco}>
-      <circle cx="11" cy="11" r="6.5" /><path d="M16 16l4.5 4.5" />
-    </svg>
-  );
-}
-
-export function IconeSino() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="1.8" {...traco}>
-      <path d="M6 17h12l-1.5-2v-4.5a4.5 4.5 0 0 0-9 0V15z" /><path d="M10 20a2 2 0 0 0 4 0" />
     </svg>
   );
 }

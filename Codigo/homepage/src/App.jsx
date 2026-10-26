@@ -7,7 +7,6 @@ import DialogoNota from './components/DialogoNota.jsx';
 import Saudacao from './components/Saudacao.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import Toast from './components/Toast.jsx';
-import Topbar from './components/Topbar.jsx';
 import { useCuidadosDoDia } from './hooks/useCuidadosDoDia.js';
 import { duracaoPorExtenso, minutosAte, somarMinutos } from './utils/hora.js';
 
@@ -25,7 +24,6 @@ export default function App() {
   const cuidados = useCuidadosDoDia();
   const { medAtual, proximo } = cuidados;
 
-  const [busca, setBusca] = useState('');
   const [notaAberta, setNotaAberta] = useState(false);
   const [sosAberto, setSosAberto] = useState(false);
   const [novaNotaId, setNovaNotaId] = useState(null);
@@ -87,7 +85,6 @@ export default function App() {
         />
 
         <div className="coluna">
-          <Topbar busca={busca} aoBuscar={setBusca} aoAbrirAjuda={() => setSosAberto(true)} />
 
           <main className="conteudo">
             <Saudacao subtitulo={subtitulo} />
@@ -107,7 +104,6 @@ export default function App() {
             <AindaHoje
               secaoRef={aindaHojeRef}
               entradas={restantes}
-              busca={busca}
               novaNotaId={novaNotaId}
               aoConcluir={(id) => concluir(restantes.find((e) => e.id === id))}
               aoRemoverNota={cuidados.removerNota}
