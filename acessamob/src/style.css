@@ -1,9 +1,9 @@
+/* ===== Design System ===== */
 :root {
     --color-text: #050315;
     --color-background: #DDE5E9;
     --color-primary: #406399;
     --color-secondary: #CAD6EF;
-    --color-accent: #406399;
     --color-white: #ffffff;
 
     --space-1: 4px;
@@ -17,14 +17,15 @@
     --font-body: 'Inter', sans-serif;
 }
 
+/* ===== Base ===== */
 body {
     margin: 0;
+    padding: var(--space-5);
     font-family: var(--font-body);
     font-size: 24px;
     color: var(--color-text);
     background-color: var(--color-background);
     text-align: center;
-    padding: var(--space-5);
 }
 
 h1,
@@ -35,26 +36,18 @@ h2 {
 }
 
 h3 {
-    font-family: var(--font-body);
     font-size: 27px;
     font-weight: 600;
-    color: var(--color-text);
 }
 
-/* Botão base (sem width fixa, para não afetar outros botões) */
 button {
     font-family: var(--font-body);
-    background-color: var(--color-primary);
     color: var(--color-white);
+    background-color: var(--color-primary);
     border: none;
     border-radius: 12px;
     padding: var(--space-3);
     cursor: pointer;
-    transition: opacity 0.2s ease;
-}
-
-button:hover {
-    opacity: 0.9;
 }
 
 /* ===== Tela inicial ===== */
@@ -67,17 +60,16 @@ button:hover {
 }
 
 .card {
+    width: 250px;
+    padding: var(--space-4);
     background-color: var(--color-white);
     border: 2px solid var(--color-secondary);
     border-radius: 12px;
-    padding: var(--space-4);
-    width: 250px;
     cursor: pointer;
-    transition: border-color 0.2s ease;
 }
 
 .card:hover {
-    border-color: var(--color-accent);
+    border-color: var(--color-primary);
 }
 
 .card img {
@@ -85,75 +77,70 @@ button:hover {
     height: 60px;
 }
 
-/* ===== Tela de perfil de acessibilidade ===== */
-.tela-acessibilidade {
+/* ===== Telas de formulário (acessibilidade e cuidador) ===== */
+.tela-acessibilidade,
+.tela-cuidador {
     max-width: 420px;
     margin: 0 auto;
+    font-size: 16px;
     text-align: left;
-    font-size: 16px;
 }
 
-.tela-acessibilidade h1 {
+.tela-acessibilidade h1,
+.tela-cuidador h1 {
     font-size: 32px;
-    margin: 0 0 var(--space-2);
-}
-
-.subtitulo {
-    margin: 0 0 var(--space-5);
-    font-size: 16px;
 }
 
 .secao-titulo {
     font-size: 20px;
-    margin: var(--space-5) 0 var(--space-3);
-    color: var(--color-text);
+    margin-top: var(--space-5);
 }
 
 .btn-voltar {
-    background: none;
-    color: var(--color-primary);
-    font-size: 16px;
     padding: var(--space-2) 0;
-    margin-bottom: var(--space-3);
+    color: var(--color-primary);
+    background: none;
 }
 
-.btn-voltar:hover {
-    opacity: 1;
-    text-decoration: underline;
+.btn-proximo {
+    width: 100%;
+    margin-top: var(--space-6);
+    font-size: 18px;
 }
 
+/* Visual de "caixa branca" que se repete nos campos */
+.opcao,
+.preferencia,
+.campo-select,
+.campo-texto,
+.campo-disponibilidade {
+    box-sizing: border-box;
+    padding: var(--space-3);
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--color-text);
+    background-color: var(--color-white);
+    border: 2px solid var(--color-secondary);
+    border-radius: 12px;
+}
+
+/* ===== Tela de acessibilidade ===== */
 .grid-mobilidade {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--space-3);
 }
 
 .opcao {
-    grid-column: span 2;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     gap: var(--space-2);
-    min-height: 120px;
-    padding: var(--space-3);
-    background-color: var(--color-white);
-    color: var(--color-text);
-    border: 2px solid var(--color-secondary);
-    border-radius: 12px;
-    font-size: 14px;
     font-weight: 600;
-    text-align: center;
-    transition: border-color 0.2s ease, background-color 0.2s ease;
-}
-
-.opcao:nth-child(n + 4) {
-    grid-column: span 3;
 }
 
 .opcao:hover {
-    opacity: 1;
-    border-color: var(--color-accent);
+    border-color: var(--color-primary);
 }
 
 .opcao--ativa {
@@ -163,7 +150,6 @@ button:hover {
 
 .opcao-icone {
     font-size: 36px;
-    line-height: 1;
 }
 
 .lista-preferencias {
@@ -174,13 +160,8 @@ button:hover {
 
 .preferencia {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: var(--space-3);
-    background-color: var(--color-white);
-    border: 2px solid var(--color-secondary);
-    border-radius: 12px;
-    font-size: 16px;
+    align-items: center;
     cursor: pointer;
 }
 
@@ -191,115 +172,19 @@ button:hover {
     font-weight: 600;
 }
 
-.switch {
-    appearance: none;
-    -webkit-appearance: none;
-    position: relative;
-    flex-shrink: 0;
-    width: 48px;
-    height: 28px;
-    margin: 0;
-    background-color: #b8c2cc;
-    border-radius: 999px;
+.switch,
+.checkbox {
+    width: 24px;
+    height: 24px;
+    accent-color: var(--color-primary);
     cursor: pointer;
-    transition: background-color 0.2s ease;
 }
 
-.switch::after {
-    content: '';
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 22px;
-    height: 22px;
-    background-color: var(--color-white);
-    border-radius: 50%;
-    transition: transform 0.2s ease;
-}
-
-.switch:checked {
-    background-color: var(--color-primary);
-}
-
-.switch:checked::after {
-    transform: translateX(20px);
-}
-
-.switch:focus-visible,
-.opcao:focus-visible,
-.card:focus-visible,
-.btn-voltar:focus-visible {
-    outline: 3px solid var(--color-primary);
-    outline-offset: 2px;
-}
-
-.btn-proximo {
-    width: 100%;
-    margin-top: var(--space-6);
-    font-size: 18px;
-    font-weight: 600;
-}
-
-/* ===== Preferências aplicadas ao site ===== */
-body.fonte-maior {
-    font-size: 28px;
-}
-
-body.fonte-maior .tela-acessibilidade,
-body.fonte-maior .subtitulo,
-body.fonte-maior .preferencia {
-    font-size: 20px;
-}
-
-body.fonte-maior .opcao {
-    font-size: 18px;
-}
-
-body.alto-contraste {
-    --color-background: #ffffff;
-    --color-text: #000000;
-    --color-primary: #1f3a6b;
-    --color-secondary: #8aa0c8;
-}
-/* ===== Tela de cuidador / profissional ===== */
-.tela-cuidador {
-    max-width: 420px;
-    margin: 0 auto;
-    text-align: left;
-    font-size: 16px;
-}
-
-.tela-cuidador h1 {
-    font-size: 32px;
-    margin: 0 0 var(--space-2);
-}
-
-.tela-cuidador .subtitulo {
-    margin: 0 0 var(--space-5);
-}
-
-/* Select */
+/* ===== Tela de cuidador ===== */
 .campo-select {
     width: 100%;
-    padding: var(--space-3);
-    font-family: var(--font-body);
-    font-size: 16px;
-    color: var(--color-text);
-    background-color: var(--color-white);
-    border: 2px solid var(--color-secondary);
-    border-radius: 12px;
-    cursor: pointer;
 }
 
-.campo-select:focus-visible,
-.campo-texto:focus-visible,
-.campo-disponibilidade:focus-visible,
-.checkbox:focus-visible {
-    outline: 3px solid var(--color-primary);
-    outline-offset: 2px;
-}
-
-/* Serviços (checkboxes) */
 .lista-servicos {
     display: flex;
     flex-direction: column;
@@ -310,82 +195,38 @@ body.alto-contraste {
     display: flex;
     align-items: center;
     gap: var(--space-3);
-    font-size: 16px;
     cursor: pointer;
 }
 
-.checkbox {
-    appearance: none;
-    -webkit-appearance: none;
-    position: relative;
-    flex-shrink: 0;
-    width: 24px;
-    height: 24px;
-    margin: 0;
-    background-color: var(--color-white);
-    border: 2px solid var(--color-primary);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.checkbox:checked {
-    background-color: var(--color-primary);
-}
-
-.checkbox:checked::after {
-    content: '';
-    position: absolute;
-    left: 6px;
-    top: 2px;
-    width: 6px;
-    height: 12px;
-    border: solid var(--color-white);
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
-}
-
-/* Disponibilidade */
 .campo-disponibilidade {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
-    padding: var(--space-3);
-    background-color: var(--color-white);
-    color: var(--color-text);
-    border: 2px solid var(--color-secondary);
-    border-radius: 12px;
-    font-size: 16px;
     text-align: left;
-}
-
-.campo-disponibilidade:hover {
-    opacity: 1;
-    border-color: var(--color-accent);
+    cursor: pointer;
 }
 
 .seta {
     font-size: 24px;
-    line-height: 1;
     color: var(--color-primary);
 }
 
 .campo-texto {
     width: 100%;
     margin-top: var(--space-3);
-    padding: var(--space-3);
-    font-family: var(--font-body);
-    font-size: 16px;
-    color: var(--color-text);
-    background-color: var(--color-white);
-    border: 2px solid var(--color-secondary);
-    border-radius: 12px;
     resize: vertical;
-    box-sizing: border-box;
 }
 
-/* Fonte maior também vale para esta tela */
+/* ===== Preferências de acessibilidade ===== */
+body.fonte-maior .tela-acessibilidade,
 body.fonte-maior .tela-cuidador {
     font-size: 20px;
+}
+
+body.alto-contraste {
+    --color-background: #ffffff;
+    --color-text: #000000;
+    --color-primary: #1f3a6b;
+    --color-secondary: #8aa0c8;
 }
