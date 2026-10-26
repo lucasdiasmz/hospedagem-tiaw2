@@ -104,6 +104,17 @@ a:focus-visible {
   margin: 0 0 36px 17px;
 }
 
+/* símbolo do logo, com fundo transparente direto sobre o azul */
+.marca-logo {
+  flex-shrink: 0;
+}
+
+.marca-logo img {
+  display: block;
+  width: 52px;
+  height: 52px;
+}
+
 .marca-nome {
   display: block;
   font-size: 22px;

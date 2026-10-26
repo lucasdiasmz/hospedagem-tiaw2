@@ -1,8 +1,9 @@
 import { USUARIO } from '../data/cuidados.js';
 import {
   IconeAgenda, IconeAjuda, IconeHistorico, IconeHorarios, IconeInicio,
-  IconeMais, IconePerfis, IconePilula, Logo, Ondas, SetaDireita,
+  IconeMais, IconePerfis, IconePilula, Ondas, SetaDireita,
 } from './Icones.jsx';
+import logo from '../assets/logo-acessamob.png';
 
 const MENU = [
   { rotulo: 'Início', Icone: IconeInicio, ativo: true },
@@ -16,7 +17,9 @@ export default function Sidebar({ aoAdicionarCuidado, aoVerHorarios, aoAbrirAjud
   return (
     <aside className="sidebar">
       <div className="marca">
-        <Logo />
+        <span className="marca-logo">
+          <img src={logo} alt="" width="52" height="52" />
+        </span>
         <div>
           <span className="marca-nome">AcessaMob</span>
           <small>Mais cuidado, todos os dias.</small>
