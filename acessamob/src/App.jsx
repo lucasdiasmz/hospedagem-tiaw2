@@ -1,122 +1,90 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import './style.css';
+import idosoImg from './assets/imgs/1761366.png';
+import familiarImg from './assets/imgs/11126155.png';
+import cuidadorImg from './assets/imgs/images.jpg';
+import PerfilAcessibilidade from './telas/PerfilAcessibilidade';
+
+const perfis = [
+  {
+    id: 'idoso',
+    titulo: 'Idoso',
+    descricao: 'Quero mais autonomia e segurança',
+    imagem: idosoImg,
+    alt: 'Ícone de idoso',
+    proximaTela: 'acessibilidade',
+  },
+  {
+    id: 'familiar',
+    titulo: 'Familiar/Responsável',
+    descricao: 'Acompanhar e cuidar de quem eu amo',
+    imagem: familiarImg,
+    alt: 'Ícone de familiar ou responsável',
+    proximaTela: 'acessibilidade',
+  },
+  {
+    id: 'cuidador',
+    titulo: 'Cuidador/Profissional',
+    descricao: 'Oferecer meus serviços e fazer a diferença',
+    imagem: cuidadorImg,
+    alt: 'Ícone de cuidador ou profissional',
+    proximaTela: null, // ainda sem tela
+  },
+];
+
+function Card({ titulo, descricao, imagem, alt, onClick }) {
+  return (
+    <div
+      className="card"
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onClick?.()}
+    >
+      <img src={imagem} alt={alt} />
+      <div>
+        <h3>{titulo}</h3>
+        <p>{descricao}</p>
+      </div>
+    </div>
+  );
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [tela, setTela] = useState('perfil');
+  const [perfilEscolhido, setPerfilEscolhido] = useState(null);
+
+  function escolherPerfil(perfil) {
+    if (!perfil.proximaTela) return;
+    setPerfilEscolhido(perfil.id);
+    setTela(perfil.proximaTela);
+  }
+
+  if (tela === 'acessibilidade') {
+    return (
+      <PerfilAcessibilidade
+        onVoltar={() => setTela('perfil')}
+        onProximo={(dados) => console.log(perfilEscolhido, dados)}
+      />
+    );
+  }
 
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      <h1>Bem vindo a AcessaMob</h1>
+      <p>Escolha o seu perfil para começar</p>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+      <div className="flex-cards">
+        {perfis.map((perfil) => (
+          <Card
+            key={perfil.id}
+            {...perfil}
+            onClick={() => escolherPerfil(perfil)}
+          />
+        ))}
+      </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
