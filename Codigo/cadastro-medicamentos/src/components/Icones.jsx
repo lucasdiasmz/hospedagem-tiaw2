@@ -114,11 +114,3 @@ export function IconeSino() {
     </svg>
   );
 }
-
-export function IconeLixeira() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" strokeWidth="1.8" {...traco}>
-      <path d="M4 7h16M10 11v6M14 11v6" /><path d="M6 7l1 13h10l1-13M9 7V4h6v3" />
-    </svg>
-  );
-}

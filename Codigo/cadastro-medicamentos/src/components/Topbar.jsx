@@ -1,4 +1,4 @@
-import { USUARIO } from '../utils/medicamentos.js';
+import { USUARIO } from '../data/db.js';
 import { IconeAgenda, IconeSino, SetaBaixo } from './Icones.jsx';
 
 function dataDeHoje() {

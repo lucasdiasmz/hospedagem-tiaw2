@@ -1,5 +1,3 @@
-export const FORMAS = ['Comprimido', 'Cápsula', 'Gotas', 'Xarope', 'Injeção', 'Pomada', 'Outro'];
-
 export const FREQUENCIAS = [
   { valor: 1, rotulo: '1 vez ao dia' },
   { valor: 2, rotulo: '2 vezes ao dia' },
@@ -19,6 +17,18 @@ export function horariosPadrao(frequencia) {
   return HORARIOS_PADRAO[frequencia].slice();
 }
 
+/* próximo id no formato do JSON: med-1, med-2... */
+export function proximoId(medicamentos) {
+  const maior = medicamentos.reduce((n, m) => Math.max(n, Number(m.id.replace('med-', '')) || 0), 0);
+  return 'med-' + (maior + 1);
+}
+
+/* data e hora locais no formato do JSON: 2026-09-15T09:00:00 */
+export function agoraIso() {
+  const local = new Date(Date.now() - new Date().getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0, 19);
+}
+
 /* devolve um objeto { campo: mensagem } com os erros; vazio quando está tudo certo */
 export function validar(med) {
   const erros = {};
@@ -28,5 +38,3 @@ export function validar(med) {
   else if (new Set(med.horarios).size !== med.horarios.length) erros.horarios = 'Há horários repetidos.';
   return erros;
 }
-
-export const USUARIO = { nome: 'Maria', nomeCompleto: 'Maria Silva', papel: 'Cuidador(a)' };

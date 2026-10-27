@@ -1,16 +1,21 @@
 import { useState } from 'react';
+import { CATALOGOS, USUARIO } from '../data/db.js';
+import { FREQUENCIAS, agoraIso, horariosPadrao, validar } from '../utils/medicamentos.js';
 import { IconePilula } from './Icones.jsx';
-import { FORMAS, FREQUENCIAS, horariosPadrao, validar } from '../utils/medicamentos.js';
+
+const { formasMedicamento, viasMedicamento } = CATALOGOS;
 
 const VAZIO = {
   nome: '',
   dosagem: '',
-  forma: FORMAS[0],
+  forma: formasMedicamento[0],
+  via: viasMedicamento[0],
   frequencia: 1,
+  categoria: '',
   observacoes: '',
 };
 
-export default function FormMedicamento({ aoSalvar, nomeRef }) {
+export default function FormMedicamento({ idoso, categorias, aoSalvar, nomeRef }) {
   const [med, setMed] = useState({ ...VAZIO, horarios: horariosPadrao(1) });
   const [erros, setErros] = useState({});
 
@@ -37,12 +42,18 @@ export default function FormMedicamento({ aoSalvar, nomeRef }) {
     if (Object.keys(encontrados).length) return;
 
     aoSalvar({
-      id: Date.now(),
+      idosoId: idoso.id,
       nome: med.nome.trim(),
       dosagem: med.dosagem.trim(),
       forma: med.forma,
+      via: med.via,
+      frequencia: med.frequencia,
       horarios: med.horarios.slice().sort(),
+      categoria: med.categoria.trim(),
       observacoes: med.observacoes.trim(),
+      ativo: true,
+      cadastradoPor: USUARIO.id,
+      criadoEm: agoraIso(),
     });
     setMed({ ...VAZIO, horarios: horariosPadrao(1) });
   }
@@ -51,7 +62,10 @@ export default function FormMedicamento({ aoSalvar, nomeRef }) {
     <form className="card form" onSubmit={enviar} noValidate>
       <h2>
         <span className="icone-tile" aria-hidden="true"><IconePilula /></span>
-        Novo medicamento
+        <span>
+          Novo medicamento
+          <small className="para">Para {idoso.apelido}</small>
+        </span>
       </h2>
 
       <label className="campo">
@@ -83,9 +97,33 @@ export default function FormMedicamento({ aoSalvar, nomeRef }) {
         </label>
 
         <label className="campo">
+          Categoria (opcional)
+          <input
+            type="text"
+            list="categorias"
+            value={med.categoria}
+            onChange={(e) => alterar('categoria', e.target.value)}
+            placeholder="Ex.: Pressão arterial"
+            maxLength="40"
+          />
+          <datalist id="categorias">
+            {categorias.map((c) => <option key={c} value={c} />)}
+          </datalist>
+        </label>
+      </div>
+
+      <div className="linha">
+        <label className="campo">
           Forma
           <select value={med.forma} onChange={(e) => alterar('forma', e.target.value)}>
-            {FORMAS.map((f) => <option key={f}>{f}</option>)}
+            {formasMedicamento.map((f) => <option key={f}>{f}</option>)}
+          </select>
+        </label>
+
+        <label className="campo">
+          Via de administração
+          <select value={med.via} onChange={(e) => alterar('via', e.target.value)}>
+            {viasMedicamento.map((v) => <option key={v}>{v}</option>)}
           </select>
         </label>
       </div>

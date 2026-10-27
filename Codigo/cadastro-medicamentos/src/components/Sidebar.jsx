@@ -1,4 +1,4 @@
-import { USUARIO } from '../utils/medicamentos.js';
+import { USUARIO } from '../data/db.js';
 import {
   IconeAgenda, IconeHistorico, IconeInicio, IconeLista, IconeMais,
   IconePerfis, IconePilula, Logo, Ondas, SetaDireita,
