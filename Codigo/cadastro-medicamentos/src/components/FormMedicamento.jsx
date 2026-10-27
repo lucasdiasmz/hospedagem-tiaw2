@@ -35,13 +35,13 @@ export default function FormMedicamento({ idoso, categorias, aoSalvar, nomeRef }
     alterar('horarios', horarios);
   }
 
-  function enviar(e) {
+  async function enviar(e) {
     e.preventDefault();
     const encontrados = validar(med);
     setErros(encontrados);
     if (Object.keys(encontrados).length) return;
 
-    aoSalvar({
+    const salvou = await aoSalvar({
       idosoId: idoso.id,
       nome: med.nome.trim(),
       dosagem: med.dosagem.trim(),
@@ -55,7 +55,7 @@ export default function FormMedicamento({ idoso, categorias, aoSalvar, nomeRef }
       cadastradoPor: USUARIO.id,
       criadoEm: agoraIso(),
     });
-    setMed({ ...VAZIO, horarios: horariosPadrao(1) });
+    if (salvou) setMed({ ...VAZIO, horarios: horariosPadrao(1) });
   }
 
   return (

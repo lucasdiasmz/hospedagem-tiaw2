@@ -17,12 +17,6 @@ export function horariosPadrao(frequencia) {
   return HORARIOS_PADRAO[frequencia].slice();
 }
 
-/* próximo id no formato do JSON: med-1, med-2... */
-export function proximoId(medicamentos) {
-  const maior = medicamentos.reduce((n, m) => Math.max(n, Number(m.id.replace('med-', '')) || 0), 0);
-  return 'med-' + (maior + 1);
-}
-
 /* data e hora locais no formato do JSON: 2026-09-15T09:00:00 */
 export function agoraIso() {
   const local = new Date(Date.now() - new Date().getTimezoneOffset() * 60000);

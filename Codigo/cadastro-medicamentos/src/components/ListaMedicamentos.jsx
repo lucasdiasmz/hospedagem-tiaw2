@@ -1,9 +1,11 @@
-export default function ListaMedicamentos({ idoso, medicamentos, aoAlternar, secaoRef }) {
+export default function ListaMedicamentos({ idoso, medicamentos, carregando, aoAlternar, secaoRef }) {
   return (
     <section className="lista card" ref={secaoRef} aria-labelledby="lista-titulo">
       <h2 id="lista-titulo">Medicamentos de {idoso.apelido}</h2>
 
-      {medicamentos.length === 0 ? (
+      {carregando ? (
+        <p className="vazio">Carregando...</p>
+      ) : medicamentos.length === 0 ? (
         <p className="vazio">Nenhum medicamento cadastrado para {idoso.apelido}.</p>
       ) : (
         <ul>

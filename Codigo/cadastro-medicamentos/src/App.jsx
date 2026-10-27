@@ -1,16 +1,16 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import FormMedicamento from './components/FormMedicamento.jsx';
 import ListaMedicamentos from './components/ListaMedicamentos.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import Toast from './components/Toast.jsx';
 import Topbar from './components/Topbar.jsx';
-import { IDOSOS, MEDICAMENTOS_INICIAIS } from './data/db.js';
-import { useLocalStorage } from './hooks/useLocalStorage.js';
-import { proximoId } from './utils/medicamentos.js';
+import { IDOSOS } from './data/db.js';
+import { criarMedicamento, definirAtivo, listarMedicamentos } from './services/api.js';
 
 export default function App() {
-  /* parte do db.json; o que for cadastrado fica salvo no navegador */
-  const [medicamentos, setMedicamentos] = useLocalStorage('acessamob.db.medicamentos', MEDICAMENTOS_INICIAIS);
+  const [medicamentos, setMedicamentos] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erroApi, setErroApi] = useState('');
   const [idosoId, setIdosoId] = useState(IDOSOS[0].id);
   const [aviso, setAviso] = useState(null);
   const nomeRef = useRef(null);
@@ -20,19 +20,39 @@ export default function App() {
   const doIdoso = medicamentos.filter((m) => m.idosoId === idosoId);
   const categorias = [...new Set(medicamentos.map((m) => m.categoria).filter(Boolean))];
 
+  useEffect(() => {
+    listarMedicamentos()
+      .then((lista) => { setMedicamentos(lista); setErroApi(''); })
+      .catch((e) => setErroApi(e.message))
+      .finally(() => setCarregando(false));
+  }, []);
+
   function avisar(msg) {
     setAviso({ msg, id: Date.now() });
   }
 
-  function cadastrar(med) {
-    setMedicamentos((lista) => [...lista, { id: proximoId(lista), ...med }]);
-    avisar('Medicamento cadastrado: ' + med.nome);
+  /* devolve true quando salvou, para o formulário saber se pode limpar os campos */
+  async function cadastrar(med) {
+    try {
+      const criado = await criarMedicamento(med);
+      setMedicamentos((lista) => [...lista, criado]);
+      avisar('Medicamento cadastrado: ' + criado.nome);
+      return true;
+    } catch (e) {
+      avisar(e.message);
+      return false;
+    }
   }
 
-  function alternar(id) {
+  async function alternar(id) {
     const med = medicamentos.find((m) => m.id === id);
-    setMedicamentos((lista) => lista.map((m) => (m.id === id ? { ...m, ativo: !m.ativo } : m)));
-    avisar((med.ativo ? 'Desativado: ' : 'Reativado: ') + med.nome);
+    try {
+      const atualizado = await definirAtivo(id, !med.ativo);
+      setMedicamentos((lista) => lista.map((m) => (m.id === id ? atualizado : m)));
+      avisar((atualizado.ativo ? 'Reativado: ' : 'Desativado: ') + med.nome);
+    } catch (e) {
+      avisar(e.message);
+    }
   }
 
   function novoMedicamento() {
@@ -64,9 +84,17 @@ export default function App() {
               </label>
             </header>
 
+            {erroApi && <p className="aviso-erro" role="alert">{erroApi}</p>}
+
             <div className="grade">
               <FormMedicamento nomeRef={nomeRef} idoso={idoso} categorias={categorias} aoSalvar={cadastrar} />
-              <ListaMedicamentos secaoRef={listaRef} idoso={idoso} medicamentos={doIdoso} aoAlternar={alternar} />
+              <ListaMedicamentos
+                secaoRef={listaRef}
+                idoso={idoso}
+                medicamentos={doIdoso}
+                carregando={carregando}
+                aoAlternar={alternar}
+              />
             </div>
           </main>
         </div>

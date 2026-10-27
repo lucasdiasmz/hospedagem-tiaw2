@@ -649,6 +649,14 @@ textarea:focus-visible {
   color: var(--suave);
 }
 
+.aviso-erro {
+  padding: var(--esp-3) var(--esp-4);
+  border-radius: 12px;
+  background: var(--erro-fundo);
+  color: var(--erro);
+  font-weight: 500;
+}
+
 /* ===== Aviso ===== */
 .toast {
   position: fixed;
