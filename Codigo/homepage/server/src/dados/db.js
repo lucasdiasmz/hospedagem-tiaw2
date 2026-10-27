@@ -24,6 +24,8 @@ export const PREFIXOS = {
   agendamentos: 'agd',
   avaliacoes: 'ava',
   chamadosAjuda: 'cha',
+  exames: 'exa',
+  eventosAgenda: 'evt',
 };
 
 export const COLECOES = Object.keys(PREFIXOS);
