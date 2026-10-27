@@ -1,0 +1,782 @@
+:root {
+    --texto: #050315;
+    --fundo: #dde5e9;
+    --primaria: #406399;
+    --secundaria: #cad6ef;
+    --borda: #c5cdd8;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    color: var(--texto);
+    background: var(--fundo);
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 24px;
+}
+
+.cabecalho {
+    background: #fff;
+    border-bottom: 1px solid var(--borda);
+}
+
+.barra {
+    max-width: 1440px;
+    margin: auto;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+}
+
+a {
+    color: var(--primaria);
+    text-decoration: none;
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 27px;
+}
+
+nav {
+    display: flex;
+    gap: 24px;
+}
+
+nav a {
+    position: relative;
+    padding: 16px 0;
+    color: #535d70;
+    font-size: 16px;
+}
+
+nav a[aria-current] {
+    color: var(--primaria);
+    font-weight: 700;
+}
+
+nav a[aria-current]::after {
+    content: '';
+    position: absolute;
+    bottom: -16px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    border-radius: 4px 4px 0 0;
+    background: var(--primaria);
+}
+
+nav span {
+    font-size: 24px;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+.usuario {
+    font-size: 16px;
+    color: #535d70;
+    white-space: nowrap;
+}
+
+.usuario span {
+    margin-right: 8px;
+}
+
+main {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 32px;
+}
+
+h1, h2 {
+    font-family: 'Lora', Georgia, serif;
+}
+
+h1 {
+    font-size: 40px;
+    margin: 0 0 8px;
+}
+
+.introducao {
+    color: #535d70;
+    margin: 0 0 32px;
+    line-height: 1.5;
+}
+
+.campo-busca {
+    display: flex;
+    align-items: center;
+    max-width: 640px;
+    background: white;
+    border: 1px solid var(--borda);
+    border-radius: 6px;
+    padding: 0 16px;
+    gap: 8px;
+}
+
+.campo-busca span {
+    color: #535d70;
+    font-size: 32px;
+}
+
+input {
+    width: 100%;
+    min-width: 0;
+    border: none;
+    padding: 16px 0;
+    font: inherit;
+    background: transparent;
+    color: var(--texto);
+}
+
+input:focus {
+    outline: none;
+}
+
+.campo-busca:focus-within {
+    outline: 3px solid var(--primaria);
+    outline-offset: 2px;
+}
+
+.proximo {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    background: #e7eefb;
+    border: 1px solid #adbfdf;
+    border-radius: 8px;
+    padding: 24px;
+    margin: 24px 0;
+}
+
+.icone-remedio {
+    display: grid;
+    place-items: center;
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--secundaria);
+    font-size: 36px;
+}
+
+.proximo h2 {
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 18px;
+    margin: 0 0 4px;
+}
+
+.proximo p {
+    margin: 4px 0;
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+.proximo .nome-proximo {
+    font-weight: 700;
+    font-size: 27px;
+}
+
+.tabela-container {
+    overflow-x: auto;
+    background: #fff;
+    border: 1px solid var(--borda);
+    border-radius: 6px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 16px;
+    text-align: left;
+}
+
+th {
+    background: #e9ecf1;
+    font-size: 14px;
+}
+
+th, td {
+    padding: 16px;
+    border-bottom: 1px solid #e3e6ed;
+    border-right: 1px solid #edf0f4;
+    line-height: 1.5;
+}
+
+th:last-child, td:last-child {
+    border-right: 0;
+}
+
+tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+td:first-child {
+    font-weight: 600;
+    min-width: 180px;
+}
+
+td:nth-child(5) {
+    min-width: 180px;
+}
+
+.status {
+    display: inline-block;
+    border-radius: 24px;
+    padding: 4px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    background: #ffe6a5;
+    color: #644000;
+}
+
+.status.tomado {
+    background: #c9f2dc;
+    color: #175e3a;
+}
+
+.botao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid var(--primaria);
+    border-radius: 4px;
+    padding: 10px 16px;
+    background: white;
+    color: var(--primaria);
+    font: 600 14px 'Inter', Arial, sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
+    min-height: 44px;
+}
+
+.botao:hover {
+    background: #edf2fa;
+}
+
+.botao.tomar {
+    background: #18804d;
+    border-color: #18804d;
+    color: white;
+}
+
+.botao.tomar:hover {
+    background: #12643c;
+}
+
+.botao:disabled {
+    color: #326247;
+    background: #edf7f1;
+    border-color: #a1c8b1;
+    cursor: default;
+}
+
+:focus-visible {
+    outline: 3px solid var(--primaria);
+    outline-offset: 3px;
+}
+
+.voltar {
+    color: #535d70;
+    border-color: #a9b3c1;
+    background: #f8fafc;
+    font-weight: 500;
+}
+
+#mensagem {
+    font-size: 16px;
+    color: #175e3a;
+    min-height: 24px;
+    margin: 8px 0;
+}
+
+#sem-resultados {
+    text-align: center;
+    font-size: 18px;
+    padding: 24px;
+}
+
+dialog {
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    padding: 32px;
+    width: min(560px, calc(100% - 32px));
+    color: var(--texto);
+}
+
+dialog::backdrop {
+    background: #05031580;
+}
+
+dialog h2 {
+    margin-top: 0;
+    font-size: 27px;
+}
+
+dl {
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+dt {
+    margin-top: 16px;
+    font-weight: 600;
+}
+
+dd {
+    margin: 4px 0 0;
+}
+
+.somente-leitor {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+/* Estrutura visual compartilhada com a homepage. */
+:root {
+    --primaria: #173c83;
+    --fundo: #f2f6fd;
+    --borda: #e2e8f1;
+}
+
+body {
+    font-size: 14px;
+}
+
+.menu-lateral {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: 224px;
+    padding: 24px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    background: #163974;
+    color: white;
+}
+
+.marca {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    padding: 0 8px 24px;
+}
+
+.marca-simbolo {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+}
+
+.marca strong {
+    font-size: 21px;
+}
+
+.marca small {
+    display: block;
+    margin-top: 4px;
+    font-size: 9px;
+    color: #d0dcf1;
+}
+
+nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    padding: 12px;
+    color: #e1e9f8;
+    border-radius: 6px;
+}
+
+nav span {
+    display: inline-block;
+    width: 20px;
+    font-size: 22px;
+    margin: 0;
+    text-align: center;
+}
+
+nav a:hover {
+    background: #234c91;
+}
+
+nav a[aria-current] {
+    background: #3379eb;
+    color: white;
+    font-weight: 600;
+}
+
+nav a[aria-current]::after {
+    display: none;
+}
+
+.atalhos {
+    border-top: 1px solid #36558a;
+    margin-top: 24px;
+    padding: 16px 12px;
+}
+
+.atalhos p {
+    font-size: 10px;
+    letter-spacing: 1.4px;
+    color: #a9bedf;
+    margin: 0 0 12px;
+}
+
+.atalhos a {
+    display: block;
+    padding: 10px 0;
+    color: #d7e3f5;
+    font-size: 12px;
+}
+
+.perfil-lateral {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 8px;
+}
+
+.avatar {
+    display: inline-grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    background: #dfebfc;
+    color: #315b96;
+    border-radius: 50%;
+    font-weight: 600;
+}
+
+.perfil-lateral strong {
+    font-size: 12px;
+}
+
+.perfil-lateral small {
+    display: block;
+    color: #b8cbe7;
+    margin-top: 4px;
+    font-size: 10px;
+}
+
+.rodape-menu {
+    padding: 12px 8px 0;
+    border-top: 1px solid #36558a;
+    color: #a9bedf;
+    font-size: 10px;
+}
+
+.conteudo {
+    margin-left: 224px;
+    min-width: 0;
+}
+
+.barra-superior {
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 32px;
+    background: white;
+    border-bottom: 1px solid var(--borda);
+    color: #66748a;
+    font-size: 12px;
+}
+
+.barra-superior > div {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.data-hoje {
+    margin-right: 16px;
+}
+
+main {
+    max-width: 1500px;
+    padding: 32px;
+}
+
+.titulo-pagina {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.titulo-icone {
+    font-size: 30px;
+}
+
+h1, h2 {
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+h1 {
+    font-size: 26px;
+    margin: 0 0 6px;
+}
+
+.introducao {
+    font-size: 14px;
+    margin: 0;
+    color: #748197;
+}
+
+.campo-busca {
+    max-width: 520px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px #16397405;
+}
+
+.campo-busca span {
+    font-size: 26px;
+}
+
+input {
+    font-size: 14px;
+    padding: 13px 0;
+}
+
+.proximo {
+    margin: 24px 0;
+    padding: 24px;
+    border: none;
+    border-radius: 12px;
+    background: #173c83;
+    color: white;
+    box-shadow: 0 6px 16px #173c831c;
+}
+
+.icone-remedio {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    background: white;
+    font-size: 30px;
+}
+
+.proximo h2 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #cfddf6;
+}
+
+.proximo .nome-proximo {
+    font-size: 24px;
+}
+
+.proximo p {
+    font-size: 14px;
+}
+
+.tabela-container {
+    border-radius: 10px;
+    box-shadow: 0 3px 12px #16397408;
+}
+
+table {
+    font-size: 13px;
+}
+
+th {
+    background: #f8faff;
+    color: #65748a;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+th, td {
+    padding: 16px 12px;
+    border-right: none;
+}
+
+td:first-child {
+    min-width: 150px;
+}
+
+td:nth-child(5) {
+    min-width: 150px;
+}
+
+.status {
+    font-size: 11px;
+    padding: 4px 10px;
+}
+
+.botao {
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    min-height: 40px;
+}
+
+.botao.tomar {
+    background: var(--primaria);
+    border-color: var(--primaria);
+}
+
+.botao.tomar:hover {
+    background: #28539d;
+}
+
+.botao.tomar.desfazer {
+    color: #326247;
+    background: #edf7f1;
+    border-color: #c9e1d3;
+}
+
+.botao.tomar.desfazer:hover {
+    background: #dcefe3;
+}
+
+.botao:disabled {
+    color: #326247;
+    background: #edf7f1;
+    border-color: #c9e1d3;
+}
+
+#mensagem {
+    font-size: 13px;
+}
+
+.voltar {
+    background: white;
+}
+
+dialog h2 {
+    font-size: 22px;
+}
+
+dl {
+    font-size: 15px;
+}
+
+@media (max-width: 1000px) {
+    .menu-lateral {
+        width: 190px;
+        padding-inline: 12px;
+    }
+
+    .conteudo {
+        margin-left: 190px;
+    }
+
+    main {
+        padding: 24px;
+    }
+
+    .marca strong {
+        font-size: 18px;
+    }
+
+    .marca-simbolo {
+        width: 32px;
+    }
+
+}
+
+@media (max-width: 650px) {
+    .menu-lateral {
+        position: static;
+        width: 100%;
+        padding: 16px;
+    }
+
+    .marca {
+        padding: 0 0 16px;
+    }
+
+    nav {
+        flex-direction: row;
+        gap: 4px;
+        overflow-x: auto;
+    }
+
+    nav a {
+        padding: 10px;
+        font-size: 12px;
+        white-space: nowrap;
+        gap: 6px;
+    }
+
+    nav span {
+        font-size: 18px;
+    }
+
+    .atalhos, .perfil-lateral, .rodape-menu {
+        display: none;
+    }
+
+    .conteudo {
+        margin-left: 0;
+    }
+
+    .barra-superior {
+        padding: 12px 16px;
+    }
+
+    .data-hoje {
+        display: none;
+    }
+
+    main {
+        padding: 24px 16px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    .introducao {
+        font-size: 13px;
+    }
+
+    .titulo-pagina {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .proximo {
+        padding: 20px 16px;
+        gap: 16px;
+    }
+
+    .icone-remedio {
+        width: 48px;
+        height: 48px;
+        font-size: 24px;
+    }
+
+    .proximo .nome-proximo {
+        font-size: 20px;
+    }
+
+}

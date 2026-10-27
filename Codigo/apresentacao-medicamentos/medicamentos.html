@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            Medicamentos | AcessaMob
+        </title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+        <link rel="stylesheet" href="css/medicamentos.css">
+        <script src="js/medicamentos.js" defer>
+        </script>
+    </head>
+    <body>
+        <aside class="menu-lateral">
+            <a class="marca" href="inicio.html">
+                <svg class="marca-simbolo" viewBox="0 0 64 64" aria-hidden="true">
+                    <circle cx="24" cy="13" r="8" fill="#cad6ef"/>
+                    <circle cx="45" cy="20" r="7" fill="#dde5e9"/>
+                    <path d="M17 24C5 35 16 58 36 57c11 0 20-7 24-17-12 13-32 12-36-4 8 7 17 8 23 3 3-3 0-7-4-6-10 3-16-14-26-9Z" fill="#cad6ef"/>
+                    <path d="M35 28c8 5 13 1 18-2 6 14-3 27-18 24-5-1-8-4-9-7 10 3 17 0 18-5-5-1-8-4-9-10Z" fill="#dde5e9"/>
+                </svg>
+                <span>
+                    <strong>
+                        AcessaMob
+                    </strong>
+                    <small>
+                        cuidado e acessibilidade
+                    </small>
+                </span>
+            </a>
+            <nav aria-label="Menu principal">
+                <a href="inicio.html">
+                    <span aria-hidden="true">
+                        ⌂
+                    </span>
+                    Início
+                </a>
+                <a href="agenda.html">
+                    <span aria-hidden="true">
+                        ▦
+                    </span>
+                    Agenda
+                </a>
+                <a href="medicamentos.html" aria-current="page">
+                    <span aria-hidden="true">
+                        ♧
+                    </span>
+                    Medicamentos
+                </a>
+                <a href="cuidadores.html">
+                    <span aria-hidden="true">
+                        ♡
+                    </span>
+                    Cuidadores
+                </a>
+                <a href="perfil.html">
+                    <span aria-hidden="true">
+                        ♙
+                    </span>
+                    Perfil
+                </a>
+            </nav>
+            <div class="atalhos">
+                <p>
+                    ATALHOS
+                </p>
+                <a href="cadastro-idoso.html">
+                    ＋ Adicionar cuidado
+                </a>
+                <a href="perfil.html">
+                    ↗ Ver minhas informações
+                </a>
+                <a href="contato.html">
+                    ✉ Contato e ajuda
+                </a>
+            </div>
+            <div class="perfil-lateral">
+                <span class="avatar">
+                    M
+                </span>
+                <span>
+                    <strong>
+                        Maria Silva
+                    </strong>
+                    <small>
+                        Cuidadora familiar
+                    </small>
+                </span>
+            </div>
+            <small class="rodape-menu">
+                AcessaMob © 2026
+            </small>
+        </aside>
+        <div class="conteudo">
+            <header class="barra-superior">
+                <span>
+                    Área de cuidado
+                </span>
+                <div>
+                    <span class="data-hoje" id="data-hoje">
+                    </span>
+                    <span class="avatar">
+                        M
+                    </span>
+                    <span>
+                        Maria⌄
+                    </span>
+                </div>
+            </header>
+            <main>
+                <div class="titulo-pagina">
+                    <span class="titulo-icone" aria-hidden="true">
+                        💊
+                    </span>
+                    <div>
+                        <h1>
+                            Medicamentos
+                        </h1>
+                        <p class="introducao">
+                            Visualize aqui os medicamentos cadastrados e acompanhe os horários de administração.
+                        </p>
+                    </div>
+                </div>
+                <form role="search" id="form-busca">
+                    <label class="somente-leitor" for="busca">
+                        Buscar medicamento pelo nome
+                    </label>
+                    <div class="campo-busca">
+                        <span aria-hidden="true">
+                            ⌕
+                        </span>
+                        <input type="search" id="busca" placeholder="Buscar medicamento" autocomplete="off">
+                    </div>
+                </form>
+                <section class="proximo" aria-labelledby="titulo-proximo">
+                    <span class="icone-remedio" aria-hidden="true">
+                        💊
+                    </span>
+                    <div>
+                        <h2 id="titulo-proximo">
+                            Próximo medicamento
+                        </h2>
+                        <p id="nome-proximo" class="nome-proximo">
+                        </p>
+                        <p id="orientacao-proximo">
+                        </p>
+                    </div>
+                </section>
+                <div class="tabela-container" role="region" aria-label="Medicamentos cadastrados" tabindex="0">
+                    <table>
+                        <caption class="somente-leitor">
+                            Lista de medicamentos cadastrados
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    Nome do Medicamento
+                                </th>
+                                <th scope="col">
+                                    Dosagem
+                                </th>
+                                <th scope="col">
+                                    Horário
+                                </th>
+                                <th scope="col">
+                                    Frequência
+                                </th>
+                                <th scope="col">
+                                    Observações
+                                </th>
+                                <th scope="col">
+                                    Status
+                                </th>
+                                <th scope="col" colspan="2">
+                                    Ações
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-medicamentos">
+                        </tbody>
+                    </table>
+                    <p id="sem-resultados" hidden>
+                        Nenhum medicamento encontrado.
+                    </p>
+                </div>
+                <p id="mensagem" role="status" aria-live="polite">
+                </p>
+                <a class="botao voltar" href="inicio.html">
+                    <span aria-hidden="true">
+                        ←
+                    </span>
+                    Voltar
+                </a>
+            </main>
+        </div>
+        <dialog id="detalhes" aria-labelledby="titulo-detalhes">
+            <h2 id="titulo-detalhes">
+            </h2>
+            <dl id="dados-detalhes">
+            </dl>
+            <form method="dialog">
+                <button class="botao" autofocus>
+                    Fechar
+                </button>
+            </form>
+        </dialog>
+    </body>
+</html>
