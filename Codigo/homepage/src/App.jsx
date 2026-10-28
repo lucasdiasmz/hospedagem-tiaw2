@@ -32,7 +32,11 @@ export default function App() {
 
   const minutos = proximo ? minutosAte(proximo.hora) : 0;
   let subtitulo = 'Tudo em dia por hoje. Que seu dia seja tranquilo!';
-  if (proximo) {
+  if (cuidados.carregando) {
+    subtitulo = 'Carregando os cuidados de hoje…';
+  } else if (cuidados.erro) {
+    subtitulo = 'Não foi possível carregar os dados: ' + cuidados.erro;
+  } else if (proximo) {
     subtitulo = minutos > 0
       ? 'Seu próximo compromisso é daqui a ' + duracaoPorExtenso(minutos) + '.'
       : 'Está na hora: ' + proximo.titulo + '.';
@@ -45,30 +49,47 @@ export default function App() {
     setAviso({ msg, id: Date.now() });
   }
 
+  /* executa uma gravação no servidor e avisa o resultado */
+  async function gravar(acao, msgOk) {
+    try {
+      await acao();
+      avisar(msgOk);
+    } catch (e) {
+      avisar('Não foi possível salvar: ' + e.message);
+    }
+  }
+
   function concluir(item) {
     if (!item) return;
-    cuidados.definir(item.id, { status: 'tomei' });
-    avisar('Registrado: ' + item.titulo);
+    gravar(() => cuidados.definir(item.id, { status: 'feito' }), 'Registrado: ' + item.titulo);
   }
 
   function recusar() {
     if (!proximo) return;
-    cuidados.definir(proximo.id, { status: 'recusou' });
-    avisar('Recusa registrada: ' + proximo.titulo);
+    gravar(() => cuidados.definir(proximo.id, { status: 'recusou' }), 'Recusa registrada: ' + proximo.titulo);
   }
 
   function adiar() {
     if (!proximo) return;
     const nova = somarMinutos(proximo.hora, 30);
-    cuidados.definir(proximo.id, { hora: nova });
-    avisar('Adiado para ' + nova);
+    gravar(() => cuidados.definir(proximo.id, { hora: nova }), 'Adiado para ' + nova);
   }
 
   function salvarNota(nota) {
-    cuidados.adicionarNota(nota);
-    setNovaNotaId(nota.id);
-    setNotaAberta(false);
-    avisar('Anotação salva');
+    gravar(async () => {
+      const salva = await cuidados.adicionarNota(nota);
+      setNovaNotaId(salva.id);
+      setNotaAberta(false);
+    }, 'Anotação salva');
+  }
+
+  function removerNota(id) {
+    gravar(() => cuidados.removerNota(id), 'Anotação removida');
+  }
+
+  function chamarAjuda() {
+    setSosAberto(false);
+    gravar(cuidados.chamarAjuda, 'Pedido de ajuda enviado à equipe');
   }
 
   function verHorarios() {
@@ -79,6 +100,7 @@ export default function App() {
     <>
       <div className="app">
         <Sidebar
+          usuario={cuidados.usuario}
           aoAdicionarCuidado={() => setNotaAberta(true)}
           aoVerHorarios={verHorarios}
           aoAbrirAjuda={() => setSosAberto(true)}
@@ -87,14 +109,16 @@ export default function App() {
         <div className="coluna">
 
           <main className="conteudo">
-            <Saudacao subtitulo={subtitulo} />
-            <CardCompromisso
-              item={proximo}
-              minutos={minutos}
-              aoConcluir={() => concluir(proximo)}
-              aoRecusar={recusar}
-              aoAdiar={adiar}
-            />
+            <Saudacao nome={cuidados.usuario?.nome} subtitulo={subtitulo} />
+            {!cuidados.carregando && !cuidados.erro && (
+              <CardCompromisso
+                item={proximo}
+                minutos={minutos}
+                aoConcluir={() => concluir(proximo)}
+                aoRecusar={recusar}
+                aoAdiar={adiar}
+              />
+            )}
             <AcoesRapidas
               med={medAtual}
               aoRegistrarRemedio={() => concluir(medAtual)}
@@ -106,7 +130,7 @@ export default function App() {
               entradas={restantes}
               novaNotaId={novaNotaId}
               aoConcluir={(id) => concluir(restantes.find((e) => e.id === id))}
-              aoRemoverNota={cuidados.removerNota}
+              aoRemoverNota={removerNota}
             />
           </main>
         </div>
@@ -125,7 +149,7 @@ export default function App() {
           <button
             type="button"
             className="btn btn-primario"
-            onClick={() => { setSosAberto(false); avisar('Pedido de ajuda enviado à equipe'); }}
+            onClick={chamarAjuda}
           >
             Chamar ajuda
           </button>

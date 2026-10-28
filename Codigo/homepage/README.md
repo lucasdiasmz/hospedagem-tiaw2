@@ -10,6 +10,9 @@ npm run dev      # servidor de desenvolvimento em http://localhost:5173
 npm run build    # gera a versão final em dist/
 ```
 
+Os dados da tela (usuário, itens do dia, anotações e pedidos de ajuda) vêm do backend em
+`server/` (MongoDB ou memória). Rode `npm run dev` também lá; o Vite repassa `/api` para ele.
+
 ## Estrutura
 
 ```
@@ -18,10 +21,9 @@ src/
 ├── main.jsx                 # ponto de entrada
 ├── components/              # Sidebar, Topbar, Saudacao, CardRemedio, Timeline,
 │                            # CardCuidados, CardHumor, Dialogo, DialogoNota, Toast, Icones
+├── api.js                   # chamadas ao backend (/api)
 ├── hooks/
-│   ├── useLocalStorage.js   # useState salvo no localStorage
-│   └── useCuidadosDoDia.js  # itens do dia, anotações, próximo item e contadores
-├── data/cuidados.js         # dados de exemplo (itens do dia e usuária)
+│   └── useCuidadosDoDia.js  # usuário, itens do dia e anotações vindos da API; próximo item
 ├── utils/hora.js            # funções de horário
 └── styles/homepage.css      # mesmo CSS da versão estática
 ```

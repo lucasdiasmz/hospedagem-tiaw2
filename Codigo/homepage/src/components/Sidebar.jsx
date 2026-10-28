@@ -1,9 +1,10 @@
-import { USUARIO } from '../data/cuidados.js';
 import {
   IconeAgenda, IconeAjuda, IconeHistorico, IconeHorarios, IconeInicio,
   IconeMais, IconePerfis, IconePilula, Ondas, SetaDireita,
 } from './Icones.jsx';
 import logo from '../assets/logo-acessamob.png';
+
+const PAPEIS = { cuidador: 'Cuidador(a)', cliente: 'Responsável' };
 
 const MENU = [
   { rotulo: 'Início', Icone: IconeInicio, ativo: true },
@@ -13,7 +14,7 @@ const MENU = [
   { rotulo: 'Perfis', Icone: IconePerfis },
 ];
 
-export default function Sidebar({ aoAdicionarCuidado, aoVerHorarios, aoAbrirAjuda }) {
+export default function Sidebar({ usuario, aoAdicionarCuidado, aoVerHorarios, aoAbrirAjuda }) {
   return (
     <aside className="sidebar">
       <div className="marca">
@@ -64,8 +65,8 @@ export default function Sidebar({ aoAdicionarCuidado, aoVerHorarios, aoAbrirAjud
       </div>
 
       <a href="#" className="usuario">
-        <span className="avatar-claro" aria-hidden="true">{USUARIO.nome[0]}</span>
-        <span className="usuario-texto"><strong>{USUARIO.nomeCompleto}</strong><small>{USUARIO.papel}</small></span>
+        <span className="avatar-claro" aria-hidden="true">{usuario?.nome[0]}</span>
+        <span className="usuario-texto"><strong>{usuario?.nome}</strong><small>{PAPEIS[usuario?.tipo]}</small></span>
         <SetaDireita />
       </a>
 

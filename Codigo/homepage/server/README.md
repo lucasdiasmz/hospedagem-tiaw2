@@ -15,7 +15,16 @@ npm test         # testes da API (em memória)
 
 Para usar o MongoDB, copie `.env.example` para `.env` e preencha `MONGODB_URI`
 (ex.: `mongodb://localhost:27017` ou a URI do MongoDB Atlas). Na primeira conexão, cada coleção
-vazia é populada com o conteúdo do `db.json`. Para rodar os testes contra o MongoDB:
+vazia é populada com o conteúdo do `db.json`.
+
+Para criar (ou recriar do zero) o banco a partir do `db.json`:
+
+```bash
+npm run seed     # apaga as coleções do banco MONGODB_DB e carrega o db.json de novo
+```
+
+O banco tem uma coleção por lista do `db.json` (`usuarios`, `idosos`, `medicamentos`...), com o
+`id` do JSON como `_id`, mais a coleção `catalogos` (um documento só). Para rodar os testes contra o MongoDB:
 `TEST_MONGODB_URI=mongodb://localhost:27017 npm test` (cria um banco `acessamob_teste_*` por teste).
 
 Com `npm run dev` rodando aqui e no front, o Vite repassa `/api` para este servidor.
@@ -72,6 +81,7 @@ O `PATCH .../itens/:itemId` aceita:
 ```
 src/
 ├── index.js              # sobe o servidor
+├── seed.js               # npm run seed: cria o banco MongoDB a partir do db.json
 ├── app.js                # usuário logado, rotas gerais e tratamento de erros
 ├── validacao.js          # validação dos dados recebidos
 ├── rotas/
