@@ -29,6 +29,26 @@ O banco tem uma coleção por lista do `db.json` (`usuarios`, `idosos`, `medicam
 
 Com `npm run dev` rodando aqui e no front, o Vite repassa `/api` para este servidor.
 
+## Banco do projeto (MongoDB Atlas)
+
+O banco oficial do projeto fica no MongoDB Atlas (cluster `cluster0.xxusils.mongodb.net`, banco
+`acessamob`) e aceita conexões de qualquer rede. Para usá-lo:
+
+1. Peça ao grupo o usuário e a senha do banco (não ficam no repositório).
+2. Crie o arquivo `server/.env` com:
+
+   ```
+   PORT=3001
+   USUARIO_PADRAO=usr-1
+   MONGODB_URI=mongodb+srv://USUARIO:SENHA@cluster0.xxusils.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+   MONGODB_DB=acessamob
+   ```
+
+3. Rode `npm install` e `npm run dev`. O terminal deve mostrar `banco: mongo`.
+
+Não rode `npm run seed` no banco compartilhado sem combinar com o grupo: ele apaga os dados e
+recarrega o `db.json`.
+
 ## Usuário logado
 
 Ainda não há login. O usuário vem do cabeçalho `X-Usuario-Id` (padrão: `usr-1`, Maria, ou
