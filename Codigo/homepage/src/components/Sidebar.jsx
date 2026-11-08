@@ -6,12 +6,15 @@ import logo from '../assets/logo-acessamob.png';
 
 const PAPEIS = { cuidador: 'Cuidador(a)', cliente: 'Responsável' };
 
+/* a agenda roda em outro servidor do Vite (Codigo/agenda, porta 5174) */
+const URL_AGENDA = import.meta.env.VITE_URL_AGENDA || 'http://localhost:5174/';
+
 const MENU = [
-  { rotulo: 'Início', Icone: IconeInicio, ativo: true },
-  { rotulo: 'Agenda', Icone: IconeAgenda },
-  { rotulo: 'Medicamentos', Icone: IconePilula },
-  { rotulo: 'Histórico', Icone: IconeHistorico },
-  { rotulo: 'Perfis', Icone: IconePerfis },
+  { rotulo: 'Início', Icone: IconeInicio, href: '/', ativo: true },
+  { rotulo: 'Agenda', Icone: IconeAgenda, href: URL_AGENDA },
+  { rotulo: 'Medicamentos', Icone: IconePilula, href: '#' },
+  { rotulo: 'Histórico', Icone: IconeHistorico, href: '#' },
+  { rotulo: 'Perfis', Icone: IconePerfis, href: '#' },
 ];
 
 export default function Sidebar({ usuario, aoAdicionarCuidado, aoVerHorarios, aoAbrirAjuda }) {
@@ -29,9 +32,9 @@ export default function Sidebar({ usuario, aoAdicionarCuidado, aoVerHorarios, ao
 
       <nav className="menu" aria-label="Navegação principal">
         <ul>
-          {MENU.map(({ rotulo, Icone, ativo }) => (
+          {MENU.map(({ rotulo, Icone, href, ativo }) => (
             <li key={rotulo}>
-              <a href="#" className={'menu-item' + (ativo ? ' ativo' : '')} aria-current={ativo ? 'page' : undefined}>
+              <a href={href} className={'menu-item' + (ativo ? ' ativo' : '')} aria-current={ativo ? 'page' : undefined}>
                 <Icone />
                 <span>{rotulo}</span>
               </a>
