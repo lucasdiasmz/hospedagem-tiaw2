@@ -128,9 +128,7 @@ export default function App() {
         <div className="coluna">
           <main className="conteudo">
             <Cabecalho
-              idosos={agenda.idosos}
-              idosoId={agenda.idosoId}
-              aoTrocarIdoso={agenda.trocarIdoso}
+              usuario={agenda.usuario}
               mes={agenda.mes}
               resumo={agenda.resumo}
               visao={agenda.visao}

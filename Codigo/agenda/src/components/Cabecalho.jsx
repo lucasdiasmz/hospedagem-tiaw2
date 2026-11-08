@@ -14,22 +14,14 @@ const VISOES = [
 ];
 
 /* título, idoso acompanhado, resumo do mês em uma linha e ações principais */
-export default function Cabecalho({ idosos, idosoId, aoTrocarIdoso, mes, resumo, visao, aoMudarVisao, aoHoje, aoNovo }) {
-  const idoso = idosos.find((i) => i.id === idosoId);
+export default function Cabecalho({ usuario, mes, resumo, visao, aoMudarVisao, aoHoje, aoNovo }) {
 
   return (
     <header className="cabecalho">
       <div className="cabecalho-titulo">
         <div className="cabecalho-linha">
           <h1>Agenda</h1>
-          {idosos.length > 1 ? (
-            <label className="seletor-idoso">
-              <span className="sr-only">Agenda de</span>
-              <select value={idosoId || ''} onChange={(e) => aoTrocarIdoso(e.target.value)}>
-                {idosos.map((i) => <option key={i.id} value={i.id}>{i.apelido || i.nome}</option>)}
-              </select>
-            </label>
-          ) : idoso && <span className="nome-idoso">{idoso.apelido || idoso.nome}</span>}
+          {usuario && <span className="nome-idoso">{usuario.nome}</span>}
         </div>
 
         <p className="resumo-linha" aria-live="polite">

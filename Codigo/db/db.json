@@ -54,7 +54,7 @@
   "usuarios": [
     {
       "id": "usr-1",
-      "nome": "Maria Silva",
+      "nome": "Usuário",
       "email": "maria.silva@email.com",
       "telefone": "(31) 99700-1122",
       "senhaHash": "",
@@ -195,7 +195,7 @@
       "id": "ido-2",
       "clienteId": "cli-2",
       "nome": "Maria de Lourdes Campos",
-      "apelido": "Dona Lurdes",
+      "apelido": "Usuário",
       "dataNascimento": "1950-07-28",
       "sexo": "Feminino",
       "tipoSanguineo": "A+",
@@ -514,7 +514,7 @@
       "idosoId": "ido-2",
       "abertoPor": "usr-3",
       "dataHora": "2026-10-26T02:15:00",
-      "mensagem": "Dona Lurdes com falta de ar, preciso de apoio.",
+      "mensagem": "Usuário com falta de ar, preciso de apoio.",
       "notificados": ["usr-5", "usr-1"],
       "status": "atendido"
     }
