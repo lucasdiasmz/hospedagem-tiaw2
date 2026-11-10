@@ -48,7 +48,9 @@
     "meses": [
       "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
       "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-    ]
+    ],
+    "categoriasTarefaRede": ["Consulta", "Compra", "Medicamento", "Outro"],
+    "statusTarefaRede": ["a_fazer", "em_andamento", "concluido"]
   },
 
   "usuarios": [
@@ -505,6 +507,131 @@
       "nota": 5,
       "comentario": "A Maria é muito atenciosa e paciente com meu pai.",
       "data": "2026-10-02"
+    }
+  ],
+
+  "tarefasRede": [
+    {
+      "id": "trd-1",
+      "idosoId": "ido-1",
+      "titulo": "Acompanhar consulta de cardiologia",
+      "categoria": "Consulta",
+      "status": "a_fazer",
+      "responsavelId": "usr-2",
+      "responsavelSugerido": false,
+      "prazo": "2026-11-12T09:30:00",
+      "observacoes": "Levar os exames de sangue",
+      "lembretes": { "avisarResponsavel": true, "antecedenciaMinutos": 60, "avisarRedeSeAtrasar": true },
+      "itensCompra": [],
+      "criadoPor": "usr-4",
+      "criadoEm": "2026-11-05T19:00:00",
+      "concluidoEm": null
+    },
+    {
+      "id": "trd-2",
+      "idosoId": "ido-1",
+      "titulo": "Comprar fraldas e itens de higiene",
+      "categoria": "Compra",
+      "status": "a_fazer",
+      "responsavelId": "usr-4",
+      "responsavelSugerido": true,
+      "prazo": "2026-11-10T12:00:00",
+      "observacoes": "Fralda tamanho G",
+      "lembretes": { "avisarResponsavel": true, "antecedenciaMinutos": 60, "avisarRedeSeAtrasar": false },
+      "itensCompra": [
+        { "nome": "Fralda geriátrica", "preco": 25.9, "comprado": false },
+        { "nome": "Sabonete líquido", "preco": 12.5, "comprado": true },
+        { "nome": "Lenço umedecido", "preco": 8.9, "comprado": false }
+      ],
+      "criadoPor": "usr-1",
+      "criadoEm": "2026-11-06T10:15:00",
+      "concluidoEm": null
+    },
+    {
+      "id": "trd-3",
+      "idosoId": "ido-1",
+      "titulo": "Buscar Losartana na farmácia popular",
+      "categoria": "Medicamento",
+      "status": "em_andamento",
+      "responsavelId": "usr-1",
+      "responsavelSugerido": false,
+      "prazo": "2026-11-09T08:00:00",
+      "observacoes": "Levar a receita e o documento do Seu Antônio",
+      "lembretes": { "avisarResponsavel": true, "antecedenciaMinutos": 60, "avisarRedeSeAtrasar": false },
+      "itensCompra": [],
+      "criadoPor": "usr-4",
+      "criadoEm": "2026-11-04T08:30:00",
+      "concluidoEm": null
+    },
+    {
+      "id": "trd-4",
+      "idosoId": "ido-1",
+      "titulo": "Levar à fisioterapia",
+      "categoria": "Outro",
+      "status": "concluido",
+      "responsavelId": "usr-4",
+      "responsavelSugerido": false,
+      "prazo": "2026-11-03T10:00:00",
+      "observacoes": "",
+      "lembretes": { "avisarResponsavel": true, "antecedenciaMinutos": 60, "avisarRedeSeAtrasar": false },
+      "itensCompra": [],
+      "criadoPor": "usr-4",
+      "criadoEm": "2026-11-01T18:00:00",
+      "concluidoEm": "2026-11-03T11:20:00"
+    },
+    {
+      "id": "trd-5",
+      "idosoId": "ido-1",
+      "titulo": "Comprar frutas da semana",
+      "categoria": "Compra",
+      "status": "concluido",
+      "responsavelId": "usr-1",
+      "responsavelSugerido": true,
+      "prazo": "2026-11-04T17:00:00",
+      "observacoes": "",
+      "lembretes": { "avisarResponsavel": false, "antecedenciaMinutos": 60, "avisarRedeSeAtrasar": false },
+      "itensCompra": [
+        { "nome": "Banana", "preco": 6.5, "comprado": true },
+        { "nome": "Mamão", "preco": 7.9, "comprado": true }
+      ],
+      "criadoPor": "usr-1",
+      "criadoEm": "2026-11-02T09:00:00",
+      "concluidoEm": "2026-11-04T16:10:00"
+    },
+    {
+      "id": "trd-6",
+      "idosoId": "ido-1",
+      "titulo": "Agendar retorno no clínico geral",
+      "categoria": "Consulta",
+      "status": "concluido",
+      "responsavelId": "usr-4",
+      "responsavelSugerido": false,
+      "prazo": "2026-11-06T18:00:00",
+      "observacoes": "",
+      "lembretes": { "avisarResponsavel": true, "antecedenciaMinutos": 60, "avisarRedeSeAtrasar": false },
+      "itensCompra": [],
+      "criadoPor": "usr-1",
+      "criadoEm": "2026-11-03T14:00:00",
+      "concluidoEm": "2026-11-06T15:45:00"
+    },
+    {
+      "id": "trd-7",
+      "idosoId": "ido-2",
+      "titulo": "Comprar AAS e soro fisiológico",
+      "categoria": "Compra",
+      "status": "a_fazer",
+      "responsavelId": "usr-5",
+      "responsavelSugerido": false,
+      "prazo": "2026-11-11T18:00:00",
+      "observacoes": "",
+      "lembretes": { "avisarResponsavel": true, "antecedenciaMinutos": 60, "avisarRedeSeAtrasar": true },
+      "itensCompra": [
+        { "nome": "AAS 100 mg", "preco": 9.9, "comprado": false },
+        { "nome": "Soro fisiológico", "preco": 6.4, "comprado": false }
+      ],
+      "criadoPor": "usr-3",
+      "criadoEm": "2026-11-07T21:30:00",
+      "concluidoEm": null
     }
   ],
 
