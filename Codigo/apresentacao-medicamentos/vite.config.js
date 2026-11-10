@@ -5,15 +5,15 @@ export default defineConfig({
     plugins: [react()],
     base: './',
     server: {
-        port: 5173,
+        port: 5177,
         strictPort: true,
         proxy: {
-            '/api': 'http://127.0.0.1:3001'
+            '/api': 'http://127.0.0.1:3005'
         }
     },
     preview: {
         proxy: {
-            '/api': 'http://127.0.0.1:3001'
+            '/api': 'http://127.0.0.1:3005'
         }
     },
     build: {

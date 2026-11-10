@@ -17,7 +17,7 @@ Em outro terminal, na mesma pasta:
 npm run dev
 ```
 
-Abra http://127.0.0.1:5174/perfil.html. Selecione um cuidador para abrir seu perfil. Exemplo de acesso direto: http://127.0.0.1:5174/perfil.html?id=cui-1.
+Abra http://127.0.0.1:5178/perfil.html. Selecione um cuidador para abrir seu perfil. Exemplo de acesso direto: http://127.0.0.1:5178/perfil.html?id=cui-1.
 
 ## Dados
 
@@ -33,7 +33,7 @@ A API consulta o MongoDB quando `MONGODB_URI` está preenchida. Nunca envie o `.
 - `src/main.jsx`: inicia o React.
 - `servidor.js`: API de consulta JSON/MongoDB.
 - `db.json`: exemplos oficiais do grupo.
-- `vite.config.js`: executa o React na porta 5174 e encaminha `/api` à API na porta 3002.
+- `vite.config.js`: executa o React na porta 5178 e encaminha `/api` à API na porta 3006.
 
 `GET /api/cuidadores` fornece a lista básica de identificação. `GET /api/cuidadores/:id` fornece o perfil público, incluindo serviços, disponibilidade e avaliações existentes.
 

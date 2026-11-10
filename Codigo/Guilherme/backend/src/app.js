@@ -7,7 +7,7 @@ import { rotaNaoEncontrada, tratarErros } from "./middlewares/tratarErros.js";
 
 const app = express();
 
-app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:5173" }));
+app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:5179" }));
 app.use(express.json());
 
 app.get("/api/health", function (req, res) {

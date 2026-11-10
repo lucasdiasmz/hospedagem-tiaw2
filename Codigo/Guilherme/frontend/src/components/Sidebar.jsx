@@ -3,13 +3,17 @@ import Icon from "./Icon.jsx";
 import Logo from "./Logo.jsx";
 import { USUARIO_LOGADO } from "../data/usuario.js";
 import { getIniciais } from "../utils/formatadores.js";
+import { TELAS } from "../navegacao.js";
 
+/* "rota" = tela deste módulo; "href" = tela de outro módulo (endereços em src/navegacao.js) */
 const menuItems = [
-  { id: "inicio", label: "Início", icone: "home", rota: null },
-  { id: "agenda", label: "Agenda", icone: "calendar", rota: null },
+  { id: "inicio", label: "Início", icone: "home", rota: null, href: TELAS.inicio },
+  { id: "agenda", label: "Agenda", icone: "calendar", rota: null, href: TELAS.agenda },
+  { id: "medicamentos", label: "Medicamentos", icone: "pill", rota: null, href: TELAS.medicamentos },
+  { id: "tarefas", label: "Tarefas", icone: "clipboard", rota: null, href: TELAS.tarefas },
   { id: "linha-do-tempo", label: "Linha do tempo", icone: "book-open", rota: "/linha-do-tempo" },
-  { id: "medicamentos", label: "Medicamentos", icone: "pill", rota: null },
   { id: "historico", label: "Histórico", icone: "history", rota: null },
+  { id: "cuidadores", label: "Cuidadores", icone: "heart", rota: null, href: TELAS.cuidadores },
   { id: "perfis", label: "Perfis", icone: "users", rota: "/perfil" }
 ];
 
@@ -30,7 +34,7 @@ function getClasseMenu({ isActive }) {
 function Sidebar() {
   return (
     <aside className="sidebar">
-      <a href="#" className="brand">
+      <a href={TELAS.inicio} className="brand">
         <Logo variante="claro" />
         <span>
           <strong>AcessaMob</strong>
@@ -49,7 +53,7 @@ function Sidebar() {
             );
           } else {
             return (
-              <a key={item.id} href="#" className="menu-item">
+              <a key={item.id} href={item.href || "#"} className="menu-item">
                 <Icon name={item.icone} />
                 {item.label}
               </a>

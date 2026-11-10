@@ -4,8 +4,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 import rotasTarefas from './routes/tarefasRede.js';
 
-/* porta 3001 para poder rodar junto com a api-medicamentos (3000) */
-const PORTA = process.env.PORT || 3001;
+/* porta 3004 para poder rodar junto com as outras APIs (ver Codigo/README.md) */
+const PORTA = process.env.PORT || 3004;
 
 if (!process.env.MONGODB_URI) {
   console.error('Defina MONGODB_URI no arquivo .env (veja o .env.example).');

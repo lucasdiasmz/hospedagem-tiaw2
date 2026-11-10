@@ -141,8 +141,8 @@ async function iniciar() {
         process.exit(1);
     });
 
-    servidor.listen(Number(process.env.PORT || 3002), '127.0.0.1', () => {
-        console.log('API de cuidadores: http://127.0.0.1:' + (process.env.PORT || 3002));
+    servidor.listen(Number(process.env.PORT || 3006), '127.0.0.1', () => {
+        console.log('API de cuidadores: http://127.0.0.1:' + (process.env.PORT || 3006));
         console.log('Banco:', banco ? 'MongoDB' : 'db.json');
     });
 

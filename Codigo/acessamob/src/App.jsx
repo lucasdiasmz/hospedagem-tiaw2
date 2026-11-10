@@ -5,6 +5,7 @@ import familiarImg from './assets/imgs/11126155.png';
 import cuidadorImg from './assets/imgs/images.jpg';
 import PerfilAcessibilidade from './telas/PerfilAcessibilidade';
 import CuidadorProfissional from './telas/CuidadorProfissional';
+import { TELAS } from './navegacao.js';
 
 const perfis = [
   {
@@ -55,6 +56,12 @@ function App() {
   const [tela, setTela] = useState('perfil');
   const [perfilEscolhido, setPerfilEscolhido] = useState(null);
 
+  /* fim do cadastro inicial: segue para a tela inicial (Codigo/homepage) */
+  function concluir(dados) {
+    console.log(perfilEscolhido, dados);
+    window.location.assign(TELAS.inicio);
+  }
+
   function escolherPerfil(perfil) {
     if (!perfil.proximaTela) return;
     setPerfilEscolhido(perfil.id);
@@ -65,7 +72,7 @@ function App() {
     return (
       <PerfilAcessibilidade
         onVoltar={() => setTela('perfil')}
-        onProximo={(dados) => console.log(perfilEscolhido, dados)}
+        onProximo={concluir}
       />
     );
   }
@@ -74,7 +81,7 @@ function App() {
     return (
       <CuidadorProfissional
         onVoltar={() => setTela('perfil')}
-        onFinalizar={(dados) => console.log(perfilEscolhido, dados)}
+        onFinalizar={concluir}
       />
     );
   }

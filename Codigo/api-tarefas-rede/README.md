@@ -2,7 +2,7 @@
 
 API em Node + Express + Mongoose (MongoDB) usada pela tela `Codigo/tarefas-rede-apoio` (RF006, Sprint 2).
 
-Os documentos têm o mesmo formato do `Codigo/db/db.json` (coleção `tarefasRede`, com `id` como `trd-1`), para facilitar juntar os bancos do grupo depois. Ela roda na porta **3001** para poder ficar ligada junto com a `api-medicamentos` (porta 3000).
+Os documentos têm o mesmo formato do `Codigo/db/db.json` (coleção `tarefasRede`, com `id` como `trd-1`), para facilitar juntar os bancos do grupo depois. Ela roda na porta **3004** para poder ficar ligada junto com a `api-medicamentos` (porta 3003).
 
 ## Como rodar
 
@@ -13,7 +13,7 @@ Os documentos têm o mesmo formato do `Codigo/db/db.json` (coleção `tarefasRed
 ```bash
 npm install
 npm run seed     # carrega as tarefas do db.json (apaga as que já existem na coleção)
-npm run dev      # API em http://localhost:3001
+npm run dev      # API em http://localhost:3004
 ```
 
 Depois rode a tela em outro terminal (`Codigo/tarefas-rede-apoio`, `npm run dev`).

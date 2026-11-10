@@ -3,4 +3,6 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
+  /* porta fixa: as outras telas apontam para http://localhost:5175/ (ver src/navegacao.js) */
+  server: { port: 5175, strictPort: true },
 });

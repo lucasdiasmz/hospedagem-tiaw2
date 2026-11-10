@@ -13,7 +13,7 @@ Os documentos têm o mesmo formato do `Codigo/db/db.json` (inclusive o campo `id
 ```bash
 npm install
 npm run seed     # carrega os medicamentos do db.json (apaga os que já existem na coleção)
-npm run dev      # API em http://localhost:3000
+npm run dev      # API em http://localhost:3003
 ```
 
 Depois rode a tela em outro terminal (`Codigo/cadastro-medicamentos`, `npm run dev`).

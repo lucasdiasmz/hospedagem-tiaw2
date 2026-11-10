@@ -1,20 +1,22 @@
 import {
-  IconeAgenda, IconeAjuda, IconeHistorico, IconeHorarios, IconeInicio,
-  IconeMais, IconePerfis, IconePilula, Ondas, SetaDireita,
+  IconeAgenda, IconeAjuda, IconeCuidadores, IconeHistorico, IconeHorarios, IconeInicio,
+  IconeLinhaDoTempo, IconeMais, IconePerfis, IconePilula, IconeTarefas, Ondas, SetaDireita,
 } from './Icones.jsx';
 import logo from '../assets/logo-acessamob.png';
+import { TELAS } from '../navegacao.js';
 
 const PAPEIS = { cuidador: 'Cuidador(a)', cliente: 'Responsável' };
 
-/* a agenda roda em outro servidor do Vite (Codigo/agenda, porta 5174) */
-const URL_AGENDA = import.meta.env.VITE_URL_AGENDA || 'http://localhost:5174/';
-
+/* as outras telas rodam cada uma no seu servidor do Vite (endereços em src/navegacao.js) */
 const MENU = [
   { rotulo: 'Início', Icone: IconeInicio, href: '/', ativo: true },
-  { rotulo: 'Agenda', Icone: IconeAgenda, href: URL_AGENDA },
-  { rotulo: 'Medicamentos', Icone: IconePilula, href: '#' },
+  { rotulo: 'Agenda', Icone: IconeAgenda, href: TELAS.agenda },
+  { rotulo: 'Medicamentos', Icone: IconePilula, href: TELAS.medicamentos },
+  { rotulo: 'Tarefas', Icone: IconeTarefas, href: TELAS.tarefas },
+  { rotulo: 'Linha do tempo', Icone: IconeLinhaDoTempo, href: TELAS.linhaDoTempo },
   { rotulo: 'Histórico', Icone: IconeHistorico, href: '#' },
-  { rotulo: 'Perfis', Icone: IconePerfis, href: '#' },
+  { rotulo: 'Cuidadores', Icone: IconeCuidadores, href: TELAS.cuidadores },
+  { rotulo: 'Perfis', Icone: IconePerfis, href: TELAS.perfis },
 ];
 
 export default function Sidebar({ usuario, aoAdicionarCuidado, aoVerHorarios, aoAbrirAjuda }) {

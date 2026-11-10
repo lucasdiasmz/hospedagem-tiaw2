@@ -10,7 +10,7 @@ Primeiro ligue a API (veja `Codigo/api-medicamentos/README.md`). Depois:
 
 ```bash
 npm install
-npm run dev      # servidor de desenvolvimento em http://localhost:5173
+npm run dev      # servidor de desenvolvimento em http://localhost:5175
 npm run build    # gera a versão final em dist/
 ```
 

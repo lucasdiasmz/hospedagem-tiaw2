@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Estrutura from './Estrutura.jsx';
 import Detalhes from './Detalhes.jsx';
+import { TELAS } from './navegacao.js';
 
 async function listarMedicamentos(idosoId, signal) {
     const resposta = await fetch('/api/medicamentos?idosoId=' + encodeURIComponent(idosoId), { signal });
@@ -290,7 +291,7 @@ export default function App() {
                 )}
 
                 <p id="mensagem" role="status" aria-live="polite">{mensagem}</p>
-                <a className="botao voltar" href="../homepage/index.html">← Voltar</a>
+                <a className="botao voltar" href={TELAS.inicio}>← Voltar</a>
             </main>
 
             {medicamentoSelecionado && (

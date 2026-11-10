@@ -1,20 +1,22 @@
 import {
-  IconeAgenda, IconeAjuda, IconeHistorico, IconeHorarios, IconeInicio,
-  IconeMais, IconePerfis, IconePilula, Ondas, SetaDireita,
+  IconeAgenda, IconeAjuda, IconeCuidadores, IconeHistorico, IconeHorarios, IconeInicio,
+  IconeLinhaDoTempo, IconeMais, IconePerfis, IconePilula, IconeTarefas, Ondas, SetaDireita,
 } from './Icones.jsx';
 import logo from '../assets/logo-acessamob.png';
+import { TELAS } from '../navegacao.js';
 
 const PAPEIS = { cuidador: 'Cuidador(a)', cliente: 'Responsável' };
 
-/* a tela inicial roda em outro servidor do Vite (Codigo/homepage, porta 5173) */
-const URL_INICIO = import.meta.env.VITE_URL_HOMEPAGE || 'http://localhost:5173/';
-
+/* as outras telas rodam cada uma no seu servidor do Vite (endereços em src/navegacao.js) */
 const MENU = [
-  { rotulo: 'Início', Icone: IconeInicio, href: URL_INICIO },
+  { rotulo: 'Início', Icone: IconeInicio, href: TELAS.inicio },
   { rotulo: 'Agenda', Icone: IconeAgenda, href: '/', ativo: true },
-  { rotulo: 'Medicamentos', Icone: IconePilula, href: '#' },
+  { rotulo: 'Medicamentos', Icone: IconePilula, href: TELAS.medicamentos },
+  { rotulo: 'Tarefas', Icone: IconeTarefas, href: TELAS.tarefas },
+  { rotulo: 'Linha do tempo', Icone: IconeLinhaDoTempo, href: TELAS.linhaDoTempo },
   { rotulo: 'Histórico', Icone: IconeHistorico, href: '#' },
-  { rotulo: 'Perfis', Icone: IconePerfis, href: '#' },
+  { rotulo: 'Cuidadores', Icone: IconeCuidadores, href: TELAS.cuidadores },
+  { rotulo: 'Perfis', Icone: IconePerfis, href: TELAS.perfis },
 ];
 
 export default function Sidebar({ usuario, aoNovoCompromisso, aoVerProximos }) {
@@ -60,7 +62,7 @@ export default function Sidebar({ usuario, aoNovoCompromisso, aoVerProximos }) {
           </li>
           <li>
             {/* o pedido de ajuda é feito na tela inicial */}
-            <a href={URL_INICIO}>
+            <a href={TELAS.inicio}>
               <IconeAjuda />
               Central de ajuda
             </a>

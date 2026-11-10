@@ -17,7 +17,7 @@ Em outro terminal, na mesma pasta:
 npm run dev
 ```
 
-Abra http://127.0.0.1:5173/medicamentos.html.
+Abra http://127.0.0.1:5177/medicamentos.html.
 
 Sem `MONGODB_URI` configurada, o servidor lê e salva no `db.json`.
 
@@ -43,7 +43,7 @@ Os medicamentos da tela original já existem no arquivo do grupo e não foram du
 ```dotenv
 MONGODB_URI=mongodb://127.0.0.1:27017
 MONGODB_DB=acessamob
-PORT=3001
+PORT=3005
 ```
 
 No Atlas, use a URI fornecida pelo serviço, configure o usuário do banco e o acesso de rede necessário.
@@ -73,7 +73,7 @@ O terminal deve mostrar **Banco: MongoDB**. A aplicação passa a ler e gravar n
 - `src/main.jsx`: inicia o React.
 - `servidor.js`: API e acesso a JSON ou MongoDB.
 - `db.json`: dados oficiais enviados pelo grupo.
-- `vite.config.js`: configuração do React e encaminhamento da API para a porta 3001.
+- `vite.config.js`: configuração do React e encaminhamento da API para a porta 3005.
 
 ## Conferir e entregar
 

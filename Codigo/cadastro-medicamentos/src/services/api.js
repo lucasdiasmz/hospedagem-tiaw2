@@ -1,5 +1,5 @@
 /* Chamadas à API de medicamentos (Codigo/api-medicamentos) */
-const URL_API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const URL_API = import.meta.env.VITE_API_URL || 'http://localhost:3003';
 
 async function chamar(caminho, opcoes) {
   let resposta;

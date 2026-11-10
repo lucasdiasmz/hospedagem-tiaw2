@@ -1,11 +1,12 @@
 import Icon from "./Icon.jsx";
 import Logo from "./Logo.jsx";
 import { formatarDataHoje } from "../utils/formatadores.js";
+import { TELAS } from "../navegacao.js";
 
 function Topbar() {
   return (
     <header className="topbar">
-      <a href="#" className="topbar-brand">
+      <a href={TELAS.inicio} className="topbar-brand">
         <Logo variante="escuro" />
         <strong>AcessaMob</strong>
       </a>

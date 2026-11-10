@@ -4,7 +4,7 @@ import app from "./app.js";
 import { conectarBanco, desconectarBanco } from "./config/db.js";
 import { popularBanco } from "./seed/popular.js";
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3007;
 
 async function iniciarDemo() {
   let mongo = null;

@@ -4,7 +4,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 import rotasMedicamentos from './routes/medicamentos.js';
 
-const PORTA = process.env.PORT || 3000;
+/* porta 3003: 3001 e 3002 são dos backends da homepage e da agenda (ver Codigo/README.md) */
+const PORTA = process.env.PORT || 3003;
 
 if (!process.env.MONGODB_URI) {
   console.error('Defina MONGODB_URI no arquivo .env (veja o .env.example).');

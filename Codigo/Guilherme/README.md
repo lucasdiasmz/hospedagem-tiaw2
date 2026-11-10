@@ -19,7 +19,7 @@ npm run demo
 
 - O `npm install` instala tudo (back-end e front-end).
 - O `npm run demo` sobe um **MongoDB de demonstração embutido**, cria os dados de exemplo, liga a API e abre o site. Na primeira vez ele baixa o MongoDB sozinho (1 ou 2 minutos).
-- Quando aparecer `API de demonstração rodando`, abra **http://localhost:5173**.
+- Quando aparecer `API de demonstração rodando`, abra **http://localhost:5179**.
 - Para parar, aperte `Ctrl + C`. Os dados voltam ao exemplo original toda vez que o comando é reiniciado.
 
 O que testar:
@@ -56,7 +56,7 @@ npm run dev
 
 O `npm run seed` apaga e recria os 2 idosos e os relatos de exemplo. Os relatos são gerados **a partir do dia em que o comando roda** (hoje, ontem e dias anteriores), então rode de novo sempre que quiser dados "de hoje" na linha do tempo.
 
-A API sobe em `http://localhost:3000`. Teste em `http://localhost:3000/api/health`.
+A API sobe em `http://localhost:3007`. Teste em `http://localhost:3007/api/health`.
 
 ## 3. Front-end (outro terminal)
 
@@ -66,7 +66,7 @@ npm install
 npm run dev
 ```
 
-Abra `http://localhost:5173`. O Vite redireciona as chamadas `/api` para o back-end.
+Abra `http://localhost:5179`. O Vite redireciona as chamadas `/api` para o back-end.
 
 ## Rotas da API
 

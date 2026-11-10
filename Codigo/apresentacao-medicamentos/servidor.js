@@ -278,8 +278,8 @@ async function iniciar() {
         process.exit(1);
     });
 
-    servidor.listen(Number(process.env.PORT || 3001), '127.0.0.1', () => {
-        console.log('API de medicamentos: http://127.0.0.1:' + (process.env.PORT || 3001));
+    servidor.listen(Number(process.env.PORT || 3005), '127.0.0.1', () => {
+        console.log('API de medicamentos: http://127.0.0.1:' + (process.env.PORT || 3005));
         console.log('Banco:', usaMongo ? 'MongoDB' : 'db.json');
     });
 

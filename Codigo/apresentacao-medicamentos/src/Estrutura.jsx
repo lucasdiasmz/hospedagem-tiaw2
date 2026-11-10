@@ -1,3 +1,5 @@
+import { TELAS } from './navegacao.js';
+
 export default function Estrutura({ children }) {
     const dataHoje = new Date().toLocaleDateString('pt-BR', {
         day: 'numeric',
@@ -8,7 +10,7 @@ export default function Estrutura({ children }) {
     return (
         <>
             <aside className="menu-lateral">
-                <a className="marca" href="../homepage/index.html">
+                <a className="marca" href={TELAS.inicio}>
                     <svg className="marca-simbolo" viewBox="0 0 64 64" aria-hidden="true">
                         <circle cx="24" cy="13" r="8" fill="#cad6ef"/>
                         <circle cx="45" cy="20" r="7" fill="#dde5e9"/>
@@ -25,13 +27,13 @@ export default function Estrutura({ children }) {
                     </span>
                 </a>
                 <nav aria-label="Menu principal">
-                    <a href="../homepage/index.html">
+                    <a href={TELAS.inicio}>
                         <span aria-hidden="true">
                             ⌂
                         </span>
                         Início
                     </a>
-                    <a href="../agenda/index.html">
+                    <a href={TELAS.agenda}>
                         <span aria-hidden="true">
                             ▦
                         </span>
@@ -43,13 +45,25 @@ export default function Estrutura({ children }) {
                         </span>
                         Medicamentos
                     </a>
-                    <a href="../cuidadores/index.html">
+                    <a href={TELAS.tarefas}>
+                        <span aria-hidden="true">
+                            ☑
+                        </span>
+                        Tarefas
+                    </a>
+                    <a href={TELAS.linhaDoTempo}>
+                        <span aria-hidden="true">
+                            ◷
+                        </span>
+                        Linha do tempo
+                    </a>
+                    <a href={TELAS.cuidadores}>
                         <span aria-hidden="true">
                             ♡
                         </span>
                         Cuidadores
                     </a>
-                    <a href="../perfil/index.html">
+                    <a href={TELAS.perfis}>
                         <span aria-hidden="true">
                             ♙
                         </span>
@@ -60,13 +74,16 @@ export default function Estrutura({ children }) {
                     <p>
                         ATALHOS
                     </p>
-                    <a href="../cadastro-idoso/index.html">
+                    <a href={TELAS.inicio}>
                         ＋ Adicionar cuidado
                     </a>
-                    <a href="../perfil/index.html">
+                    <a href={TELAS.cadastroMedicamentos}>
+                        ＋ Cadastrar medicamento
+                    </a>
+                    <a href={TELAS.perfis}>
                         ↗ Ver minhas informações
                     </a>
-                    <a href="../contato/index.html">
+                    <a href={TELAS.inicio}>
                         ✉ Contato e ajuda
                     </a>
                 </div>
