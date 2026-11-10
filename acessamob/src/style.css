@@ -1,0 +1,232 @@
+/* ===== Design System ===== */
+:root {
+    --color-text: #050315;
+    --color-background: #DDE5E9;
+    --color-primary: #406399;
+    --color-secondary: #CAD6EF;
+    --color-white: #ffffff;
+
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 16px;
+    --space-4: 24px;
+    --space-5: 32px;
+    --space-6: 48px;
+
+    --font-heading: 'Lora', serif;
+    --font-body: 'Inter', sans-serif;
+}
+
+/* ===== Base ===== */
+body {
+    margin: 0;
+    padding: var(--space-5);
+    font-family: var(--font-body);
+    font-size: 24px;
+    color: var(--color-text);
+    background-color: var(--color-background);
+    text-align: center;
+}
+
+h1,
+h2 {
+    font-family: var(--font-heading);
+    font-size: 40px;
+    color: var(--color-primary);
+}
+
+h3 {
+    font-size: 27px;
+    font-weight: 600;
+}
+
+button {
+    font-family: var(--font-body);
+    color: var(--color-white);
+    background-color: var(--color-primary);
+    border: none;
+    border-radius: 12px;
+    padding: var(--space-3);
+    cursor: pointer;
+}
+
+/* ===== Tela inicial ===== */
+.flex-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-4);
+    margin-top: var(--space-5);
+}
+
+.card {
+    width: 250px;
+    padding: var(--space-4);
+    background-color: var(--color-white);
+    border: 2px solid var(--color-secondary);
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.card:hover {
+    border-color: var(--color-primary);
+}
+
+.card img {
+    width: 60px;
+    height: 60px;
+}
+
+/* ===== Telas de formulário (acessibilidade e cuidador) ===== */
+.tela-acessibilidade,
+.tela-cuidador {
+    max-width: 420px;
+    margin: 0 auto;
+    font-size: 16px;
+    text-align: left;
+}
+
+.tela-acessibilidade h1,
+.tela-cuidador h1 {
+    font-size: 32px;
+}
+
+.secao-titulo {
+    font-size: 20px;
+    margin-top: var(--space-5);
+}
+
+.btn-voltar {
+    padding: var(--space-2) 0;
+    color: var(--color-primary);
+    background: none;
+}
+
+.btn-proximo {
+    width: 100%;
+    margin-top: var(--space-6);
+    font-size: 18px;
+}
+
+/* Visual de "caixa branca" que se repete nos campos */
+.opcao,
+.preferencia,
+.campo-select,
+.campo-texto,
+.campo-disponibilidade {
+    box-sizing: border-box;
+    padding: var(--space-3);
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--color-text);
+    background-color: var(--color-white);
+    border: 2px solid var(--color-secondary);
+    border-radius: 12px;
+}
+
+/* ===== Tela de acessibilidade ===== */
+.grid-mobilidade {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-3);
+}
+
+.opcao {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: 600;
+}
+
+.opcao:hover {
+    border-color: var(--color-primary);
+}
+
+.opcao--ativa {
+    border-color: var(--color-primary);
+    background-color: var(--color-secondary);
+}
+
+.opcao-icone {
+    font-size: 36px;
+}
+
+.lista-preferencias {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.preferencia {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.preferencia-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-weight: 600;
+}
+
+.switch,
+.checkbox {
+    width: 24px;
+    height: 24px;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+}
+
+/* ===== Tela de cuidador ===== */
+.campo-select {
+    width: 100%;
+}
+
+.lista-servicos {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.servico {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    cursor: pointer;
+}
+
+.campo-disponibilidade {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+}
+
+.seta {
+    font-size: 24px;
+    color: var(--color-primary);
+}
+
+.campo-texto {
+    width: 100%;
+    margin-top: var(--space-3);
+    resize: vertical;
+}
+
+/* ===== Preferências de acessibilidade ===== */
+body.fonte-maior .tela-acessibilidade,
+body.fonte-maior .tela-cuidador {
+    font-size: 20px;
+}
+
+body.alto-contraste {
+    --color-background: #ffffff;
+    --color-text: #000000;
+    --color-primary: #1f3a6b;
+    --color-secondary: #8aa0c8;
+}
