@@ -30,13 +30,31 @@
     "statusSolicitacao": ["pendente", "aceita", "recusada", "cancelada"],
     "statusAgendamento": ["agendado", "realizado", "cancelado"],
     "statusConsulta": ["agendada", "realizada", "cancelada"],
-    "statusChamado": ["aberto", "atendido"]
+    "statusChamado": ["aberto", "atendido"],
+    "tiposEvento": [
+      { "id": "consulta", "rotulo": "Consulta", "icone": "estetoscopio", "colecaoOrigem": "consultas" },
+      { "id": "exame", "rotulo": "Exame", "icone": "tubo-ensaio", "colecaoOrigem": "exames" },
+      { "id": "visita", "rotulo": "Visita", "icone": "pessoa", "colecaoOrigem": "agendamentos" },
+      { "id": "medicamento", "rotulo": "Medicamento", "icone": "pilula", "colecaoOrigem": "medicamentos" },
+      { "id": "tarefa", "rotulo": "Tarefa", "icone": "check", "colecaoOrigem": "tarefas" }
+    ],
+    "statusEvento": [
+      { "id": "confirmado", "rotulo": "Confirmado", "cor": "#4A4A4A" },
+      { "id": "pendente", "rotulo": "Pendente", "cor": "#E0B04A" },
+      { "id": "concluido", "rotulo": "Concluído", "cor": "#3E9B5F" },
+      { "id": "cancelado", "rotulo": "Cancelado", "cor": "#C0392B" }
+    ],
+    "diasSemanaCurtos": ["D", "S", "T", "Q", "Q", "S", "S"],
+    "meses": [
+      "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+      "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+    ]
   },
 
   "usuarios": [
     {
       "id": "usr-1",
-      "nome": "Maria Silva",
+      "nome": "Usuário",
       "email": "maria.silva@email.com",
       "telefone": "(31) 99700-1122",
       "senhaHash": "",
@@ -177,7 +195,7 @@
       "id": "ido-2",
       "clienteId": "cli-2",
       "nome": "Maria de Lourdes Campos",
-      "apelido": "Dona Lurdes",
+      "apelido": "Usuário",
       "dataNascimento": "1950-07-28",
       "sexo": "Feminino",
       "tipoSanguineo": "A+",
@@ -496,9 +514,117 @@
       "idosoId": "ido-2",
       "abertoPor": "usr-3",
       "dataHora": "2026-10-26T02:15:00",
-      "mensagem": "Dona Lurdes com falta de ar, preciso de apoio.",
+      "mensagem": "Usuário com falta de ar, preciso de apoio.",
       "notificados": ["usr-5", "usr-1"],
       "status": "atendido"
+    }
+  ],
+
+  "exames": [
+    {
+      "id": "exa-1",
+      "idosoId": "ido-1",
+      "data": "2026-10-27",
+      "horario": "09:00",
+      "nome": "Exame de sangue",
+      "laboratorio": "Laboratório Central",
+      "preparo": "Jejum de 8 horas",
+      "status": "pendente",
+      "acompanhanteId": "cui-1",
+      "observacoes": "Levar pedido médico e carteirinha do plano"
+    },
+    {
+      "id": "exa-2",
+      "idosoId": "ido-1",
+      "data": "2026-10-30",
+      "horario": "07:30",
+      "nome": "Eletrocardiograma",
+      "laboratorio": "Clínica Vida",
+      "preparo": "",
+      "status": "confirmado",
+      "acompanhanteId": "cui-1",
+      "observacoes": ""
+    }
+  ],
+
+  "eventosAgenda": [
+    {
+      "id": "evt-1",
+      "idosoId": "ido-1",
+      "tipo": "medicamento",
+      "data": "2026-10-27",
+      "horario": "08:00",
+      "titulo": "Losartana 50mg",
+      "subtitulo": "Pressão arterial",
+      "status": "concluido",
+      "origem": { "colecao": "medicamentos", "id": "med-1" },
+      "recorrencia": { "frequencia": "diaria", "diasSemana": ["seg", "ter", "qua", "qui", "sex", "sab", "dom"] },
+      "lembrete": { "ativo": true, "minutosAntes": 15 }
+    },
+    {
+      "id": "evt-2",
+      "idosoId": "ido-1",
+      "tipo": "exame",
+      "data": "2026-10-27",
+      "horario": "09:00",
+      "titulo": "Exame de sangue",
+      "subtitulo": "Laboratório Central",
+      "status": "pendente",
+      "origem": { "colecao": "exames", "id": "exa-1" },
+      "recorrencia": null,
+      "lembrete": { "ativo": true, "minutosAntes": 720 }
+    },
+    {
+      "id": "evt-3",
+      "idosoId": "ido-1",
+      "tipo": "consulta",
+      "data": "2026-10-27",
+      "horario": "10:30",
+      "titulo": "Consulta médica",
+      "subtitulo": "Dr. Carlos",
+      "status": "confirmado",
+      "origem": { "colecao": "consultas", "id": "con-1" },
+      "recorrencia": null,
+      "lembrete": { "ativo": true, "minutosAntes": 60 }
+    },
+    {
+      "id": "evt-4",
+      "idosoId": "ido-1",
+      "tipo": "visita",
+      "data": "2026-10-27",
+      "horario": "15:00",
+      "titulo": "Visita da cuidadora",
+      "subtitulo": "Ana Souza",
+      "status": "confirmado",
+      "origem": { "colecao": "agendamentos", "id": "agd-2" },
+      "recorrencia": { "frequencia": "semanal", "diasSemana": ["ter"] },
+      "lembrete": { "ativo": false, "minutosAntes": 0 }
+    },
+    {
+      "id": "evt-5",
+      "idosoId": "ido-1",
+      "tipo": "consulta",
+      "data": "2026-10-28",
+      "horario": "09:30",
+      "titulo": "Consulta: Cardiologia",
+      "subtitulo": "Dra. Fernanda Souza",
+      "status": "confirmado",
+      "origem": { "colecao": "consultas", "id": "con-2" },
+      "recorrencia": null,
+      "lembrete": { "ativo": true, "minutosAntes": 60 }
+    },
+    {
+      "id": "evt-6",
+      "idosoId": "ido-1",
+      "tipo": "exame",
+      "data": "2026-10-30",
+      "horario": "07:30",
+      "titulo": "Eletrocardiograma",
+      "subtitulo": "Clínica Vida",
+      "status": "confirmado",
+      "origem": { "colecao": "exames", "id": "exa-2" },
+      "recorrencia": null,
+      "lembrete": { "ativo": true, "minutosAntes": 60 }
     }
   ]
 }
