@@ -1,0 +1,72 @@
+export const STORAGE_KEY = "acessamob-agenda-v1";
+
+export const initialData = {
+  medicamentos: [
+    {
+      id: "med-1001",
+      nome: "Losartana Potássica",
+      dose: "50 mg",
+      horarios: ["08:00"],
+      frequencia: "1x ao dia",
+      categoria: "Pressão arterial",
+      observacao: "Após o café da manhã",
+      ativo: true,
+    },
+    {
+      id: "med-1002",
+      nome: "Metformina",
+      dose: "850 mg",
+      horarios: ["08:00", "20:00"],
+      frequencia: "2x ao dia",
+      categoria: "Glicemia",
+      observacao: "Tomar junto às refeições",
+      ativo: true,
+    },
+    {
+      id: "med-1003",
+      nome: "Vitamina D",
+      dose: "1000 UI",
+      horarios: ["12:00"],
+      frequencia: "1x ao dia",
+      categoria: "Suplemento",
+      observacao: "Após o almoço",
+      ativo: true,
+    },
+    {
+      id: "med-1004",
+      nome: "Paracetamol",
+      dose: "500 mg",
+      horarios: ["20:00"],
+      frequencia: "Conforme prescrição",
+      categoria: "Alívio da dor",
+      observacao: "Seguir orientação profissional",
+      ativo: false,
+    },
+  ],
+  consultas: [
+    {
+      id: "con-2001",
+      data: "2026-10-28",
+      horario: "09:30",
+      especialidade: "Cardiologia",
+      profissional: "Dra. Fernanda Souza",
+      local: "Clínica Vida",
+    },
+    {
+      id: "con-2002",
+      data: "2026-11-03",
+      horario: "14:00",
+      especialidade: "Fisioterapia",
+      profissional: "Marcos Oliveira",
+      local: "Centro de Reabilitação",
+    },
+    {
+      id: "con-2003",
+      data: "2026-11-12",
+      horario: "10:15",
+      especialidade: "Clínico geral",
+      profissional: "Dr. Paulo Lima",
+      local: "Unidade de Saúde Central",
+    },
+  ],
+};
