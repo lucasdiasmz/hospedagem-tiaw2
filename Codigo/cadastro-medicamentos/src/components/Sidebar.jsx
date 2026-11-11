@@ -6,7 +6,7 @@ import {
 } from './Icones.jsx';
 
 /* as outras telas rodam cada uma no seu servidor do Vite (endereços em src/navegacao.js).
-   "Medicamentos" leva à lista do dia (apresentacao-medicamentos); esta tela é o cadastro. */
+   "Medicamentos" leva à lista do dia (medicamentos); esta tela é o cadastro. */
 const MENU = [
   { rotulo: 'Início', Icone: IconeInicio, href: TELAS.inicio },
   { rotulo: 'Agenda', Icone: IconeAgenda, href: TELAS.agenda },

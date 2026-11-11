@@ -2,11 +2,11 @@
 
 Tela de **cadastro de medicamentos** (requisito 7 do planejamento da sprint, tipo CI) em React + Vite. O visual segue o Design System do projeto: Lora nos títulos, Inter no texto, cores `#050315`, `#DDE5E9`, `#406399` e `#CAD6EF` e espaçamentos de 4, 8, 16, 24, 32 e 48 px.
 
-O usuário escolhe o idoso e informa nome, dosagem, categoria, forma, via, frequência, horários e observações. Os medicamentos ficam no MongoDB, acessado pela API em `Codigo/api-medicamentos`. Idosos e catálogos (formas e vias) vêm de `Codigo/db/db.json`.
+O usuário escolhe o idoso e informa nome, dosagem, categoria, forma, via, frequência, horários e observações. Os medicamentos ficam no MongoDB, acessado pela API em `Codigo/cadastro-medicamentos/server`. Idosos e catálogos (formas e vias) vêm de `Codigo/db/db.json`.
 
 ## Como rodar
 
-Primeiro ligue a API (veja `Codigo/api-medicamentos/README.md`). Depois:
+Primeiro ligue a API (veja `Codigo/cadastro-medicamentos/server/README.md`). Depois:
 
 ```bash
 npm install
