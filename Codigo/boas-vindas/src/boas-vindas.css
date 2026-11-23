@@ -1,0 +1,266 @@
+/* =====================================================
+   AcessaMob | Boas-vindas e cadastro inicial (mobile-first)
+   Tokens e componentes comuns: Codigo/design-system/acessamob.css
+   No celular: faixa azul da marca em cima e o passo embaixo.
+   No computador: painel azul à esquerda e o passo à direita.
+   ===================================================== */
+
+.boas-vindas {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.bv-marca {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
+  padding: var(--e-6) var(--e-5) var(--e-10);
+  background: var(--marinho-800);
+  color: #fff;
+  isolation: isolate;
+}
+
+/* o abraço do logo, ampliado e quase invisível */
+.bv-marca::after {
+  content: '';
+  position: absolute;
+  right: -6rem;
+  bottom: -9rem;
+  z-index: -1;
+  width: 18rem;
+  height: 18rem;
+  border-radius: 50%;
+  border: 3rem solid rgba(111, 151, 227, 0.12);
+}
+
+.bv-nome {
+  display: block;
+  font-size: var(--t-lg);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.bv-slogan {
+  display: block;
+  color: var(--sobre-escuro-2);
+  font-size: var(--t-sm);
+}
+
+.bv-conteudo {
+  flex: 1;
+  width: 100%;
+  max-width: 34rem;
+  margin: calc(var(--e-6) * -1) auto 0;
+  padding: var(--e-6) var(--e-5) var(--e-10);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  background: var(--fundo);
+}
+
+.bv-conteudo h1 {
+  font-size: var(--t-xl);
+  letter-spacing: -0.025em;
+  outline: none;
+}
+
+.bv-sub {
+  margin: var(--e-2) 0 var(--e-6);
+  color: var(--tinta-2);
+}
+
+/* indicador de passos */
+.passos {
+  display: flex;
+  gap: 6px;
+  margin-bottom: var(--e-6);
+}
+
+.passos li {
+  flex: 1;
+  height: 6px;
+  border-radius: var(--r-pilula);
+  background: var(--linha);
+}
+
+.passos li.feito {
+  background: var(--azul-logo);
+}
+
+.passos li.atual {
+  background: var(--azul);
+}
+
+/* escolha de perfil */
+.bv-perfis {
+  display: grid;
+  gap: var(--e-3);
+}
+
+.bv-perfil {
+  display: flex;
+  align-items: center;
+  gap: var(--e-4);
+  width: 100%;
+  min-height: 5.5rem;
+  padding: var(--e-4);
+  border-radius: var(--r-lg);
+  border: 1.5px solid var(--linha);
+  background: var(--superficie);
+  box-shadow: var(--sombra-1);
+  text-align: left;
+  transition: border-color 0.15s, transform 0.2s var(--ease);
+}
+
+.bv-perfil:hover {
+  border-color: var(--azul);
+}
+
+.bv-perfil:active {
+  transform: scale(0.98);
+}
+
+.bv-perfil.escolhido {
+  border-color: var(--azul);
+  background: var(--azul-suave);
+}
+
+.bv-perfil-icone {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  flex-shrink: 0;
+  border-radius: var(--r-md);
+  background: var(--azul-suave);
+  color: var(--azul);
+}
+
+.bv-perfil-icone svg {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.bv-perfil-texto {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bv-perfil-texto strong {
+  font-size: var(--t-md);
+}
+
+.bv-perfil-texto small {
+  color: var(--tinta-2);
+  font-size: var(--t-sm);
+}
+
+.bv-perfil > svg {
+  color: var(--azul);
+}
+
+.bv-pular {
+  margin-top: var(--e-4);
+  padding-left: 0;
+}
+
+.bv-fieldset {
+  border: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.bv-fieldset legend {
+  margin-bottom: var(--e-3);
+  font-weight: 600;
+}
+
+.bv-dias {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--e-1);
+}
+
+.bv-dia {
+  display: grid;
+  place-items: center;
+  height: var(--toque);
+  border-radius: var(--r-sm);
+  border: 1.5px solid var(--linha-forte);
+  background: var(--superficie);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.bv-dia input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.bv-dia:has(input:checked) {
+  border-color: var(--azul);
+  background: var(--azul);
+  color: #fff;
+}
+
+.bv-dia:has(input:focus-visible) {
+  box-shadow: var(--foco);
+}
+
+.bv-horas {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* ===== Computador: painel da marca à esquerda ===== */
+@media (min-width: 64rem) {
+  .boas-vindas {
+    display: grid;
+    grid-template-columns: minmax(20rem, 2fr) 3fr;
+  }
+
+  .bv-marca {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    min-height: 100dvh;
+    padding: var(--e-12);
+  }
+
+  .bv-marca img {
+    width: 88px;
+    height: 88px;
+  }
+
+  .bv-nome {
+    margin-top: var(--e-4);
+    font-size: var(--t-2xl);
+  }
+
+  .bv-slogan {
+    font-size: var(--t-md);
+  }
+
+  .bv-marca::after {
+    right: -10rem;
+    bottom: auto;
+    top: -10rem;
+    width: 30rem;
+    height: 30rem;
+    border-width: 5rem;
+  }
+
+  .bv-conteudo {
+    align-self: center;
+    margin: 0 auto;
+    padding: var(--e-12) var(--e-8);
+    border-radius: 0;
+  }
+
+  .bv-conteudo h1 {
+    font-size: var(--t-2xl);
+  }
+}
