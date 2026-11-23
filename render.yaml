@@ -1,0 +1,105 @@
+# Blueprint do Render: cria as 7 APIs do AcessaMob de uma vez (New → Blueprint).
+# MONGODB_URI é pedida na criação de cada serviço: cole a mesma string do Atlas,
+# terminando em /acessamob (ex.: mongodb+srv://usuario:senha@cluster0.xxxxx.mongodb.net/acessamob).
+# Passo a passo completo em Codigo/HOSPEDAGEM.md.
+services:
+  - type: web
+    name: acessamob-inicio-api
+    runtime: node
+    plan: free
+    region: virginia
+    rootDir: Codigo/inicio/server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/saude
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DB
+        value: acessamob
+
+  - type: web
+    name: acessamob-agenda-api
+    runtime: node
+    plan: free
+    region: virginia
+    rootDir: Codigo/agenda/server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/saude
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DB
+        value: acessamob
+
+  - type: web
+    name: acessamob-cadastro-api
+    runtime: node
+    plan: free
+    region: virginia
+    rootDir: Codigo/cadastro-medicamentos/server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+
+  - type: web
+    name: acessamob-tarefas-api
+    runtime: node
+    plan: free
+    region: virginia
+    rootDir: Codigo/tarefas/server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+
+  - type: web
+    name: acessamob-medicamentos-api
+    runtime: node
+    plan: free
+    region: virginia
+    rootDir: Codigo/medicamentos
+    buildCommand: npm install
+    startCommand: npm run api
+    healthCheckPath: /api/idosos
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DB
+        value: acessamob
+
+  - type: web
+    name: acessamob-cuidadores-api
+    runtime: node
+    plan: free
+    region: virginia
+    rootDir: Codigo/cuidadores
+    buildCommand: npm install
+    startCommand: npm run api
+    healthCheckPath: /api/cuidadores
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DB
+        value: acessamob
+
+  - type: web
+    name: acessamob-perfil-api
+    runtime: node
+    plan: free
+    region: virginia
+    rootDir: Codigo/perfil-linha-do-tempo/backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      # endereço do site do perfil na Vercel; ajuste depois de publicar os sites
+      - key: FRONTEND_URL
+        value: https://acessamob-perfil.vercel.app
+      - key: FUSO_HORARIO
+        value: "-03:00"
