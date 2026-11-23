@@ -1,6 +1,8 @@
 /* chamadas ao backend da agenda (server/); em desenvolvimento o Vite repassa /api para http://localhost:3002 */
-/* hospedado, VITE_API_URL aponta para o endereço da API (ex.: https://acessamob-agenda.onrender.com) */
-const URL_API = (import.meta.env.VITE_API_URL || '') + '/api';
+import { urlApi } from './navegacao.js';
+
+/* local: o Vite repassa /api para server/; publicado: a API no Render (src/navegacao.js) */
+const URL_API = urlApi('agenda') + '/api';
 
 export async function api(caminho, { metodo = 'GET', corpo } = {}) {
   const res = await fetch(URL_API + caminho, {

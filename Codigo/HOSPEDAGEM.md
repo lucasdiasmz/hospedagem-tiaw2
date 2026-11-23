@@ -48,39 +48,40 @@ Teste abrindo `<endereço>/api/saude` (início e agenda) ou `<endereço>/api/ido
 
 ## 3. Sites (Vercel)
 
-Em vercel.com: *Add New → Project*, o mesmo repositório 8 vezes, mudando o *Root Directory*.
-O framework (Vite) é detectado sozinho.
+Em vercel.com: *Add New → Project*, o mesmo repositório 8 vezes, clicando em *Import single
+project* no módulo certo e usando exatamente estes nomes de projeto:
 
-| Site | Root Directory | `VITE_API_URL` |
+| Site | Root Directory | Nome do projeto (endereço) |
 |---|---|---|
-| Boas-vindas | `Codigo/boas-vindas` | — |
-| Início | `Codigo/inicio` | endereço da API do Início |
-| Agenda | `Codigo/agenda` | endereço da API da Agenda |
-| Medicamentos | `Codigo/medicamentos` | endereço da API de Medicamentos |
-| Cadastro de medicamentos | `Codigo/cadastro-medicamentos` | endereço da API de Cadastro |
-| Tarefas | `Codigo/tarefas` | endereço da API de Tarefas |
-| Cuidadores | `Codigo/cuidadores` | endereço da API de Cuidadores |
-| Perfil e Linha do tempo | `Codigo/perfil-linha-do-tempo/frontend` | endereço da API do Perfil |
+| Boas-vindas | `Codigo/boas-vindas` | `acessamob-boas-vindas` |
+| Início | `Codigo/inicio` | `acessamob-inicio` |
+| Agenda | `Codigo/agenda` | `acessamob-agenda` |
+| Medicamentos | `Codigo/medicamentos` | `acessamob-medicamentos` |
+| Cadastro de medicamentos | `Codigo/cadastro-medicamentos` | `acessamob-cadastro` |
+| Tarefas | `Codigo/tarefas` | `acessamob-tarefas` |
+| Cuidadores | `Codigo/cuidadores` | `acessamob-cuidadores` |
+| Perfil e Linha do tempo | `Codigo/perfil-linha-do-tempo/frontend` | `acessamob-perfil` |
 
-`VITE_API_URL` é só o endereço do Render, sem `/api` e sem `/` no fim.
-Sem ela, o site usa o endereço local (como em desenvolvimento).
+Não é preciso cadastrar variáveis: `src/navegacao.js` sabe que, fora do `localhost`, as telas
+ficam em `https://acessamob-<nome>.vercel.app` e as APIs em
+`https://acessamob-<api>-api.onrender.com` (os nomes do `render.yaml`).
 
-## 4. Links do menu entre as telas
+## 4. Se algum endereço mudar
 
-Com os 8 sites no ar, cadastre **em todos os projetos da Vercel** as variáveis abaixo (os nomes
-estão em `src/navegacao.js`) e faça *Redeploy* de cada um:
+Se a Vercel ou o Render derem outro endereço (nome já usado, domínio próprio), cadastre no projeto
+da Vercel a variável correspondente e faça *Redeploy* (o Vite grava os valores no build):
 
-| Variável | Valor (exemplo) |
-|---|---|
-| `VITE_URL_BOAS_VINDAS` | `https://acessamob-boas-vindas.vercel.app/` |
-| `VITE_URL_HOMEPAGE` | `https://acessamob-inicio.vercel.app/` |
-| `VITE_URL_AGENDA` | `https://acessamob-agenda.vercel.app/` |
-| `VITE_URL_MEDICAMENTOS` | `https://acessamob-medicamentos.vercel.app/` |
-| `VITE_URL_CADASTRO_MEDICAMENTOS` | `https://acessamob-cadastro.vercel.app/` |
-| `VITE_URL_TAREFAS` | `https://acessamob-tarefas.vercel.app/` |
-| `VITE_URL_CUIDADORES` | `https://acessamob-cuidadores.vercel.app/` |
-| `VITE_URL_LINHA_DO_TEMPO` | `https://acessamob-perfil.vercel.app/linha-do-tempo` |
-| `VITE_URL_PERFIS` | `https://acessamob-perfil.vercel.app/perfil` |
+- `VITE_API_URL`: endereço da API daquela tela no Render, sem `/api` e sem `/` no fim;
+- `VITE_URL_BOAS_VINDAS`, `VITE_URL_HOMEPAGE`, `VITE_URL_AGENDA`, `VITE_URL_MEDICAMENTOS`,
+  `VITE_URL_CADASTRO_MEDICAMENTOS`, `VITE_URL_TAREFAS`, `VITE_URL_CUIDADORES`,
+  `VITE_URL_LINHA_DO_TEMPO`, `VITE_URL_PERFIS`: endereços das telas, usados pelo menu
+  (em todos os projetos).
 
-Dica: na Vercel, *Settings → Environment Variables* aceita colar várias linhas `NOME=valor` de
-uma vez. O Vite grava esses valores no build, por isso o *Redeploy* é necessário a cada mudança.
+Na API do perfil, `FRONTEND_URL` (no Render) precisa ser o endereço do site do perfil.
+
+## Observações sobre o banco
+
+- O perfil usa um banco próprio, `acessamob_perfil`: o modelo de idoso dele é diferente do das
+  outras telas e o seed dele apaga a coleção `idosos`.
+- Nas coleções compartilhadas, o id fica no `_id` (padrão do `inicio`). Os medicamentos também
+  têm o campo `id`, usado pelo cadastro.

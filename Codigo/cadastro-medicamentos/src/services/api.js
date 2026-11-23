@@ -1,5 +1,8 @@
 /* Chamadas à API de medicamentos (Codigo/cadastro-medicamentos/server) */
-const URL_API = import.meta.env.VITE_API_URL || 'http://localhost:3003';
+import { urlApi } from '../navegacao.js';
+
+/* local: http://localhost:3003; publicado: a API no Render (src/navegacao.js) */
+const URL_API = urlApi('cadastro', 'http://localhost:3003');
 
 async function chamar(caminho, opcoes) {
   let resposta;

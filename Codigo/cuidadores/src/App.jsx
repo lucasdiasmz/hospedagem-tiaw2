@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import Sidebar from './components/Sidebar.jsx';
+import { urlApi } from './navegacao.js';
 import { IconeCuidadores } from './components/Icones.jsx';
 
-/* local: o Vite repassa /api para servidor.js; hospedado: VITE_API_URL aponta para o endereço da API */
-const URL_API = (import.meta.env.VITE_API_URL || '') + '/api';
+/* local: o Vite repassa /api para servidor.js; publicado: a API no Render (src/navegacao.js) */
+const URL_API = urlApi('cuidadores') + '/api';
 
 const abas = ['Sobre', 'Serviços e preços', 'Avaliações', 'Disponibilidade'];
 const experiencias = {

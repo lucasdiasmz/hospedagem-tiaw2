@@ -1,5 +1,7 @@
-/* local: o Vite repassa /api para o backend; hospedado: VITE_API_URL aponta para o endereço da API */
-const API_URL = (import.meta.env.VITE_API_URL || "") + "/api";
+import { urlApi } from "../navegacao.js";
+
+/* local: o Vite repassa /api para o backend; publicado: a API no Render (src/navegacao.js) */
+const API_URL = urlApi("perfil") + "/api";
 
 async function requisicao(caminho, opcoes) {
   let resposta = null;

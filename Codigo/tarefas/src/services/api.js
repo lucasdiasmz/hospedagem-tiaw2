@@ -1,5 +1,8 @@
 /* Chamadas à API de tarefas da rede de apoio (Codigo/tarefas/server) */
-const URL_API = import.meta.env.VITE_API_URL || 'http://localhost:3004';
+import { urlApi } from '../navegacao.js';
+
+/* local: http://localhost:3004; publicado: a API no Render (src/navegacao.js) */
+const URL_API = urlApi('tarefas', 'http://localhost:3004');
 
 async function chamar(caminho, opcoes) {
   let resposta;
