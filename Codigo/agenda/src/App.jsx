@@ -5,8 +5,10 @@ import DialogoNovo from './components/DialogoNovo.jsx';
 import Mes from './components/Mes.jsx';
 import PainelDia from './components/PainelDia.jsx';
 import Semana from './components/Semana.jsx';
-import Sidebar from './components/Sidebar.jsx';
-import Toast from './components/Toast.jsx';
+import Shell from '@ds/Shell.jsx';
+import Toast from '@ds/Toast.jsx';
+import { Estado } from '@ds/Componentes.jsx';
+import { IconeAgenda, IconeMais } from '@ds/Icones.jsx';
 import { useAgenda } from './hooks/useAgenda.js';
 import { hoje } from './utils/datas.js';
 
@@ -30,8 +32,8 @@ export default function App() {
   const [ano, mesNum] = agenda.mes.split('-').map(Number);
   const nomeMes = (catalogos?.meses || MESES_PADRAO)[mesNum - 1] + ' ' + ano;
 
-  function avisar(msg) {
-    setAviso({ msg, id: Date.now() });
+  function avisar(msg, tipo) {
+    setAviso({ msg, tipo, id: Date.now() });
   }
 
   async function gravar(acao, msgOk) {
@@ -39,7 +41,7 @@ export default function App() {
       await acao();
       avisar(msgOk);
     } catch (e) {
-      avisar('Não foi possível salvar: ' + e.message);
+      avisar('Não foi possível salvar: ' + e.message, 'erro');
     }
   }
 
@@ -78,17 +80,16 @@ export default function App() {
   let conteudo;
   if (agenda.erro && !agenda.carregado) {
     conteudo = (
-      <div className="card aviso-erro" role="alert">
-        <h2>Não foi possível carregar a agenda</h2>
-        <p>{agenda.erro}. Verifique se o servidor da agenda está rodando (Codigo/agenda/server).</p>
-      </div>
+      <Estado tipo="erro" titulo="Não foi possível carregar a agenda"
+        acao={<button type="button" className="btn" onClick={() => window.location.reload()}>Tentar de novo</button>}>
+        <p>{agenda.erro}. Confira a conexão; no computador, veja se a API da agenda (porta 3002) está ligada.</p>
+      </Estado>
     );
   } else if (!agenda.carregando && !agenda.idosoId) {
     conteudo = (
-      <div className="card aviso-erro">
-        <h2>Nenhum idoso acompanhado</h2>
+      <Estado titulo="Nenhum idoso acompanhado">
         <p>Quando você acompanhar um idoso, a agenda dele aparece aqui.</p>
-      </div>
+      </Estado>
     );
   } else {
     conteudo = (
@@ -120,27 +121,28 @@ export default function App() {
     );
   }
 
+  const idoso = agenda.idosos.find((i) => i.id === agenda.idosoId);
+  const atalhos = [
+    { rotulo: 'Novo compromisso', Icone: IconeMais, aoClicar: () => setNovoAberto(true) },
+    { rotulo: 'Ver próximos compromissos', Icone: IconeAgenda, aoClicar: verProximos },
+  ];
+
   return (
-    <>
-      <div className="app">
-        <Sidebar usuario={agenda.usuario} aoNovoCompromisso={() => setNovoAberto(true)} aoVerProximos={verProximos} />
-
-        <div className="coluna">
-          <main className="conteudo">
-            <Cabecalho
-              usuario={agenda.usuario}
-              mes={agenda.mes}
-              resumo={agenda.resumo}
-              visao={agenda.visao}
-              aoMudarVisao={agenda.mudarVisao}
-              aoHoje={() => agenda.selecionar(hoje())}
-              aoNovo={() => setNovoAberto(true)}
-            />
-            {conteudo}
-          </main>
-        </div>
-      </div>
-
+    <Shell tela="agenda" usuario={agenda.usuario} atalhos={atalhos}>
+      <Cabecalho
+        idoso={idoso}
+        mes={agenda.mes}
+        resumo={agenda.resumo}
+        visao={agenda.visao}
+        aoMudarVisao={agenda.mudarVisao}
+        aoHoje={() => agenda.selecionar(hoje())}
+        aoNovo={() => setNovoAberto(true)}
+      />
+      {conteudo}
+      <button type="button" className="fab" onClick={() => setNovoAberto(true)}>
+        <IconeMais />
+        Novo
+      </button>
       <Toast aviso={aviso} />
 
       <DialogoNovo
@@ -159,6 +161,6 @@ export default function App() {
         aoMudarStatus={mudarStatus}
         aoExcluir={excluir}
       />
-    </>
+    </Shell>
   );
 }

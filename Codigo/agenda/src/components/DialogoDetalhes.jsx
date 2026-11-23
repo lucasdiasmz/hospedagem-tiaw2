@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { antecedencia, dataPorExtenso, descreverRecorrencia } from '../utils/datas.js';
-import Dialogo from './Dialogo.jsx';
+import Dialogo from '@ds/Dialogo.jsx';
 import { ICONES_TIPO, IconeFechar, IconeRelogio, IconeRepetir, IconeSino } from './Icones.jsx';
 
 /* Detalhes de um compromisso, com as ações possíveis.

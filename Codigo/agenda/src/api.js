@@ -1,5 +1,5 @@
 /* chamadas ao backend da agenda (server/); em desenvolvimento o Vite repassa /api para http://localhost:3002 */
-import { urlApi } from './navegacao.js';
+import { urlApi } from '@ds/navegacao.js';
 
 /* local: o Vite repassa /api para server/; publicado: a API no Render (src/navegacao.js) */
 const URL_API = urlApi('agenda') + '/api';
