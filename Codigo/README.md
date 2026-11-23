@@ -31,11 +31,12 @@ entra na navegação: a tela de agenda do sistema é a de `agenda/`.
 
 ## Padrão visual
 
-Todas as telas seguem o visual da tela inicial (`inicio/src/styles/inicio.css`): fonte Inter, menu
-lateral azul-escuro com o logo `logo-acessamob.png`, fundo `#f3f6fc`, azul principal `#1d63dc`,
-cartões brancos com cantos de 12–16 px e cartão de destaque em `#0f3a8c`. Em telas estreitas o menu
-lateral vira barra inferior. Ao criar uma tela nova, copie os tokens do `:root` e o `Sidebar.jsx`
-de um módulo existente.
+O visual é um só, em [`design-system/`](design-system/README.md): tokens, componentes, menu
+(`Shell.jsx`), ícones, diálogo, aviso e navegação. Cada tela importa de lá (`@ds/...`) e guarda no
+próprio CSS só o que é dela. É **mobile-first**: no celular, barra no topo e abas embaixo; no
+computador, o menu lateral azul-escuro com o logo. Identidade: logo e nome AcessaMob, slogan
+"Mais cuidado, todos os dias.", azul `#1d63dc`, azul-escuro `#0c2152` e fonte Inter.
+Ao criar uma tela nova, use `<Shell>` e os componentes do design system.
 
 ## Hospedagem
 
@@ -43,8 +44,8 @@ O passo a passo para publicar banco, APIs e sites está em [HOSPEDAGEM.md](HOSPE
 
 ## Navegação entre as telas
 
-Os endereços ficam em `src/navegacao.js`, um arquivo **igual em todos os módulos**. Ao mudar
-uma porta, mude no `vite.config.js` do módulo e nesse arquivo em todos os outros. Fora do
+Os endereços ficam em `design-system/navegacao.js`, um arquivo só para todas as telas. Ao mudar
+uma porta, mude no `vite.config.js` do módulo e nesse arquivo. Fora do
 ambiente local, defina as variáveis `VITE_URL_*` no `.env` de cada módulo.
 
 | Item do menu | Abre |
@@ -55,11 +56,11 @@ ambiente local, defina as variáveis `VITE_URL_*` no `.env` de cada módulo.
 | Tarefas | `tarefas/` |
 | Linha do tempo | `perfil-linha-do-tempo/` em `/linha-do-tempo` |
 | Cuidadores | `cuidadores/` |
-| Perfis | `perfil-linha-do-tempo/` em `/perfil` |
-| Histórico | ainda sem tela |
+| Perfil do idoso | `perfil-linha-do-tempo/` em `/perfil` |
 
-A tela de boas-vindas (`boas-vindas/`) é a entrada do sistema: ao concluir o cadastro inicial ela
-leva para o Início.
+A tela de boas-vindas (`boas-vindas/`) é a entrada do sistema: guarda o perfil, o nome e as
+preferências de acessibilidade (valem em todas as telas) e leva para o Início ou, para cuidadores,
+para Cuidadores. No celular, Linha do tempo, Cuidadores e Perfil do idoso ficam na aba "Mais".
 
 ## Como rodar tudo
 
