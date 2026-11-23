@@ -2,8 +2,9 @@ import { USUARIO } from '../data/db.js';
 import { TELAS } from '../navegacao.js';
 import {
   IconeAgenda, IconeCuidadores, IconeHistorico, IconeInicio, IconeLinhaDoTempo, IconeLista,
-  IconeMais, IconePerfis, IconePilula, IconeTarefas, Logo, Ondas, SetaDireita,
+  IconeMais, IconePerfis, IconePilula, IconeTarefas, Ondas, SetaDireita,
 } from './Icones.jsx';
+import logo from '../assets/logo-acessamob.png';
 
 /* as outras telas rodam cada uma no seu servidor do Vite (endereços em src/navegacao.js).
    "Medicamentos" leva à lista do dia (medicamentos); esta tela é o cadastro. */
@@ -22,7 +23,9 @@ export default function Sidebar({ aoNovoMedicamento, aoVerCadastrados }) {
   return (
     <aside className="sidebar">
       <div className="marca">
-        <Logo />
+        <span className="marca-logo">
+          <img src={logo} alt="" width="52" height="52" />
+        </span>
         <div>
           <span className="marca-nome">AcessaMob</span>
           <small>Mais cuidado, todos os dias.</small>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import Estrutura from './Estrutura.jsx';
+import Sidebar from './components/Sidebar.jsx';
+import { IconeCuidadores } from './components/Icones.jsx';
 
 const abas = ['Sobre', 'Serviços e preços', 'Avaliações', 'Disponibilidade'];
 const experiencias = {
@@ -93,152 +94,162 @@ export default function App() {
         : null;
 
     return (
-        <Estrutura>
-            <main>
-                <p className="caminho">Cuidadores <span aria-hidden="true">/</span> Perfil profissional</p>
-                <h1>{id ? 'Perfil do cuidador' : 'Cuidadores'}</h1>
-                <p className="introducao">Conheça o profissional e as informações sobre seus cuidados.</p>
+        <div className="app">
+            <Sidebar />
 
-                {carregando && <p className="aviso" role="status">Carregando...</p>}
-
-                {!carregando && erro && (
-                    <div className="aviso erro" role="alert">
-                        <p>{erro}</p>
-                        <button className="botao" onClick={() => setTentativa(valor => valor + 1)}>
-                            Tentar novamente
-                        </button>
+            <div className="coluna">
+                <main className="conteudo">
+                    <div className="saudacao">
+                        <span className="saudacao-icone" aria-hidden="true"><IconeCuidadores /></span>
+                        <div>
+                            <h1>{id ? 'Perfil do cuidador' : 'Cuidadores'}</h1>
+                            <p>{id
+                                ? 'Conheça o profissional e as informações sobre seus cuidados.'
+                                : 'Escolha um profissional para ver o perfil completo.'}</p>
+                        </div>
                     </div>
-                )}
 
-                {!carregando && !erro && naoEncontrado && (
-                    <div className="aviso" role="status">
-                        <h2>Perfil não encontrado</h2>
-                        <p>Este cuidador não está disponível. Volte e selecione outro profissional.</p>
-                        <a className="botao" href="./perfil.html">Voltar aos cuidadores</a>
-                    </div>
-                )}
+                    {carregando && <p className="aviso" role="status">Carregando...</p>}
 
-                {!carregando && !erro && !id && (
-                    <section className="lista-cuidadores" aria-label="Escolher cuidador">
-                        {lista.length === 0 && <p className="aviso">Nenhum cuidador cadastrado.</p>}
-                        {lista.map(cuidador => (
-                            <article className="cartao-cuidador" key={cuidador.id}>
-                                <span className="foto-lista" aria-hidden="true">{iniciais(cuidador.nome)}</span>
-                                <div>
-                                    <h2>{cuidador.nome}</h2>
-                                    <p>Perfil profissional</p>
-                                </div>
-                                <a className="botao" href={'./perfil.html?id=' + encodeURIComponent(cuidador.id)}>
-                                    Ver perfil <span className="somente-leitor">de {cuidador.nome}</span>
-                                </a>
-                            </article>
-                        ))}
-                    </section>
-                )}
+                    {!carregando && erro && (
+                        <div className="aviso erro" role="alert">
+                            <p>{erro}</p>
+                            <button className="botao" onClick={() => setTentativa(valor => valor + 1)}>
+                                Tentar novamente
+                            </button>
+                        </div>
+                    )}
 
-                {!carregando && !erro && !naoEncontrado && perfil && (
-                    <article className="perfil">
-                        <header className="resumo-perfil">
-                            {perfil.foto && !fotoFalhou ? (
-                                <img className="foto-perfil" src={perfil.foto} alt={'Foto de ' + perfil.nome} onError={() => setFotoFalhou(true)} />
-                            ) : (
-                                <span className="foto-perfil iniciais" role="img" aria-label={'Sem foto de ' + perfil.nome}>
-                                    {iniciais(perfil.nome)}
-                                </span>
-                            )}
-                            <h2>{perfil.nome}</h2>
-                            <p className="nota">
-                                {media !== null ? (
-                                    <><span aria-hidden="true">★</span> {media.toFixed(1).replace('.', ',')} <span className="quantidade">({avaliacoes.length} {avaliacoes.length === 1 ? 'avaliação' : 'avaliações'})</span></>
-                                ) : 'Ainda sem avaliações'}
-                            </p>
-                            <p>{experiencias[perfil.experiencia]
-                                ? experiencias[perfil.experiencia] + ' de experiência em cuidados'
-                                : 'Experiência não informada'}</p>
-                            <p className="localizacao">
-                                {[perfil.localizacao.bairro, perfil.localizacao.cidade].filter(Boolean).join(' · ') || 'Localização não informada'}
-                            </p>
-                        </header>
+                    {!carregando && !erro && naoEncontrado && (
+                        <div className="aviso" role="status">
+                            <h2>Perfil não encontrado</h2>
+                            <p>Este cuidador não está disponível. Volte e selecione outro profissional.</p>
+                            <a className="botao" href="./perfil.html">Voltar aos cuidadores</a>
+                        </div>
+                    )}
 
-                        <nav className="abas-perfil" aria-label="Seções do perfil">
-                            {abas.map(nome => (
-                                <button key={nome} className={aba === nome ? 'aba ativa' : 'aba'} aria-pressed={aba === nome} onClick={() => setAba(nome)}>
-                                    {nome}
-                                </button>
-                            ))}
-                        </nav>
-
-                        <section className="conteudo-perfil" aria-label={aba}>
-                            {aba === 'Sobre' && (
-                                <>
-                                    <h3>Sobre o profissional</h3>
-                                    <p>{perfil.sobre || 'Apresentação não informada.'}</p>
-                                    <h3>Qualificações</h3>
-                                    {perfil.qualificacoes.length > 0 ? (
-                                        <ul>{perfil.qualificacoes.map((item, indice) => <li key={indice}>{item}</li>)}</ul>
-                                    ) : <p>Nenhuma qualificação informada.</p>}
-                                    <h3>Referências profissionais</h3>
-                                    {perfil.referencias.length > 0 ? (
-                                        <ul className="referencias">
-                                            {perfil.referencias.map((item, indice) => (
-                                                <li key={indice}><strong>{item.nome}</strong>{item.telefone && <span>{item.telefone}</span>}</li>
-                                            ))}
-                                        </ul>
-                                    ) : <p>Nenhuma referência informada.</p>}
-                                </>
-                            )}
-
-                            {aba === 'Serviços e preços' && (
-                                <>
-                                    <h3>Serviços oferecidos</h3>
-                                    {perfil.servicos.length > 0 ? (
-                                        <ul className="servicos">
-                                            {perfil.servicos.map(servico => <li key={servico}>{servicos[servico] || servico}</li>)}
-                                        </ul>
-                                    ) : <p>Nenhum serviço informado.</p>}
-                                    <div className="preco">
-                                        <span>Valor por hora</span>
-                                        <strong>{perfil.valorHora !== null ? dinheiro(perfil.valorHora) : 'Não informado'}</strong>
+                    {!carregando && !erro && !id && (
+                        <section className="lista-cuidadores" aria-label="Escolher cuidador">
+                            {lista.length === 0 && <p className="aviso">Nenhum cuidador cadastrado.</p>}
+                            {lista.map(cuidador => (
+                                <article className="cartao-cuidador" key={cuidador.id}>
+                                    <span className="foto-lista" aria-hidden="true">{iniciais(cuidador.nome)}</span>
+                                    <div>
+                                        <h2>{cuidador.nome}</h2>
+                                        <p>Perfil profissional</p>
                                     </div>
-                                </>
-                            )}
-
-                            {aba === 'Avaliações' && (
-                                <>
-                                    <h3>Avaliações dos atendimentos</h3>
-                                    {avaliacoes.length === 0 && <p>Este cuidador ainda não recebeu avaliações.</p>}
-                                    {avaliacoes.map(avaliacao => (
-                                        <article className="avaliacao" key={avaliacao.id}>
-                                            <div><strong>{avaliacao.autor}</strong><span className="nota" aria-label={avaliacao.nota + ' de 5 estrelas'}>★ {avaliacao.nota}/5</span></div>
-                                            <p>{avaliacao.comentario || 'Avaliação sem comentário.'}</p>
-                                            {avaliacao.data && <time dateTime={avaliacao.data}>{avaliacao.data.split('-').reverse().join('/')}</time>}
-                                        </article>
-                                    ))}
-                                </>
-                            )}
-
-                            {aba === 'Disponibilidade' && (
-                                <>
-                                    <h3>Disponibilidade de atendimento</h3>
-                                    <p>{perfil.disponibilidade.descricao || 'Disponibilidade não informada.'}</p>
-                                    <ul className="dias">
-                                        {perfil.disponibilidade.dias.map(dia => <li key={dia}>{dias[dia] || dia}</li>)}
-                                    </ul>
-                                    {perfil.disponibilidade.inicio && perfil.disponibilidade.fim && (
-                                        <p className="horario">Das {perfil.disponibilidade.inicio} às {perfil.disponibilidade.fim}
-                                            {perfil.disponibilidade.fim < perfil.disponibilidade.inicio && ' do dia seguinte'}
-                                        </p>
-                                    )}
-                                </>
-                            )}
+                                    <a className="botao" href={'./perfil.html?id=' + encodeURIComponent(cuidador.id)}>
+                                        Ver perfil <span className="somente-leitor">de {cuidador.nome}</span>
+                                    </a>
+                                </article>
+                            ))}
                         </section>
+                    )}
 
-                        <footer className="rodape-perfil">
-                            <a className="botao" href="./perfil.html">← Voltar aos cuidadores</a>
-                        </footer>
-                    </article>
-                )}
-            </main>
-        </Estrutura>
+                    {!carregando && !erro && !naoEncontrado && perfil && (
+                        <article className="perfil">
+                            <header className="resumo-perfil">
+                                {perfil.foto && !fotoFalhou ? (
+                                    <img className="foto-perfil" src={perfil.foto} alt={'Foto de ' + perfil.nome} onError={() => setFotoFalhou(true)} />
+                                ) : (
+                                    <span className="foto-perfil iniciais" role="img" aria-label={'Sem foto de ' + perfil.nome}>
+                                        {iniciais(perfil.nome)}
+                                    </span>
+                                )}
+                                <h2>{perfil.nome}</h2>
+                                <p className="nota">
+                                    {media !== null ? (
+                                        <><span aria-hidden="true">★</span> {media.toFixed(1).replace('.', ',')} <span className="quantidade">({avaliacoes.length} {avaliacoes.length === 1 ? 'avaliação' : 'avaliações'})</span></>
+                                    ) : 'Ainda sem avaliações'}
+                                </p>
+                                <p>{experiencias[perfil.experiencia]
+                                    ? experiencias[perfil.experiencia] + ' de experiência em cuidados'
+                                    : 'Experiência não informada'}</p>
+                                <p className="localizacao">
+                                    {[perfil.localizacao.bairro, perfil.localizacao.cidade].filter(Boolean).join(' · ') || 'Localização não informada'}
+                                </p>
+                            </header>
+
+                            <nav className="abas-perfil" aria-label="Seções do perfil">
+                                {abas.map(nome => (
+                                    <button key={nome} className={aba === nome ? 'aba ativa' : 'aba'} aria-pressed={aba === nome} onClick={() => setAba(nome)}>
+                                        {nome}
+                                    </button>
+                                ))}
+                            </nav>
+
+                            <section className="conteudo-perfil" aria-label={aba}>
+                                {aba === 'Sobre' && (
+                                    <>
+                                        <h3>Sobre o profissional</h3>
+                                        <p>{perfil.sobre || 'Apresentação não informada.'}</p>
+                                        <h3>Qualificações</h3>
+                                        {perfil.qualificacoes.length > 0 ? (
+                                            <ul>{perfil.qualificacoes.map((item, indice) => <li key={indice}>{item}</li>)}</ul>
+                                        ) : <p>Nenhuma qualificação informada.</p>}
+                                        <h3>Referências profissionais</h3>
+                                        {perfil.referencias.length > 0 ? (
+                                            <ul className="referencias">
+                                                {perfil.referencias.map((item, indice) => (
+                                                    <li key={indice}><strong>{item.nome}</strong>{item.telefone && <span>{item.telefone}</span>}</li>
+                                                ))}
+                                            </ul>
+                                        ) : <p>Nenhuma referência informada.</p>}
+                                    </>
+                                )}
+
+                                {aba === 'Serviços e preços' && (
+                                    <>
+                                        <h3>Serviços oferecidos</h3>
+                                        {perfil.servicos.length > 0 ? (
+                                            <ul className="servicos">
+                                                {perfil.servicos.map(servico => <li key={servico}>{servicos[servico] || servico}</li>)}
+                                            </ul>
+                                        ) : <p>Nenhum serviço informado.</p>}
+                                        <div className="preco">
+                                            <span>Valor por hora</span>
+                                            <strong>{perfil.valorHora !== null ? dinheiro(perfil.valorHora) : 'Não informado'}</strong>
+                                        </div>
+                                    </>
+                                )}
+
+                                {aba === 'Avaliações' && (
+                                    <>
+                                        <h3>Avaliações dos atendimentos</h3>
+                                        {avaliacoes.length === 0 && <p>Este cuidador ainda não recebeu avaliações.</p>}
+                                        {avaliacoes.map(avaliacao => (
+                                            <article className="avaliacao" key={avaliacao.id}>
+                                                <div><strong>{avaliacao.autor}</strong><span className="nota" aria-label={avaliacao.nota + ' de 5 estrelas'}>★ {avaliacao.nota}/5</span></div>
+                                                <p>{avaliacao.comentario || 'Avaliação sem comentário.'}</p>
+                                                {avaliacao.data && <time dateTime={avaliacao.data}>{avaliacao.data.split('-').reverse().join('/')}</time>}
+                                            </article>
+                                        ))}
+                                    </>
+                                )}
+
+                                {aba === 'Disponibilidade' && (
+                                    <>
+                                        <h3>Disponibilidade de atendimento</h3>
+                                        <p>{perfil.disponibilidade.descricao || 'Disponibilidade não informada.'}</p>
+                                        <ul className="dias">
+                                            {perfil.disponibilidade.dias.map(dia => <li key={dia}>{dias[dia] || dia}</li>)}
+                                        </ul>
+                                        {perfil.disponibilidade.inicio && perfil.disponibilidade.fim && (
+                                            <p className="horario">Das {perfil.disponibilidade.inicio} às {perfil.disponibilidade.fim}
+                                                {perfil.disponibilidade.fim < perfil.disponibilidade.inicio && ' do dia seguinte'}
+                                            </p>
+                                        )}
+                                    </>
+                                )}
+                            </section>
+
+                            <footer className="rodape-perfil">
+                                <a className="botao" href="./perfil.html">← Voltar aos cuidadores</a>
+                            </footer>
+                        </article>
+                    )}
+                </main>
+            </div>
+        </div>
     );
 }

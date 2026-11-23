@@ -2,8 +2,9 @@ import { USUARIO } from '../data/db.js';
 import { TELAS } from '../navegacao.js';
 import {
   IconeAgenda, IconeCarrinho, IconeCuidadores, IconeHistorico, IconeInicio, IconeLinhaDoTempo,
-  IconeMais, IconePerfis, IconePilula, IconeTarefas, Logo, Ondas, SetaDireita,
+  IconeMais, IconePerfis, IconePilula, IconeTarefas, Ondas, SetaDireita,
 } from './Icones.jsx';
+import logo from '../assets/logo-acessamob.png';
 
 /* as outras telas rodam cada uma no seu servidor do Vite (endereços em src/navegacao.js) */
 const MENU = [
@@ -21,7 +22,9 @@ export default function Sidebar({ aoNovaTarefa, aoVerCompras }) {
   return (
     <aside className="sidebar">
       <div className="marca">
-        <Logo />
+        <span className="marca-logo">
+          <img src={logo} alt="" width="52" height="52" />
+        </span>
         <div>
           <span className="marca-nome">AcessaMob</span>
           <small>Mais cuidado, todos os dias.</small>

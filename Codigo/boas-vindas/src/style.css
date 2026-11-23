@@ -1,232 +1,480 @@
-/* ===== Design System ===== */
+/* =====================================================
+   AcessaMob | Boas-vindas
+   Mesma base visual da tela inicial (Codigo/inicio/src/styles/inicio.css)
+   ===================================================== */
 :root {
-    --color-text: #050315;
-    --color-background: #DDE5E9;
-    --color-primary: #406399;
-    --color-secondary: #CAD6EF;
-    --color-white: #ffffff;
+  --sb-bg: #0c2152;
+  --azul: #1d63dc;
+  --azul-hover: #1855c0;
+  --azul-texto: #1b3d7a;
+  --azul-claro: #d6e5fc;
+  --azul-suave: #e4edfb;
+  --azul-linha: #d6e4fb;
 
-    --space-1: 4px;
-    --space-2: 8px;
-    --space-3: 16px;
-    --space-4: 24px;
-    --space-5: 32px;
-    --space-6: 48px;
+  --texto: #0c1b3c;
+  --suave: #6b7a96;
+  --fraco: #8b97ad;
+  --fundo: #f3f6fc;
+  --card: #ffffff;
+  --borda: #e9eef7;
+  --tile: #f0f4fa;
 
-    --font-heading: 'Lora', serif;
-    --font-body: 'Inter', sans-serif;
+  --fonte: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+  --sombra: 0 4px 20px rgba(30, 60, 120, 0.06);
 }
 
 /* ===== Base ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-    margin: 0;
-    padding: var(--space-5);
-    font-family: var(--font-body);
-    font-size: 24px;
-    color: var(--color-text);
-    background-color: var(--color-background);
-    text-align: center;
+  font-family: var(--fonte);
+  font-size: 16px;
+  background: var(--fundo);
+  color: var(--texto);
 }
 
-h1,
-h2 {
-    font-family: var(--font-heading);
-    font-size: 40px;
-    color: var(--color-primary);
-}
-
-h3 {
-    font-size: 27px;
-    font-weight: 600;
+button,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
 }
 
 button {
-    font-family: var(--font-body);
-    color: var(--color-white);
-    background-color: var(--color-primary);
-    border: none;
-    border-radius: 12px;
-    padding: var(--space-3);
-    cursor: pointer;
+  cursor: pointer;
+  border: none;
+  background: none;
 }
 
-/* ===== Tela inicial ===== */
+:focus-visible {
+  outline: 2px solid var(--azul);
+  outline-offset: 2px;
+}
+
+/* ===== Moldura: painel da marca + área da etapa ===== */
+.moldura {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.painel-marca {
+  position: sticky;
+  top: 0;
+  width: 360px;
+  height: 100vh;
+  height: 100dvh;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 32px 110px 37px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #0c2152 0%, #0b1f4d 65%, #0b2a63 100%);
+  color: #fff;
+}
+
+.painel-marca > * {
+  position: relative;
+  z-index: 1;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 64px;
+}
+
+.marca img {
+  display: block;
+  flex-shrink: 0;
+}
+
+.marca-nome {
+  display: block;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.marca small {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #a9b8d6;
+}
+
+.painel-texto {
+  margin-top: auto;
+}
+
+.painel-etapa {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9fb0d0;
+}
+
+.painel-frase {
+  margin-top: 12px;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.painel-marca .ondas {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 0;
+  width: 100%;
+  height: 150px;
+  pointer-events: none;
+}
+
+.painel-marca .versao {
+  position: absolute;
+  left: 37px;
+  bottom: 34px;
+  font-size: 12.5px;
+  color: #9fb0d0;
+}
+
+.area {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  padding: 64px 33px;
+  background: linear-gradient(180deg, #f6f9fd, var(--fundo));
+}
+
+.area > main {
+  width: 100%;
+  animation: entra 0.25s ease-out both;
+}
+
+@keyframes entra {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* ===== Títulos ===== */
+h1 {
+  font-size: 35px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.subtitulo {
+  margin-top: 9px;
+  font-size: 17.5px;
+  color: var(--suave);
+}
+
+.secao-titulo {
+  margin: 32px 0 12px;
+  font-size: 19px;
+  font-weight: 600;
+}
+
+/* ===== Escolha de perfil ===== */
+.tela-perfil {
+  max-width: 900px;
+}
+
 .flex-cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--space-4);
-    margin-top: var(--space-5);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 32px;
 }
 
 .card {
-    width: 250px;
-    padding: var(--space-4);
-    background-color: var(--color-white);
-    border: 2px solid var(--color-secondary);
-    border-radius: 12px;
-    cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 22px;
+  border: 1px solid var(--borda);
+  border-radius: 14px;
+  background: var(--card);
+  box-shadow: var(--sombra);
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.1s;
 }
 
 .card:hover {
-    border-color: var(--color-primary);
+  border-color: var(--azul);
 }
 
-.card img {
-    width: 60px;
-    height: 60px;
+.card:active {
+  transform: translateY(1px);
+}
+
+.card-imagem {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--azul-claro);
+}
+
+.card-imagem img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.card-texto h3 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.card-texto p {
+  margin-top: 4px;
+  font-size: 15px;
+  color: var(--suave);
 }
 
 /* ===== Telas de formulário (acessibilidade e cuidador) ===== */
 .tela-acessibilidade,
 .tela-cuidador {
-    max-width: 420px;
-    margin: 0 auto;
-    font-size: 16px;
-    text-align: left;
-}
-
-.tela-acessibilidade h1,
-.tela-cuidador h1 {
-    font-size: 32px;
-}
-
-.secao-titulo {
-    font-size: 20px;
-    margin-top: var(--space-5);
+  max-width: 560px;
 }
 
 .btn-voltar {
-    padding: var(--space-2) 0;
-    color: var(--color-primary);
-    background: none;
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  margin-bottom: 16px;
+  color: var(--azul);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.btn-voltar:hover {
+  color: var(--azul-hover);
 }
 
 .btn-proximo {
-    width: 100%;
-    margin-top: var(--space-6);
-    font-size: 18px;
+  width: 100%;
+  height: 54px;
+  margin-top: 40px;
+  border-radius: 999px;
+  background: var(--azul);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 600;
+  transition: background 0.15s, transform 0.1s;
 }
 
-/* Visual de "caixa branca" que se repete nos campos */
+.btn-proximo:hover {
+  background: var(--azul-hover);
+}
+
+.btn-proximo:active {
+  transform: translateY(1px);
+}
+
+/* caixa branca que se repete nos campos */
 .opcao,
 .preferencia,
+.servico,
 .campo-select,
 .campo-texto,
 .campo-disponibilidade {
-    box-sizing: border-box;
-    padding: var(--space-3);
-    font-family: var(--font-body);
-    font-size: 16px;
-    color: var(--color-text);
-    background-color: var(--color-white);
-    border: 2px solid var(--color-secondary);
-    border-radius: 12px;
+  padding: 14px 16px;
+  border: 2px solid var(--azul-linha);
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--texto);
+  font-size: 16px;
 }
 
 /* ===== Tela de acessibilidade ===== */
 .grid-mobilidade {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-3);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
 }
 
 .opcao {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-2);
-    font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  transition: border-color 0.15s, background 0.15s;
 }
 
 .opcao:hover {
-    border-color: var(--color-primary);
+  border-color: var(--azul);
 }
 
 .opcao--ativa {
-    border-color: var(--color-primary);
-    background-color: var(--color-secondary);
+  border-color: var(--azul);
+  background: var(--azul-suave);
+  color: var(--azul-texto);
 }
 
 .opcao-icone {
-    font-size: 36px;
+  font-size: 34px;
 }
 
-.lista-preferencias {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
+.lista-preferencias,
+.lista-servicos {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .preferencia {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
 }
 
 .preferencia-info {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-weight: 600;
 }
 
 .switch,
 .checkbox {
-    width: 24px;
-    height: 24px;
-    accent-color: var(--color-primary);
-    cursor: pointer;
+  width: 22px;
+  height: 22px;
+  accent-color: var(--azul);
+  cursor: pointer;
 }
 
 /* ===== Tela de cuidador ===== */
 .campo-select {
-    width: 100%;
-}
-
-.lista-servicos {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
+  width: 100%;
+  height: 52px;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .servico {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-weight: 500;
+  cursor: pointer;
 }
 
 .campo-disponibilidade {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  text-align: left;
 }
 
 .seta {
-    font-size: 24px;
-    color: var(--color-primary);
+  font-size: 22px;
+  color: var(--azul);
 }
 
 .campo-texto {
-    width: 100%;
-    margin-top: var(--space-3);
-    resize: vertical;
+  width: 100%;
+  margin-top: 12px;
+  resize: vertical;
+}
+
+.campo-select:focus,
+.campo-texto:focus {
+  outline: none;
+  border-color: var(--azul);
+}
+
+/* ===== Telas estreitas: o painel vira uma faixa no topo ===== */
+@media (max-width: 900px) {
+  .moldura {
+    flex-direction: column;
+  }
+
+  .painel-marca {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 16px;
+  }
+
+  .painel-texto,
+  .painel-marca .ondas,
+  .painel-marca .versao {
+    display: none;
+  }
+
+  .marca {
+    height: auto;
+  }
+
+  .area {
+    padding: 28px 16px 40px;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  .subtitulo {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-mobilidade {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* ===== Preferências de acessibilidade ===== */
 body.fonte-maior .tela-acessibilidade,
 body.fonte-maior .tela-cuidador {
-    font-size: 20px;
+  font-size: 20px;
+}
+
+body.fonte-maior .opcao,
+body.fonte-maior .preferencia,
+body.fonte-maior .servico,
+body.fonte-maior .campo-select,
+body.fonte-maior .campo-texto,
+body.fonte-maior .campo-disponibilidade {
+  font-size: 20px;
 }
 
 body.alto-contraste {
-    --color-background: #ffffff;
-    --color-text: #000000;
-    --color-primary: #1f3a6b;
-    --color-secondary: #8aa0c8;
+  --texto: #000000;
+  --suave: #2b3550;
+  --azul: #0b3ea8;
+  --azul-hover: #08307f;
+  --azul-linha: #6f8fc9;
+  --borda: #6f8fc9;
+  --fundo: #ffffff;
+}
+
+/* quem prefere menos movimento não vê animações nem transições */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }

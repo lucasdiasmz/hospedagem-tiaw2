@@ -1,7 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Sidebar from "./components/Sidebar.jsx";
-import Topbar from "./components/Topbar.jsx";
-import BottomNav from "./components/BottomNav.jsx";
 import PerfilIdoso from "./pages/PerfilIdoso.jsx";
 import LinhaDoTempo from "./pages/LinhaDoTempo.jsx";
 
@@ -11,7 +9,6 @@ function App() {
       <div className="app">
         <Sidebar />
         <div className="main">
-          <Topbar />
           <Routes>
             <Route path="/" element={<Navigate to="/perfil" replace />} />
             <Route path="/perfil" element={<PerfilIdoso />} />
@@ -20,7 +17,6 @@ function App() {
           </Routes>
         </div>
       </div>
-      <BottomNav />
     </BrowserRouter>
   );
 }

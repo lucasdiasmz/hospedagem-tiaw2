@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import Estrutura from './Estrutura.jsx';
 import Detalhes from './Detalhes.jsx';
-import { TELAS } from './navegacao.js';
+import Sidebar from './components/Sidebar.jsx';
+import Toast from './components/Toast.jsx';
+import { IconeCheck, IconePilula } from './components/Icones.jsx';
 
 async function listarMedicamentos(idosoId, signal) {
     const resposta = await fetch('/api/medicamentos?idosoId=' + encodeURIComponent(idosoId), { signal });
@@ -64,7 +65,7 @@ export default function App() {
     const [busca, setBusca] = useState('');
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState('');
-    const [mensagem, setMensagem] = useState('');
+    const [aviso, setAviso] = useState(null);
     const [salvandoId, setSalvandoId] = useState(null);
     const [medicamentoSelecionado, setMedicamentoSelecionado] = useState(null);
     const [tentativa, setTentativa] = useState(0);
@@ -76,7 +77,6 @@ export default function App() {
             setCarregando(true);
             setMedicamentos([]);
             setErro('');
-            setMensagem('');
             setMedicamentoSelecionado(null);
 
             try {
@@ -107,12 +107,15 @@ export default function App() {
         return () => controle.abort();
     }, [idosoId, tentativa]);
 
+    function avisar(msg) {
+        setAviso({ msg, id: Date.now() });
+    }
+
     async function alterarStatus(medicamento) {
         const novoStatus = medicamento.status === 'Tomado' ? 'Pendente' : 'Tomado';
 
         setSalvandoId(medicamento.id);
         setErro('');
-        setMensagem('');
 
         try {
             const atualizado = await salvarStatus(medicamento.id, novoStatus, medicamento.data);
@@ -124,9 +127,9 @@ export default function App() {
             });
 
             if (novoStatus === 'Tomado') {
-                setMensagem(medicamento.nome + ' marcado como tomado.');
+                avisar(medicamento.nome + ' marcado como tomado.');
             } else {
-                setMensagem('Registro de ' + medicamento.nome + ' desfeito.');
+                avisar('Registro de ' + medicamento.nome + ' desfeito.');
             }
         } catch (falha) {
             setErro(falha.message || 'Não foi possível salvar o registro. O status foi mantido.');
@@ -137,162 +140,202 @@ export default function App() {
 
     const filtrados = buscarMedicamentos(medicamentos, busca);
     const proximo = encontrarProximo(medicamentos);
+    const tomados = medicamentos.filter(item => item.status === 'Tomado').length;
+
+    let subtitulo = 'Acompanhe os remédios do dia e registre cada dose.';
+    if (!carregando && medicamentos.length > 0) {
+        subtitulo = tomados + ' de ' + medicamentos.length + ' doses registradas hoje.';
+    }
+
+    let semPendentes = 'Todos os medicamentos foram tomados';
+    if (medicamentos.length === 0) {
+        semPendentes = 'Nenhum medicamento cadastrado';
+    } else if (medicamentos.some(item => item.status === 'Recusado')) {
+        semPendentes = 'Há doses recusadas';
+    }
 
     return (
-        <Estrutura>
-            <main>
-                <div className="titulo-pagina">
-                    <span className="titulo-icone" aria-hidden="true">💊</span>
-                    <div>
-                        <h1>Medicamentos</h1>
-                        <p className="introducao">
-                            Visualize aqui os medicamentos cadastrados e acompanhe os horários de administração.
-                        </p>
-                    </div>
-                </div>
+        <>
+            <div className="app">
+                <Sidebar />
 
-                <div className="selecao-idoso">
-                    <label htmlFor="idoso">Medicamentos de</label>
-                    <select
-                        id="idoso"
-                        value={idosoId}
-                        disabled={carregando || salvandoId !== null}
-                        onChange={evento => setIdosoId(evento.target.value)}
-                    >
-                        {idosos.map(idoso => (
-                            <option key={idoso.id} value={idoso.id}>{idoso.nome}</option>
-                        ))}
-                    </select>
-                </div>
-
-                <form role="search" onSubmit={evento => evento.preventDefault()}>
-                    <label className="somente-leitor" htmlFor="busca">
-                        Buscar medicamento pelo nome
-                    </label>
-                    <div className="campo-busca">
-                        <span aria-hidden="true">⌕</span>
-                        <input
-                            type="search"
-                            id="busca"
-                            placeholder="Buscar medicamento"
-                            autoComplete="off"
-                            value={busca}
-                            onChange={evento => setBusca(evento.target.value)}
-                        />
-                    </div>
-                </form>
-
-                {carregando && <p role="status">Carregando medicamentos...</p>}
-
-                {erro && (
-                    <div className="aviso-erro" role="alert">
-                        <p>{erro}</p>
-                        {medicamentos.length === 0 && !carregando && (
-                            <button className="botao" onClick={() => setTentativa(tentativa + 1)}>
-                                Tentar novamente
-                            </button>
-                        )}
-                    </div>
-                )}
-
-                {!carregando && (!erro || medicamentos.length > 0) && (
-                    <>
-                        <section className="proximo" aria-labelledby="titulo-proximo">
-                            <span className="icone-remedio" aria-hidden="true">💊</span>
+                <div className="coluna">
+                    <main className="conteudo">
+                        <div className="saudacao">
+                            <span className="saudacao-icone" aria-hidden="true"><IconePilula /></span>
                             <div>
-                                <h2 id="titulo-proximo">Próximo medicamento</h2>
-                                {proximo ? (
-                                    <>
-                                        <p className="nome-proximo">{proximo.nome}</p>
-                                        <p>{proximo.horario} | {proximo.observacoes}</p>
-                                    </>
-                                ) : (
-                                    <>
-                                        <p className="nome-proximo">
-                                            {medicamentos.length === 0
-                                                ? 'Nenhum medicamento cadastrado'
-                                                : medicamentos.some(item => item.status === 'Recusado')
-                                                    ? 'Há doses recusadas'
-                                                    : 'Todos os medicamentos foram tomados'}
-                                        </p>
-                                        <p>Nenhuma dose pendente na lista de hoje.</p>
-                                    </>
+                                <h1>Medicamentos</h1>
+                                <p>{subtitulo}</p>
+                            </div>
+                        </div>
+
+                        <div className="filtros">
+                            <label className="campo" htmlFor="idoso">
+                                Medicamentos de
+                                <select
+                                    id="idoso"
+                                    value={idosoId}
+                                    disabled={carregando || salvandoId !== null}
+                                    onChange={evento => setIdosoId(evento.target.value)}
+                                >
+                                    {idosos.map(idoso => (
+                                        <option key={idoso.id} value={idoso.id}>{idoso.nome}</option>
+                                    ))}
+                                </select>
+                            </label>
+
+                            <form className="campo campo-busca" role="search" onSubmit={evento => evento.preventDefault()}>
+                                <label htmlFor="busca">Buscar</label>
+                                <input
+                                    type="search"
+                                    id="busca"
+                                    placeholder="Nome do medicamento"
+                                    autoComplete="off"
+                                    value={busca}
+                                    onChange={evento => setBusca(evento.target.value)}
+                                />
+                            </form>
+                        </div>
+
+                        {carregando && <p className="estado" role="status">Carregando medicamentos...</p>}
+
+                        {erro && (
+                            <div className="aviso-erro" role="alert">
+                                <p>{erro}</p>
+                                {medicamentos.length === 0 && !carregando && (
+                                    <button type="button" className="btn btn-primario" onClick={() => setTentativa(tentativa + 1)}>
+                                        Tentar novamente
+                                    </button>
                                 )}
                             </div>
-                        </section>
+                        )}
 
-                        <div className="tabela-container" role="region" aria-label="Medicamentos cadastrados" tabIndex="0">
-                            <table>
-                                <caption className="somente-leitor">Lista de medicamentos cadastrados</caption>
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Nome do Medicamento</th>
-                                        <th scope="col">Dosagem</th>
-                                        <th scope="col">Horário</th>
-                                        <th scope="col">Frequência</th>
-                                        <th scope="col">Observações</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col" colSpan="2">Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filtrados.map(medicamento => {
-                                        const tomado = medicamento.status === 'Tomado';
+                        {!carregando && (!erro || medicamentos.length > 0) && (
+                            <>
+                                <section className="card-compromisso" aria-labelledby="titulo-proximo">
+                                    <div className="contador">
+                                        {proximo ? (
+                                            <>
+                                                <span className="contador-topo">Às</span>
+                                                <span className="contador-valor">{proximo.horario}</span>
+                                            </>
+                                        ) : (
+                                            <span className="contador-icone"><IconeCheck /></span>
+                                        )}
+                                    </div>
 
-                                        return (
-                                            <tr key={medicamento.id}>
-                                                <td>{medicamento.nome}</td>
-                                                <td>{medicamento.dosagem}</td>
-                                                <td>{medicamento.horario}</td>
-                                                <td>{medicamento.frequencia}</td>
-                                                <td>{medicamento.observacoes}</td>
-                                                <td>
-                                                    <span className={tomado ? 'status tomado' : medicamento.status === 'Recusado' ? 'status recusado' : 'status'}>
-                                                        {medicamento.status}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <button
-                                                        className="botao"
-                                                        aria-label={'Ver detalhes de ' + medicamento.nome}
-                                                        onClick={() => setMedicamentoSelecionado(medicamento)}
-                                                    >
-                                                        Ver detalhes
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    <button
-                                                        className={tomado ? 'botao tomar desfazer' : 'botao tomar'}
-                                                        aria-label={(tomado ? 'Desfazer registro de ' : 'Marcar como tomado: ') + medicamento.nome}
-                                                        aria-busy={salvandoId === medicamento.id}
-                                                        disabled={salvandoId !== null}
-                                                        onClick={() => alterarStatus(medicamento)}
-                                                    >
-                                                        {salvandoId === medicamento.id
-                                                            ? 'Salvando...'
-                                                            : tomado ? 'Desfazer registro' : 'Marcar como tomado'}
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
+                                    <div className="compromisso-texto">
+                                        <small id="titulo-proximo">
+                                            Próximo medicamento{proximo && ' · ' + proximo.horario}
+                                        </small>
+                                        <strong>{proximo ? proximo.nome : semPendentes}</strong>
+                                        <span className="compromisso-info">
+                                            {proximo
+                                                ? proximo.dosagem + (proximo.observacoes ? ' · ' + proximo.observacoes : '')
+                                                : 'Nenhuma dose pendente na lista de hoje.'}
+                                        </span>
+                                    </div>
 
-                            {filtrados.length === 0 && (
-                                <p id="sem-resultados">
-                                    {medicamentos.length === 0
-                                        ? 'Nenhum medicamento cadastrado.'
-                                        : 'Nenhum medicamento encontrado.'}
-                                </p>
-                            )}
-                        </div>
-                    </>
-                )}
+                                    {proximo && (
+                                        <div className="compromisso-acoes">
+                                            <button
+                                                type="button"
+                                                className="btn-claro"
+                                                disabled={salvandoId !== null}
+                                                onClick={() => alterarStatus(proximo)}
+                                            >
+                                                <IconeCheck />
+                                                Marcar como tomado
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="btn-contorno"
+                                                onClick={() => setMedicamentoSelecionado(proximo)}
+                                            >
+                                                Ver detalhes
+                                            </button>
+                                        </div>
+                                    )}
+                                </section>
 
-                <p id="mensagem" role="status" aria-live="polite">{mensagem}</p>
-                <a className="botao voltar" href={TELAS.inicio}>← Voltar</a>
-            </main>
+                                <section className="card lista" aria-labelledby="titulo-lista">
+                                    <h2 id="titulo-lista">Medicamentos de hoje</h2>
+
+                                    <div className="tabela-container" role="region" aria-labelledby="titulo-lista" tabIndex="0">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Horário</th>
+                                                    <th scope="col">Medicamento</th>
+                                                    <th scope="col">Frequência</th>
+                                                    <th scope="col">Observações</th>
+                                                    <th scope="col">Status</th>
+                                                    <th scope="col"><span className="somente-leitor">Ações</span></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {filtrados.map(medicamento => {
+                                                    const tomado = medicamento.status === 'Tomado';
+                                                    let classeStatus = 'status';
+                                                    if (tomado) classeStatus += ' tomado';
+                                                    if (medicamento.status === 'Recusado') classeStatus += ' recusado';
+
+                                                    return (
+                                                        <tr key={medicamento.id}>
+                                                            <td className="col-hora">{medicamento.horario}</td>
+                                                            <td>
+                                                                <strong className="med-nome">{medicamento.nome}</strong>
+                                                                <span className="med-dose">{medicamento.dosagem}</span>
+                                                            </td>
+                                                            <td>{medicamento.frequencia}</td>
+                                                            <td className="col-obs">{medicamento.observacoes}</td>
+                                                            <td><span className={classeStatus}>{medicamento.status}</span></td>
+                                                            <td>
+                                                                <div className="acoes-linha">
+                                                                    <button
+                                                                        type="button"
+                                                                        className="btn-linha"
+                                                                        aria-label={'Ver detalhes de ' + medicamento.nome}
+                                                                        onClick={() => setMedicamentoSelecionado(medicamento)}
+                                                                    >
+                                                                        Detalhes
+                                                                    </button>
+                                                                    <button
+                                                                        type="button"
+                                                                        className={tomado ? 'btn-linha' : 'btn-linha btn-linha-primario'}
+                                                                        aria-label={(tomado ? 'Desfazer registro de ' : 'Marcar como tomado: ') + medicamento.nome}
+                                                                        aria-busy={salvandoId === medicamento.id}
+                                                                        disabled={salvandoId !== null}
+                                                                        onClick={() => alterarStatus(medicamento)}
+                                                                    >
+                                                                        {salvandoId === medicamento.id
+                                                                            ? 'Salvando...'
+                                                                            : tomado ? 'Desfazer' : 'Marcar como tomado'}
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                            </tbody>
+                                        </table>
+
+                                        {filtrados.length === 0 && (
+                                            <p className="estado">
+                                                {medicamentos.length === 0
+                                                    ? 'Nenhum medicamento cadastrado.'
+                                                    : 'Nenhum medicamento encontrado.'}
+                                            </p>
+                                        )}
+                                    </div>
+                                </section>
+                            </>
+                        )}
+                    </main>
+                </div>
+            </div>
+
+            <Toast aviso={aviso} />
 
             {medicamentoSelecionado && (
                 <Detalhes
@@ -300,6 +343,7 @@ export default function App() {
                     aoFechar={() => setMedicamentoSelecionado(null)}
                 />
             )}
-        </Estrutura>
+        </>
     );
 }
+

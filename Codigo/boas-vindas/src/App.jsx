@@ -5,6 +5,7 @@ import familiarImg from './assets/imgs/11126155.png';
 import cuidadorImg from './assets/imgs/images.jpg';
 import PerfilAcessibilidade from './telas/PerfilAcessibilidade';
 import CuidadorProfissional from './telas/CuidadorProfissional';
+import Moldura from './telas/Moldura';
 import { TELAS } from './navegacao.js';
 
 const perfis = [
@@ -43,8 +44,8 @@ function Card({ titulo, descricao, imagem, alt, onClick }) {
       onClick={onClick}
       onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onClick?.()}
     >
-      <img src={imagem} alt={alt} />
-      <div>
+      <span className="card-imagem"><img src={imagem} alt={alt} /></span>
+      <div className="card-texto">
         <h3>{titulo}</h3>
         <p>{descricao}</p>
       </div>
@@ -70,37 +71,43 @@ function App() {
 
   if (tela === 'acessibilidade') {
     return (
-      <PerfilAcessibilidade
-        onVoltar={() => setTela('perfil')}
-        onProximo={concluir}
-      />
+      <Moldura etapa="Passo 2 de 2">
+        <PerfilAcessibilidade
+          onVoltar={() => setTela('perfil')}
+          onProximo={concluir}
+        />
+      </Moldura>
     );
   }
 
   if (tela === 'cuidador') {
     return (
-      <CuidadorProfissional
-        onVoltar={() => setTela('perfil')}
-        onFinalizar={concluir}
-      />
+      <Moldura etapa="Passo 2 de 2">
+        <CuidadorProfissional
+          onVoltar={() => setTela('perfil')}
+          onFinalizar={concluir}
+        />
+      </Moldura>
     );
   }
 
   return (
-    <>
-      <h1>Bem vindo a AcessaMob</h1>
-      <p>Escolha o seu perfil para começar</p>
+    <Moldura etapa="Passo 1 de 2">
+      <main className="tela-perfil">
+        <h1>Bem-vindo à AcessaMob</h1>
+        <p className="subtitulo">Escolha o seu perfil para começar.</p>
 
-      <div className="flex-cards">
-        {perfis.map((perfil) => (
-          <Card
-            key={perfil.id}
-            {...perfil}
-            onClick={() => escolherPerfil(perfil)}
-          />
-        ))}
-      </div>
-    </>
+        <div className="flex-cards">
+          {perfis.map((perfil) => (
+            <Card
+              key={perfil.id}
+              {...perfil}
+              onClick={() => escolherPerfil(perfil)}
+            />
+          ))}
+        </div>
+      </main>
+    </Moldura>
   );
 }
 

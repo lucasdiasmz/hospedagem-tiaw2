@@ -28,7 +28,7 @@ A API consulta o MongoDB quando `MONGODB_URI` está preenchida. Nunca envie o `.
 ## Arquivos
 
 - `src/App.jsx`: consulta, perfil e abas.
-- `src/Estrutura.jsx`: menu e barra superior do grupo.
+- `src/components/Sidebar.jsx`: menu lateral (o mesmo da tela inicial).
 - `src/perfil.css`: estilos responsivos.
 - `src/main.jsx`: inicia o React.
 - `servidor.js`: API de consulta JSON/MongoDB.

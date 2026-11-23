@@ -3,7 +3,7 @@ import FormMedicamento from './components/FormMedicamento.jsx';
 import ListaMedicamentos from './components/ListaMedicamentos.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import Toast from './components/Toast.jsx';
-import Topbar from './components/Topbar.jsx';
+import { IconePilula } from './components/Icones.jsx';
 import { IDOSOS } from './data/db.js';
 import { criarMedicamento, definirAtivo, listarMedicamentos } from './services/api.js';
 
@@ -70,18 +70,19 @@ export default function App() {
         <Sidebar aoNovoMedicamento={novoMedicamento} aoVerCadastrados={verCadastrados} />
 
         <div className="coluna">
-          <Topbar />
-
           <main className="conteudo">
             <header className="titulo-pagina">
-              <h1>Cadastro de medicamentos</h1>
-              <p>Registre os remédios, as dosagens e os horários para que ninguém esqueça de nenhuma dose.</p>
-              <label className="seletor-idoso">
-                Idoso
-                <select value={idosoId} onChange={(e) => setIdosoId(e.target.value)}>
-                  {IDOSOS.map((i) => <option key={i.id} value={i.id}>{i.nome}</option>)}
-                </select>
-              </label>
+              <span className="titulo-icone" aria-hidden="true"><IconePilula /></span>
+              <div>
+                <h1>Cadastro de medicamentos</h1>
+                <p>Registre os remédios, as dosagens e os horários para que ninguém esqueça de nenhuma dose.</p>
+                <label className="seletor-idoso">
+                  Idoso
+                  <select value={idosoId} onChange={(e) => setIdosoId(e.target.value)}>
+                    {IDOSOS.map((i) => <option key={i.id} value={i.id}>{i.nome}</option>)}
+                  </select>
+                </label>
+              </div>
             </header>
 
             {erroApi && <p className="aviso-erro" role="alert">{erroApi}</p>}

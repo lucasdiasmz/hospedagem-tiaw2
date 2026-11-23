@@ -8,7 +8,7 @@ export default function Detalhes({ medicamento, aoFechar }) {
     }, []);
 
     return (
-        <dialog ref={janela} aria-labelledby="titulo-detalhes" onClose={aoFechar}>
+        <dialog ref={janela} className="dialogo" aria-labelledby="titulo-detalhes" onClose={aoFechar}>
             <h2 id="titulo-detalhes">{medicamento.nome}</h2>
 
             <dl>
@@ -32,7 +32,7 @@ export default function Detalhes({ medicamento, aoFechar }) {
             </dl>
 
             <form method="dialog">
-                <button className="botao" autoFocus>Fechar</button>
+                <button className="btn btn-primario" autoFocus>Fechar</button>
             </form>
         </dialog>
     );

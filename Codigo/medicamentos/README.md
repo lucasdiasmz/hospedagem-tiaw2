@@ -67,7 +67,7 @@ O terminal deve mostrar **Banco: MongoDB**. A aplicação passa a ler e gravar n
 ## Arquivos principais
 
 - `src/App.jsx`: tela, seleção do idoso, busca e ações.
-- `src/Estrutura.jsx`: menu lateral e barra superior.
+- `src/components/Sidebar.jsx`: menu lateral (o mesmo da tela inicial).
 - `src/Detalhes.jsx`: janela de detalhes.
 - `src/medicamentos.css`: estilos.
 - `src/main.jsx`: inicia o React.

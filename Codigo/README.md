@@ -29,6 +29,14 @@ Todas as APIs usam o mesmo banco MongoDB (`acessamob`), configurado no `.env` de
 O protótipo antigo da agenda (Next.js, dados fictícios) fica em `../Prototipo-AcessaMob/` e não
 entra na navegação: a tela de agenda do sistema é a de `agenda/`.
 
+## Padrão visual
+
+Todas as telas seguem o visual da tela inicial (`inicio/src/styles/inicio.css`): fonte Inter, menu
+lateral azul-escuro com o logo `logo-acessamob.png`, fundo `#f3f6fc`, azul principal `#1d63dc`,
+cartões brancos com cantos de 12–16 px e cartão de destaque em `#0f3a8c`. Em telas estreitas o menu
+lateral vira barra inferior. Ao criar uma tela nova, copie os tokens do `:root` e o `Sidebar.jsx`
+de um módulo existente.
+
 ## Navegação entre as telas
 
 Os endereços ficam em `src/navegacao.js`, um arquivo **igual em todos os módulos**. Ao mudar

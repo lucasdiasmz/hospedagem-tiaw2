@@ -8,21 +8,6 @@ const traco = {
   'aria-hidden': true,
 };
 
-export function Logo() {
-  return (
-    <svg width="46" height="42" viewBox="0 0 48 44" aria-hidden="true">
-      <defs>
-        <linearGradient id="hg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#8fc0ff" />
-          <stop offset="1" stopColor="#2468e0" />
-        </linearGradient>
-      </defs>
-      <path d="M24 42S3 29 3 14.5C3 7.6 8.2 3 14 3c4 0 8 2.3 10 6 2-3.7 6-6 10-6 5.8 0 11 4.6 11 11.5C45 29 24 42 24 42z" fill="url(#hg)" />
-      <path d="M24 14v14M17 21h14" stroke="#fff" strokeWidth="4" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 export function IconeInicio() {
   return (
     <svg viewBox="0 0 24 24" strokeWidth="1.8" {...traco}>
@@ -103,14 +88,6 @@ export function Ondas() {
     <svg className="ondas" viewBox="0 0 313 150" preserveAspectRatio="none" aria-hidden="true">
       <path d="M0 70C50 20 110 10 170 40s100 30 143-10v120H0z" fill="rgba(70,130,255,.12)" />
       <path d="M0 100C60 60 120 70 190 90s90 0 123-20v80H0z" fill="rgba(70,130,255,.1)" />
-    </svg>
-  );
-}
-
-export function IconeSino() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="1.8" {...traco}>
-      <path d="M6 17h12l-1.5-2v-4.5a4.5 4.5 0 0 0-9 0V15z" /><path d="M10 20a2 2 0 0 0 4 0" />
     </svg>
   );
 }

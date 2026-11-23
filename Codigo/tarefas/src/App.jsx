@@ -5,7 +5,7 @@ import ListaCompras from './components/ListaCompras.jsx';
 import ListaTarefas from './components/ListaTarefas.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import Toast from './components/Toast.jsx';
-import Topbar from './components/Topbar.jsx';
+import { IconeTarefas } from './components/Icones.jsx';
 import { IDOSOS, membrosDaRede } from './data/db.js';
 import { criarTarefa, listarTarefas, marcarComprados, mudarStatus } from './services/api.js';
 import { ABAS } from './utils/tarefas.js';
@@ -91,18 +91,19 @@ export default function App() {
         <Sidebar aoNovaTarefa={() => setCriando(true)} aoVerCompras={verCompras} />
 
         <div className="coluna">
-          <Topbar />
-
           <main className="conteudo">
             <header className="titulo-pagina">
-              <h1>Tarefas da rede de apoio</h1>
-              <p>Divida os cuidados entre a família e os cuidadores, sem sobrecarregar ninguém.</p>
-              <label className="seletor-idoso">
-                Idoso
-                <select value={idosoId} onChange={(e) => setIdosoId(e.target.value)}>
-                  {IDOSOS.map((i) => <option key={i.id} value={i.id}>{i.nome}</option>)}
-                </select>
-              </label>
+              <span className="titulo-icone" aria-hidden="true"><IconeTarefas /></span>
+              <div>
+                <h1>Tarefas da rede de apoio</h1>
+                <p>Divida os cuidados entre a família e os cuidadores, sem sobrecarregar ninguém.</p>
+                <label className="seletor-idoso">
+                  Idoso
+                  <select value={idosoId} onChange={(e) => setIdosoId(e.target.value)}>
+                    {IDOSOS.map((i) => <option key={i.id} value={i.id}>{i.nome}</option>)}
+                  </select>
+                </label>
+              </div>
             </header>
 
             {erroApi && <p className="aviso-erro" role="alert">{erroApi}</p>}

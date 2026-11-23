@@ -1,6 +1,6 @@
 /* =====================================================
    AcessaMob | Cadastro de medicamentos
-   Mesmo layout da tela inicial (barra lateral + topbar),
+   Mesmo layout da tela inicial (Codigo/inicio),
    com os espaçamentos do Design System: 4, 8, 16, 24, 32, 48
    ===================================================== */
 :root {
@@ -21,7 +21,6 @@
   --erro-fundo: #fdeceb;
 
   --fonte: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
-  --fonte-titulo: "Lora", Georgia, serif;
   --sombra: 0 4px 20px rgba(30, 60, 120, 0.06);
 
   --esp-1: 4px;
@@ -280,80 +279,6 @@ textarea:focus-visible {
   color: #9fb0d0;
 }
 
-/* ===== Barra superior ===== */
-.topbar {
-  height: 90px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 24px;
-  padding: 0 32px;
-  background: rgba(255, 255, 255, 0.85);
-  border-bottom: 1px solid var(--borda);
-}
-
-.sino {
-  position: relative;
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-}
-
-.sino:hover {
-  background: var(--azul-suave);
-}
-
-.notif {
-  position: absolute;
-  top: 6px;
-  right: 8px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #ef4444;
-  border: 1.5px solid #fff;
-}
-
-.data-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border: 1px solid var(--borda);
-  border-radius: 999px;
-  background: #fff;
-  font-size: 13px;
-  white-space: nowrap;
-}
-
-.perfil {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.perfil > svg {
-  color: var(--suave);
-}
-
-.avatar {
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--azul-suave);
-  color: var(--azul);
-  font-size: 18px;
-  font-weight: 500;
-}
-
 /* ===== Conteúdo ===== */
 .conteudo {
   flex: 1;
@@ -362,7 +287,7 @@ textarea:focus-visible {
   display: flex;
   flex-direction: column;
   gap: var(--esp-4);
-  padding: 36px 32px;
+  padding: 37px 30px 37px 33px;
   scrollbar-width: thin;
   scrollbar-color: var(--azul-linha) transparent;
 }
@@ -373,15 +298,35 @@ textarea:focus-visible {
   max-width: 1180px;
 }
 
+.titulo-pagina {
+  display: flex;
+  align-items: flex-start;
+  gap: 21px;
+}
+
+.titulo-icone {
+  flex-shrink: 0;
+  width: 50px;
+  display: grid;
+  place-items: center;
+  color: var(--azul);
+}
+
+.titulo-icone svg {
+  width: 44px;
+  height: 44px;
+}
+
 .titulo-pagina h1 {
-  font-family: var(--fonte-titulo);
-  font-size: 40px;
-  line-height: 1.2;
+  font-size: 35px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
 }
 
 .titulo-pagina p {
-  margin-top: var(--esp-2);
-  font-size: 18px;
+  margin-top: 9px;
+  font-size: 17.5px;
   color: var(--suave);
 }
 
@@ -684,21 +629,157 @@ textarea:focus-visible {
   }
 }
 
-@media (max-width: 900px) {
+/* ===== Telas baixas (notebooks, zoom do Windows): versão compacta para caber sem cortes ===== */
+@media (min-width: 901px) and (max-height: 860px) {
   .sidebar {
-    display: none;
+    padding: 16px 22px 64px 20px;
   }
 
-  .data-wrap {
-    display: none;
+  .marca {
+    height: 52px;
+    margin-bottom: 20px;
+  }
+
+  .marca-nome {
+    font-size: 20px;
+  }
+
+  .marca small {
+    margin-top: 4px;
+  }
+
+  .menu ul {
+    gap: 4px;
+  }
+
+  .menu-item {
+    height: 44px;
+    font-size: 15.5px;
+  }
+
+  .menu-item svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .atalhos {
+    margin-top: 16px;
+    padding-top: 14px;
+  }
+
+  .atalhos-titulo {
+    margin-bottom: 6px;
+    font-size: 12px;
+  }
+
+  .atalhos ul {
+    gap: 2px;
+  }
+
+  .atalhos button {
+    height: 36px;
+    font-size: 14.5px;
+  }
+
+  .atalhos button svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .usuario {
+    padding-top: 14px;
+  }
+
+  .avatar-claro {
+    width: 38px;
+    height: 38px;
+  }
+
+  .sidebar .ondas {
+    height: 100px;
+  }
+
+  .sidebar .versao {
+    bottom: 20px;
   }
 
   .conteudo {
-    padding: var(--esp-4) var(--esp-3);
+    gap: 20px;
+    padding: 22px 28px 24px 30px;
+  }
+}
+
+@media (max-width: 900px) {
+  body {
+    overflow: auto;
+  }
+
+  .app {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  /* barra lateral vira barra inferior, como na tela inicial */
+  .sidebar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    width: auto;
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+    box-shadow: 0 -4px 16px rgba(12, 27, 60, 0.2);
+  }
+
+  .marca,
+  .atalhos,
+  .usuario,
+  .sidebar .ondas,
+  .sidebar .versao {
+    display: none;
+  }
+
+  .menu {
+    flex: 1;
+  }
+
+  .menu ul {
+    flex-direction: row;
+    gap: 2px;
+  }
+
+  .menu li {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .menu-item {
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    height: auto;
+    padding: 8px 2px;
+    font-size: 11px;
+  }
+
+  .menu-item svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .conteudo {
+    overflow: visible;
+    padding: 24px 16px 110px;
   }
 
   .titulo-pagina h1 {
-    font-size: 32px;
+    font-size: 28px;
+  }
+
+  .toast {
+    bottom: 96px;
   }
 }
 
