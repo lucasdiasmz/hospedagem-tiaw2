@@ -24,15 +24,20 @@ function horaAtual() {
     });
 }
 
+/* no MongoDB o id do db.json fica no _id (padrão do Codigo/inicio); devolve sempre com "id" */
+function comId({ _id, ...resto }) {
+    return { id: resto.id ?? _id, ...resto };
+}
+
 async function lerDados() {
     if (usaMongo) {
         const [idosos, medicamentos, registros] = await Promise.all([
-            banco.collection('idosos').find({}, { projection: { _id: 0 } }).toArray(),
-            banco.collection('medicamentos').find({}, { projection: { _id: 0 } }).toArray(),
-            banco.collection('registros').find({}, { projection: { _id: 0 } }).toArray()
+            banco.collection('idosos').find({}).toArray(),
+            banco.collection('medicamentos').find({}).toArray(),
+            banco.collection('registros').find({}).toArray()
         ]);
 
-        return { idosos, medicamentos, registros };
+        return { idosos: idosos.map(comId), medicamentos: medicamentos.map(comId), registros: registros.map(comId) };
     }
 
     return JSON.parse(await readFile(arquivo, 'utf8'));

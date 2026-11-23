@@ -5,16 +5,26 @@ import { setServers } from 'node:dns';
 let cliente;
 let banco;
 
+/* no MongoDB o id do db.json fica no _id (padrão do Codigo/inicio); devolve sempre com "id" */
+function comId({ _id, ...resto }) {
+    return { id: resto.id ?? _id, ...resto };
+}
+
 async function lerDados() {
     if (banco) {
         const [usuarios, cuidadores, avaliacoes, clientes] = await Promise.all([
-            banco.collection('usuarios').find({}, { projection: { _id: 0, id: 1, nome: 1 } }).toArray(),
-            banco.collection('cuidadores').find({}, { projection: { _id: 0 } }).toArray(),
-            banco.collection('avaliacoes').find({}, { projection: { _id: 0 } }).toArray(),
-            banco.collection('clientes').find({}, { projection: { _id: 0, id: 1, usuarioId: 1 } }).toArray()
+            banco.collection('usuarios').find({}, { projection: { _id: 1, id: 1, nome: 1 } }).toArray(),
+            banco.collection('cuidadores').find({}).toArray(),
+            banco.collection('avaliacoes').find({}).toArray(),
+            banco.collection('clientes').find({}, { projection: { _id: 1, id: 1, usuarioId: 1 } }).toArray()
         ]);
 
-        return { usuarios, cuidadores, avaliacoes, clientes };
+        return {
+            usuarios: usuarios.map(comId),
+            cuidadores: cuidadores.map(comId),
+            avaliacoes: avaliacoes.map(comId),
+            clientes: clientes.map(comId)
+        };
     }
 
     return JSON.parse(await readFile(new URL('./db.json', import.meta.url), 'utf8'));
