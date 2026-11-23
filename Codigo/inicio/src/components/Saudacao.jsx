@@ -2,9 +2,9 @@ import { IconeLua, IconeSol, IconeSolNascente } from './Icones.jsx';
 
 /* manhã 05:00–11:59, tarde 12:00–17:59, noite 18:00–04:59 */
 const PERIODOS = {
-  manha: { saudacao: 'Bom dia', icone: <IconeSolNascente /> },
-  tarde: { saudacao: 'Boa tarde', icone: <IconeSol /> },
-  noite: { saudacao: 'Boa noite', icone: <IconeLua /> },
+  manha: { saudacao: 'Bom dia', Icone: IconeSolNascente },
+  tarde: { saudacao: 'Boa tarde', Icone: IconeSol },
+  noite: { saudacao: 'Boa noite', Icone: IconeLua },
 };
 
 function periodoAtual() {
@@ -15,21 +15,26 @@ function periodoAtual() {
 }
 
 /* "Maria Silva" → "Maria" */
-function primeiroNome(nome) {
-  return nome.split(' ')[0];
+function primeiroNome(nome = '') {
+  return nome.trim().split(/\s+/)[0];
 }
 
+const DATA = new Intl.DateTimeFormat('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+
 /* saudação e ícone pelo horário; o App re-renderiza a cada 30 s, então a troca acontece sozinha */
-export default function Saudacao({ nome, subtitulo }) {
-  const { saudacao, icone } = PERIODOS[periodoAtual()];
+export default function Saudacao({ nome, idoso, subtitulo }) {
+  const { saudacao, Icone } = PERIODOS[periodoAtual()];
+  const hoje = DATA.format(new Date());
 
   return (
-    <div className="saudacao">
-      <span className="saudacao-icone" aria-hidden="true">{icone}</span>
-      <div>
-        <h1>{nome ? saudacao + ', ' + primeiroNome(nome) + '!' : saudacao + '!'}</h1>
-        <p>{subtitulo}</p>
-      </div>
-    </div>
+    <header className="saudacao">
+      <p className="saudacao-data">
+        <Icone />
+        <span>{hoje.charAt(0).toUpperCase() + hoje.slice(1)}</span>
+        {idoso && <span className="saudacao-idoso">· cuidando de {primeiroNome(idoso)}</span>}
+      </p>
+      <h1>{nome ? saudacao + ', ' + primeiroNome(nome) : saudacao}</h1>
+      <p className="saudacao-sub" aria-live="polite">{subtitulo}</p>
+    </header>
   );
 }

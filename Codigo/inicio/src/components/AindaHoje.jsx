@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react';
-import { IconeCheck } from './Icones.jsx';
+import { IconeCheck, IconeFechar } from '@ds/Icones.jsx';
+import { ICONES_TIPO, NOMES_TIPO } from './Icones.jsx';
 
 /* o que ainda falta no dia (sem o item em destaque) e as anotações, em ordem de horário */
-export default function AindaHoje({ secaoRef, entradas, novaNotaId, aoConcluir, aoRemoverNota }) {
+export default function AindaHoje({ secaoRef, entradas, carregando, novaNotaId, aoConcluir, aoRemoverNota, aoNovaNota }) {
   const listaRef = useRef(null);
 
   /* rola até a anotação recém-criada */
@@ -13,33 +14,41 @@ export default function AindaHoje({ secaoRef, entradas, novaNotaId, aoConcluir, 
   }, [novaNotaId]);
 
   return (
-    <section className="card ainda-hoje" ref={secaoRef} aria-labelledby="ainda-hoje-titulo">
-      <h2 id="ainda-hoje-titulo">Ainda hoje</h2>
+    <section className="ainda-hoje" ref={secaoRef} aria-labelledby="ainda-hoje-titulo">
+      <div className="secao-cabeca">
+        <h2 id="ainda-hoje-titulo">Ainda hoje</h2>
+        <button type="button" className="btn btn-texto" onClick={aoNovaNota}>Anotar</button>
+      </div>
 
-      {!entradas.length ? (
-        <p className="ainda-vazio">Nada mais para hoje.</p>
+      {carregando ? (
+        <div className="esqueleto ainda-esqueleto" aria-hidden="true" />
+      ) : !entradas.length ? (
+        <p className="ainda-vazio">Nada mais para hoje. Use “Anotar” para registrar algo do dia.</p>
       ) : (
-        <ul className="ainda-lista" ref={listaRef}>
-          {entradas.map((e) =>
-            e.tipo === 'nota' ? (
-              <li key={'nota-' + e.id} className="ainda-item nota" data-id={e.id}>
-                <span className="ainda-hora">{e.hora}</span>
-                <span className="ainda-titulo" title={e.texto}>{e.texto}</span>
-                <span className="ainda-detalhe">Anotação</span>
-                <button type="button" className="ainda-botao" aria-label="Remover anotação" onClick={() => aoRemoverNota(e.id)}>×</button>
+        <ol className="ainda-lista" ref={listaRef}>
+          {entradas.map((e) => {
+            const nota = e.tipo === 'nota';
+            return (
+              <li key={(nota ? 'nota-' : '') + e.id} className={'ainda-item tipo-' + e.tipo} data-id={e.id}>
+                <time className="ainda-hora">{e.hora}</time>
+                <span className="ainda-icone" aria-hidden="true">{ICONES_TIPO[e.tipo]}</span>
+                <span className="ainda-texto">
+                  <strong>{nota ? e.texto : e.titulo}</strong>
+                  <small>{nota ? NOMES_TIPO.nota : e.detalhe || NOMES_TIPO[e.tipo]}</small>
+                </span>
+                {nota ? (
+                  <button type="button" className="btn-icone" aria-label={'Remover anotação: ' + e.texto} onClick={() => aoRemoverNota(e.id)}>
+                    <IconeFechar />
+                  </button>
+                ) : (
+                  <button type="button" className="ainda-feito" aria-label={'Marcar como feito: ' + e.titulo} onClick={() => aoConcluir(e.id)}>
+                    <IconeCheck />
+                  </button>
+                )}
               </li>
-            ) : (
-              <li key={e.id} className="ainda-item" data-id={e.id}>
-                <span className="ainda-hora">{e.hora}</span>
-                <span className="ainda-titulo">{e.titulo}</span>
-                <span className="ainda-detalhe">{e.detalhe}</span>
-                <button type="button" className="ainda-botao" aria-label={'Marcar como feito: ' + e.titulo} onClick={() => aoConcluir(e.id)}>
-                  <IconeCheck />
-                </button>
-              </li>
-            )
-          )}
-        </ul>
+            );
+          })}
+        </ol>
       )}
     </section>
   );
