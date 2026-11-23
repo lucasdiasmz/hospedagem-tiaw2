@@ -15,7 +15,7 @@ function HeroIdoso({ idoso, onEditar }) {
   let botaoLigar = null;
   if (contatoPrincipal) {
     botaoLigar = (
-      <a className="btn btn-light" href={getTelLink(contatoPrincipal.telefone)}>
+      <a className="btn btn-claro" href={getTelLink(contatoPrincipal.telefone)}>
         <Icon name="phone" />
         Ligar para {getPrimeiroNome(contatoPrincipal.nome)}
       </a>
@@ -28,12 +28,11 @@ function HeroIdoso({ idoso, onEditar }) {
   }
 
   return (
-    <section className="hero" aria-labelledby="nomeIdoso">
+    <section className="hero sobre-escuro" aria-labelledby="nomeIdoso">
       <div className="avatar avatar-xl" aria-hidden="true">
         {getIniciais(idoso.nome)}
       </div>
       <div className="hero-info">
-        <span className="eyebrow">Idoso(a) acompanhado(a)</span>
         <h2 id="nomeIdoso">{idoso.nome}</h2>
         <p className="hero-meta">
           {apelidoTexto}
@@ -52,7 +51,7 @@ function HeroIdoso({ idoso, onEditar }) {
       </div>
       <div className="hero-actions">
         {botaoLigar}
-        <button type="button" className="btn btn-ghost-light" onClick={onEditar}>
+        <button type="button" className="btn btn-contorno" onClick={onEditar}>
           <Icon name="edit" />
           Editar perfil
         </button>

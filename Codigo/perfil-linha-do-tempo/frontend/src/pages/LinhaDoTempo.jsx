@@ -85,29 +85,29 @@ function LinhaDoTempo() {
 
   if (carregando) {
     return (
-      <main className="content">
+      <div className="pagina">
         <EstadoCarregando texto="Carregando linha do tempo..." />
-      </main>
+      </div>
     );
   }
 
   if (erro) {
     return (
-      <main className="content">
+      <div className="pagina">
         <EstadoErro titulo="Não foi possível carregar a linha do tempo" mensagem={erro} onTentarDeNovo={recarregar} />
-      </main>
+      </div>
     );
   }
 
   if (!idosoAtual) {
     return (
-      <main className="content">
+      <div className="pagina">
         <EstadoVazio
           icone="users"
           titulo="Nenhum idoso cadastrado ainda"
           texto='Rode o comando "npm run seed" no back-end para inserir os dados de exemplo.'
         />
-      </main>
+      </div>
     );
   }
 
@@ -210,7 +210,7 @@ function LinhaDoTempo() {
       <div className="estado">
         <Icon name="message" />
         <strong>Nenhum relato com esses filtros</strong>
-        <button type="button" className="btn btn-ghost" onClick={handleLimparFiltros}>
+        <button type="button" className="btn" onClick={handleLimparFiltros}>
           Limpar filtros
         </button>
       </div>
@@ -240,11 +240,11 @@ function LinhaDoTempo() {
   }
 
   return (
-    <main className="content">
+    <div className="pagina">
       <div className="page-head">
         <div>
           <nav className="breadcrumb" aria-label="Você está em">
-            <a href="#">Diário de cuidado</a>
+            <span>Diário de cuidado</span>
             <Icon name="chevron-right" />
             <span>{idosoAtual.nome}</span>
           </nav>
@@ -273,7 +273,7 @@ function LinhaDoTempo() {
           <ResumoSemana resumo={resumo} carregando={carregandoRelatos} />
           <button
             type="button"
-            className="btn btn-primary btn-bloco"
+            className="btn btn-primario btn-bloco"
             disabled={carregandoRelatos || erroRelatos !== ""}
             onClick={function () {
               setModalAberto(true);
@@ -287,7 +287,7 @@ function LinhaDoTempo() {
 
       {modal}
       <Toast toast={toast} onFechar={handleFecharToast} />
-    </main>
+    </div>
   );
 }
 

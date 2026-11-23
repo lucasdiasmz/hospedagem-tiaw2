@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import Dialogo from "@ds/Dialogo.jsx";
 import Icon from "../Icon.jsx";
 
 const tiposSanguineos = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
@@ -29,22 +30,12 @@ function ModalEditarPerfil({ idoso, onSalvar, onFechar }) {
   const nomeRef = useRef(null);
 
   useEffect(function () {
-    nomeRef.current.focus();
-    document.body.style.overflow = "hidden";
-
-    function handleKeyDown(evento) {
-      if (evento.key === "Escape") {
-        onFechar();
+    requestAnimationFrame(function () {
+      if (nomeRef.current) {
+        nomeRef.current.focus();
       }
-    }
-
-    document.addEventListener("keydown", handleKeyDown);
-
-    return function () {
-      document.body.style.overflow = "";
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [onFechar]);
+    });
+  }, []);
 
   function handleChange(evento) {
     const campo = evento.target.name;
@@ -96,12 +87,6 @@ function ModalEditarPerfil({ idoso, onSalvar, onFechar }) {
     });
   }
 
-  function handleClickFundo(evento) {
-    if (evento.target === evento.currentTarget) {
-      onFechar();
-    }
-  }
-
   let textoBotao = "Salvar";
   if (salvando) {
     textoBotao = "Salvando...";
@@ -117,14 +102,7 @@ function ModalEditarPerfil({ idoso, onSalvar, onFechar }) {
   }
 
   return (
-    <div className="modal" onClick={handleClickFundo}>
-      <div className="modal-box" role="dialog" aria-modal="true" aria-labelledby="tituloModal">
-        <div className="modal-head">
-          <h2 id="tituloModal">Editar perfil</h2>
-          <button type="button" className="icon-btn" aria-label="Fechar" onClick={onFechar}>
-            <Icon name="x" />
-          </button>
-        </div>
+    <Dialogo aberto aoFechar={onFechar} titulo="Editar perfil" largo>
 
         <form className="form" noValidate onSubmit={handleSubmit}>
           <div className="field field-full">
@@ -183,17 +161,16 @@ function ModalEditarPerfil({ idoso, onSalvar, onFechar }) {
           {mensagemErro}
 
           <div className="form-actions">
-            <button type="button" className="btn btn-ghost" onClick={onFechar}>
+            <button type="button" className="btn" onClick={onFechar}>
               Cancelar
             </button>
-            <button type="submit" className="btn btn-primary" disabled={salvando}>
+            <button type="submit" className="btn btn-primario" disabled={salvando}>
               <Icon name="check" />
               {textoBotao}
             </button>
           </div>
         </form>
-      </div>
-    </div>
+      </Dialogo>
   );
 }
 

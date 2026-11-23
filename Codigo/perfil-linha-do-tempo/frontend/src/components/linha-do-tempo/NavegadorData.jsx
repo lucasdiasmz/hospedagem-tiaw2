@@ -15,7 +15,7 @@ function NavegadorData({ data, hoje, onMudarData }) {
     <div className="navegador-data">
       <button
         type="button"
-        className="icon-btn nav-dia"
+        className="btn-icone nav-dia"
         aria-label="Dia anterior"
         onClick={function () {
           onMudarData(somarDias(data, -1));
@@ -31,7 +31,7 @@ function NavegadorData({ data, hoje, onMudarData }) {
 
       <button
         type="button"
-        className="icon-btn nav-dia"
+        className="btn-icone nav-dia"
         aria-label="Próximo dia"
         disabled={ehHoje}
         onClick={function () {
@@ -42,11 +42,11 @@ function NavegadorData({ data, hoje, onMudarData }) {
       </button>
 
       <div className="navegador-acoes">
-        <label className="sr-only" htmlFor="escolherData">Escolher data</label>
+        <label className="somente-leitor" htmlFor="escolherData">Escolher data</label>
         <input id="escolherData" type="date" className="input-data" value={data} max={hoje} onChange={handleEscolherData} />
         <button
           type="button"
-          className="btn btn-ghost"
+          className="btn"
           disabled={ehHoje}
           onClick={function () {
             onMudarData(hoje);

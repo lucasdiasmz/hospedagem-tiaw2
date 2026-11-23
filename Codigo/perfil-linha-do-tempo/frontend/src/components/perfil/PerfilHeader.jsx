@@ -6,7 +6,7 @@ function PerfilHeader({ idosos, idosoAtual, onTrocarIdoso }) {
     <div className="page-head">
       <div>
         <nav className="breadcrumb" aria-label="Você está em">
-          <a href="#">Perfis</a>
+          <span>Perfis</span>
           <Icon name="chevron-right" />
           <span>{idosoAtual.nome}</span>
         </nav>
