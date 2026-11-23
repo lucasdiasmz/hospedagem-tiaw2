@@ -8,6 +8,21 @@
 
 Ordem: **banco → APIs → sites → variáveis dos links do menu**. Cada etapa usa os endereços da anterior.
 
+## Site único (recomendado)
+
+Todas as telas num endereço só, num único projeto da Vercel:
+
+- Vercel → *Add New → Project* → repositório, **Root Directory `./`** (a raiz), preset *Other*.
+  O `vercel.json` da raiz já define o build (`node Codigo/build-unificado.mjs`) e a saída (`dist`).
+- As telas ficam em `/boas-vindas/`, `/inicio/`, `/agenda/`, `/medicamentos/`,
+  `/cadastro-medicamentos/`, `/tarefas/`, `/cuidadores/` e `/idoso/perfil` + `/idoso/linha-do-tempo`;
+  a raiz `/` abre as boas-vindas.
+- As chamadas de API vão para `/srv/<api>/...` no mesmo endereço, e a Vercel repassa ao Render
+  (as 7 APIs continuam lá, criadas pelo `render.yaml`).
+- Para testar no computador: `node Codigo/build-unificado.mjs` gera o site em `dist/`.
+
+As seções abaixo descrevem o banco, as APIs e, como alternativa, um projeto da Vercel por tela.
+
 ## 1. Banco (MongoDB Atlas)
 
 1. Crie um cluster M0 em cloud.mongodb.com.

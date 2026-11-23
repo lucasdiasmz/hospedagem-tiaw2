@@ -5,7 +5,8 @@ import LinhaDoTempo from "./pages/LinhaDoTempo.jsx";
 
 function App() {
   return (
-    <BrowserRouter>
+    /* no site único esta tela fica em /idoso/ (Codigo/build-unificado.mjs) */
+    <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, "")}>
       <div className="app">
         <Sidebar />
         <div className="main">

@@ -11,7 +11,7 @@ const MENU = [
   { rotulo: 'Início', Icone: IconeInicio, href: TELAS.inicio },
   { rotulo: 'Agenda', Icone: IconeAgenda, href: TELAS.agenda },
   { rotulo: 'Medicamentos', Icone: IconePilula, href: TELAS.medicamentos },
-  { rotulo: 'Tarefas', Icone: IconeTarefas, href: '/', ativo: true },
+  { rotulo: 'Tarefas', Icone: IconeTarefas, href: TELAS.tarefas, ativo: true },
   { rotulo: 'Linha do tempo', Icone: IconeLinhaDoTempo, href: TELAS.linhaDoTempo },
   { rotulo: 'Histórico', Icone: IconeHistorico, href: '#' },
   { rotulo: 'Cuidadores', Icone: IconeCuidadores, href: TELAS.cuidadores },

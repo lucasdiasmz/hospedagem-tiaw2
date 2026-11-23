@@ -1,0 +1,17 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "node Codigo/build-unificado.mjs",
+  "installCommand": "echo sem dependencias na raiz",
+  "outputDirectory": "dist",
+  "framework": null,
+  "rewrites": [
+    { "source": "/srv/inicio/:caminho*", "destination": "https://acessamob-inicio-api.onrender.com/:caminho*" },
+    { "source": "/srv/agenda/:caminho*", "destination": "https://acessamob-agenda-api.onrender.com/:caminho*" },
+    { "source": "/srv/cadastro/:caminho*", "destination": "https://acessamob-cadastro-api.onrender.com/:caminho*" },
+    { "source": "/srv/tarefas/:caminho*", "destination": "https://acessamob-tarefas-api.onrender.com/:caminho*" },
+    { "source": "/srv/medicamentos/:caminho*", "destination": "https://acessamob-medicamentos-api.onrender.com/:caminho*" },
+    { "source": "/srv/cuidadores/:caminho*", "destination": "https://acessamob-cuidadores-api.onrender.com/:caminho*" },
+    { "source": "/srv/perfil/:caminho*", "destination": "https://acessamob-perfil-api.onrender.com/:caminho*" },
+    { "source": "/idoso/:caminho*", "destination": "/idoso/index.html" }
+  ]
+}

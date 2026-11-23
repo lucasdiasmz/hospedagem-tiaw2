@@ -9,7 +9,7 @@ const PAPEIS = { cuidador: 'Cuidador(a)', cliente: 'Responsável' };
 
 /* as outras telas rodam cada uma no seu servidor do Vite (endereços em src/navegacao.js) */
 const MENU = [
-  { rotulo: 'Início', Icone: IconeInicio, href: '/', ativo: true },
+  { rotulo: 'Início', Icone: IconeInicio, href: TELAS.inicio, ativo: true },
   { rotulo: 'Agenda', Icone: IconeAgenda, href: TELAS.agenda },
   { rotulo: 'Medicamentos', Icone: IconePilula, href: TELAS.medicamentos },
   { rotulo: 'Tarefas', Icone: IconeTarefas, href: TELAS.tarefas },
