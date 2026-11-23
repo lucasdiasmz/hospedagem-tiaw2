@@ -7,15 +7,10 @@ export default function DivisaoCuidado({ membros, tarefas }) {
 
   return (
     <section className="card divisao" aria-labelledby="divisao-titulo">
-      <h2 id="divisao-titulo">
-        <span className="icone-tile" aria-hidden="true"><IconePerfis /></span>
-        <span>
-          Divisão do cuidado
-          <small className="para">
-            {concluidas === 1 ? '1 tarefa concluída' : concluidas + ' tarefas concluídas'} até agora
-          </small>
-        </span>
-      </h2>
+      <h2 id="divisao-titulo"><IconePerfis />Divisão do cuidado</h2>
+      <p className="divisao-sub">
+        {concluidas === 1 ? '1 tarefa concluída' : concluidas + ' tarefas concluídas'} até agora. A barra mostra quanto cada pessoa assumiu.
+      </p>
 
       <ul className="membros">
         {divisao.map((m) => (

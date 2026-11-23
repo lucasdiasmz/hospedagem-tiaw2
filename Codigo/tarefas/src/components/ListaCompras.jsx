@@ -32,10 +32,7 @@ export default function ListaCompras({ tarefas, aoComprar, secaoRef }) {
 
   return (
     <section className="card compras" ref={secaoRef} aria-labelledby="compras-titulo">
-      <h2 id="compras-titulo">
-        <span className="icone-tile" aria-hidden="true"><IconeCarrinho /></span>
-        Lista de compras do cuidado
-      </h2>
+      <h2 id="compras-titulo"><IconeCarrinho />Lista de compras</h2>
 
       {itens.length === 0 ? (
         <p className="vazio">Nenhuma compra pendente. Crie uma tarefa da categoria Compra.</p>
@@ -61,7 +58,7 @@ export default function ListaCompras({ tarefas, aoComprar, secaoRef }) {
             <span>Falta comprar: <b>{dinheiro(falta)}</b></span>
             <span>Total: <b>{dinheiro(total)}</b></span>
           </div>
-          <button type="button" className="btn btn-primario btn-largo" disabled={marcados.length === 0} onClick={comprar}>
+          <button type="button" className="btn btn-primario btn-bloco" disabled={marcados.length === 0} onClick={comprar}>
             Marcar como comprado
           </button>
         </>
