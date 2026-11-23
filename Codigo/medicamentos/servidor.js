@@ -152,8 +152,17 @@ async function alterarRegistro(idDose, status, dataTela) {
     return { codigo: 200, dose };
 }
 
+function cabecalhosCors() {
+    return {
+        'Access-Control-Allow-Origin': process.env.CORS_ORIGIN || '*',
+        'Access-Control-Allow-Methods': 'GET, PATCH, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type'
+    };
+}
+
 function responder(resposta, codigo, dados) {
     resposta.writeHead(codigo, {
+        ...cabecalhosCors(),
         'Content-Type': 'application/json; charset=utf-8',
         'Cache-Control': 'no-store'
     });
@@ -226,6 +235,13 @@ async function iniciar() {
         try {
             const url = new URL(requisicao.url, 'http://localhost');
 
+            /* pré-verificação do navegador quando o site está em outro endereço */
+            if (requisicao.method === 'OPTIONS') {
+                resposta.writeHead(204, cabecalhosCors());
+                resposta.end();
+                return;
+            }
+
             if (requisicao.method === 'GET' && url.pathname === '/api/idosos') {
                 await fila;
                 const dados = await lerDados();
@@ -278,8 +294,10 @@ async function iniciar() {
         process.exit(1);
     });
 
-    servidor.listen(Number(process.env.PORT || 3005), '127.0.0.1', () => {
-        console.log('API de medicamentos: http://127.0.0.1:' + (process.env.PORT || 3005));
+    /* local: só este computador; na hospedagem (Render define RENDER) ou com HOST=0.0.0.0: todas as interfaces */
+    const host = process.env.HOST || (process.env.RENDER ? '0.0.0.0' : '127.0.0.1');
+    servidor.listen(Number(process.env.PORT || 3005), host, () => {
+        console.log('API de medicamentos: http://' + host + ':' + (process.env.PORT || 3005));
         console.log('Banco:', usaMongo ? 'MongoDB' : 'db.json');
     });
 

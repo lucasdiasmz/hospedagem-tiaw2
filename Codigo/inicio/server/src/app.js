@@ -8,6 +8,15 @@ export function criarApp(repo, { usuarioPadrao = 'usr-1' } = {}) {
   const app = express();
   app.use(express.json());
 
+  /* libera o site hospedado em outro endereço (CORS_ORIGIN; padrão: qualquer origem) */
+  app.use((req, res, next) => {
+    res.set('Access-Control-Allow-Origin', process.env.CORS_ORIGIN || '*');
+    res.set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+    res.set('Access-Control-Allow-Headers', 'Content-Type, X-Usuario-Id');
+    if (req.method === 'OPTIONS') return res.sendStatus(204);
+    next();
+  });
+
   app.get('/api/saude', (req, res) => res.json({ ok: true, banco: repo.tipo }));
 
   app.get('/api/catalogos', async (req, res) => {

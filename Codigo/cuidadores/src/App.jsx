@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import Sidebar from './components/Sidebar.jsx';
 import { IconeCuidadores } from './components/Icones.jsx';
 
+/* local: o Vite repassa /api para servidor.js; hospedado: VITE_API_URL aponta para o endereço da API */
+const URL_API = (import.meta.env.VITE_API_URL || '') + '/api';
+
 const abas = ['Sobre', 'Serviços e preços', 'Avaliações', 'Disponibilidade'];
 const experiencias = {
     '0-1': 'Menos de 1 ano',
@@ -54,7 +57,7 @@ export default function App() {
             setNaoEncontrado(false);
 
             try {
-                const endereco = id ? '/api/cuidadores/' + encodeURIComponent(id) : '/api/cuidadores';
+                const endereco = URL_API + (id ? '/cuidadores/' + encodeURIComponent(id) : '/cuidadores');
                 const resposta = await fetch(endereco, { signal: controle.signal });
 
                 if (resposta.status === 404) {

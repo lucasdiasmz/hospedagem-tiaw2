@@ -70,8 +70,17 @@ function montarPerfil(cuidador, dados) {
     };
 }
 
+function cabecalhosCors() {
+    return {
+        'Access-Control-Allow-Origin': process.env.CORS_ORIGIN || '*',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type'
+    };
+}
+
 function responder(resposta, codigo, dados) {
     resposta.writeHead(codigo, {
+        ...cabecalhosCors(),
         'Content-Type': 'application/json; charset=utf-8',
         'Cache-Control': 'no-store'
     });
@@ -95,6 +104,13 @@ async function iniciar() {
     const servidor = createServer(async (requisicao, resposta) => {
         try {
             const url = new URL(requisicao.url, 'http://localhost');
+
+            /* pré-verificação do navegador quando o site está em outro endereço */
+            if (requisicao.method === 'OPTIONS') {
+                resposta.writeHead(204, cabecalhosCors());
+                resposta.end();
+                return;
+            }
 
             if (requisicao.method !== 'GET') {
                 responder(resposta, 405, { mensagem: 'Esta tela permite somente consultar os perfis.' });
@@ -141,8 +157,10 @@ async function iniciar() {
         process.exit(1);
     });
 
-    servidor.listen(Number(process.env.PORT || 3006), '127.0.0.1', () => {
-        console.log('API de cuidadores: http://127.0.0.1:' + (process.env.PORT || 3006));
+    /* local: só este computador; na hospedagem (Render define RENDER) ou com HOST=0.0.0.0: todas as interfaces */
+    const host = process.env.HOST || (process.env.RENDER ? '0.0.0.0' : '127.0.0.1');
+    servidor.listen(Number(process.env.PORT || 3006), host, () => {
+        console.log('API de cuidadores: http://' + host + ':' + (process.env.PORT || 3006));
         console.log('Banco:', banco ? 'MongoDB' : 'db.json');
     });
 

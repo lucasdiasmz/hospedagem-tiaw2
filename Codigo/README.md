@@ -37,6 +37,10 @@ cartões brancos com cantos de 12–16 px e cartão de destaque em `#0f3a8c`. Em
 lateral vira barra inferior. Ao criar uma tela nova, copie os tokens do `:root` e o `Sidebar.jsx`
 de um módulo existente.
 
+## Hospedagem
+
+O passo a passo para publicar banco, APIs e sites está em [HOSPEDAGEM.md](HOSPEDAGEM.md).
+
 ## Navegação entre as telas
 
 Os endereços ficam em `src/navegacao.js`, um arquivo **igual em todos os módulos**. Ao mudar

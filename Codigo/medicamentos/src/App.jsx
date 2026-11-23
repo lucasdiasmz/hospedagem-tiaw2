@@ -4,8 +4,11 @@ import Sidebar from './components/Sidebar.jsx';
 import Toast from './components/Toast.jsx';
 import { IconeCheck, IconePilula } from './components/Icones.jsx';
 
+/* local: o Vite repassa /api para servidor.js; hospedado: VITE_API_URL aponta para o endereço da API */
+const URL_API = (import.meta.env.VITE_API_URL || '') + '/api';
+
 async function listarMedicamentos(idosoId, signal) {
-    const resposta = await fetch('/api/medicamentos?idosoId=' + encodeURIComponent(idosoId), { signal });
+    const resposta = await fetch(URL_API + '/medicamentos?idosoId=' + encodeURIComponent(idosoId), { signal });
 
     if (!resposta.ok) {
         throw new Error('Não foi possível carregar os medicamentos. Confira se a API está ligada.');
@@ -15,7 +18,7 @@ async function listarMedicamentos(idosoId, signal) {
 }
 
 async function salvarStatus(id, status, data) {
-    const resposta = await fetch('/api/medicamentos/' + encodeURIComponent(id), {
+    const resposta = await fetch(URL_API + '/medicamentos/' + encodeURIComponent(id), {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json'
@@ -82,7 +85,7 @@ export default function App() {
             try {
                 const [dados, respostaIdosos] = await Promise.all([
                     listarMedicamentos(idosoId, controle.signal),
-                    fetch('/api/idosos', { signal: controle.signal })
+                    fetch(URL_API + '/idosos', { signal: controle.signal })
                 ]);
 
                 if (!respostaIdosos.ok) {

@@ -1,4 +1,5 @@
-const API_URL = "/api";
+/* local: o Vite repassa /api para o backend; hospedado: VITE_API_URL aponta para o endereço da API */
+const API_URL = (import.meta.env.VITE_API_URL || "") + "/api";
 
 async function requisicao(caminho, opcoes) {
   let resposta = null;
