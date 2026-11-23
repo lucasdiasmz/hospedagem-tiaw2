@@ -108,44 +108,40 @@ async function alterarRegistro(idDose, status, dataTela) {
         return { codigo: 404, mensagem: 'Dose não encontrada.' };
     }
 
-    const filtro = {
+    /* uma dose tem no máximo um registro: "feito" (Tomado) ou "recusou" (Recusado);
+       Pendente apaga o que houver */
+    const base = {
         tipo: 'medicamento',
         itemId: medicamentoId,
         idosoId: medicamento.idosoId,
         data,
-        horarioPrevisto: horario,
-        status: 'feito'
+        horarioPrevisto: horario
     };
-
-    const novoRegistro = {
+    const statusRegistro = { Tomado: 'feito', Recusado: 'recusou' }[status];
+    const novoRegistro = statusRegistro && {
         id: 'reg-' + randomUUID(),
-        ...filtro,
+        ...base,
+        status: statusRegistro,
         horarioRegistro: horaAtual(),
-        registradoPor: 'usr-1'
+        registradoPor: process.env.USUARIO_PADRAO || 'usr-1'
     };
 
-    function corresponde(registro) {
-        return Object.entries(filtro).every(([campo, valor]) => registro[campo] === valor);
+    function daDose(registro) {
+        return Object.entries(base).every(([campo, valor]) => registro[campo] === valor)
+            && ['feito', 'recusou'].includes(registro.status);
     }
 
     if (usaMongo) {
-        if (status === 'Tomado') {
-            await banco.collection('registros').updateOne(
-                filtro,
-                { $setOnInsert: novoRegistro },
-                { upsert: true }
-            );
-        } else {
-            await banco.collection('registros').deleteMany(filtro);
+        await banco.collection('registros').deleteMany({ ...base, status: { $in: ['feito', 'recusou'] } });
+        if (novoRegistro) {
+            /* mesmo padrão do Codigo/inicio: o id fica no _id */
+            const { id, ...resto } = novoRegistro;
+            await banco.collection('registros').insertOne({ _id: id, ...resto });
         }
     } else {
-        if (status === 'Tomado') {
-            if (!dados.registros.some(corresponde)) {
-                dados.registros.push(novoRegistro);
-            }
-        } else {
-            // Desfaz apenas a confirmação desta dose, preservando recusas e outras atividades.
-            dados.registros = dados.registros.filter(registro => !corresponde(registro));
+        dados.registros = dados.registros.filter(registro => !daDose(registro));
+        if (novoRegistro) {
+            dados.registros.push(novoRegistro);
         }
 
         await writeFile(temporario, JSON.stringify(dados, null, 4) + '\n');
@@ -192,12 +188,13 @@ async function importarMongo() {
 
     for (const [nome, conteudo] of Object.entries(dados)) {
         if (Array.isArray(conteudo)) {
-            await banco.collection(nome).createIndex({ id: 1 }, { unique: true });
-
-            for (const documento of conteudo) {
+            /* mesmo padrão do Codigo/inicio: o id do db.json vira o _id. Antes havia um índice
+               único em "id", que falhava quando o seed do início já tinha criado a coleção. */
+            for (const { id, ...documento } of conteudo) {
+                /* o cadastro de medicamentos grava com "id" e _id próprio: procura pelos dois */
                 await banco.collection(nome).updateOne(
-                    { id: documento.id },
-                    { $setOnInsert: documento },
+                    { $or: [{ _id: id }, { id }] },
+                    { $setOnInsert: { _id: id, ...documento, id } },
                     { upsert: true }
                 );
             }
@@ -274,7 +271,7 @@ async function iniciar() {
                     return;
                 }
 
-                if (!corpo || !['Tomado', 'Pendente'].includes(corpo.status)) {
+                if (!corpo || !['Tomado', 'Pendente', 'Recusado'].includes(corpo.status)) {
                     responder(resposta, 400, { mensagem: 'Status inválido.' });
                     return;
                 }
@@ -318,8 +315,9 @@ async function iniciar() {
     process.on('SIGTERM', encerrar);
 }
 
-iniciar().catch(async () => {
+iniciar().catch(async erro => {
     console.error('Falha ao abrir os dados. Confira db.json ou a conexão MongoDB no .env.');
+    console.error(erro.message);
     await cliente?.close();
     process.exit(1);
 });
