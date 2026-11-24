@@ -6,13 +6,17 @@ import {
 } from './Icones.jsx';
 import { TELAS } from './navegacao.js';
 import { usePreferencias, useUsuario } from './preferencias.js';
+import { NOMES_PERFIL, usePermissoes } from './permissoes.js';
+import { Estado } from './Componentes.jsx';
 import logo from './assets/logo-acessamob.png';
 
 /* Estrutura comum de todas as telas (mobile-first):
    - celular e tablet: barra do topo com a marca, conteúdo e barra de abas embaixo com as
      4 telas mais usadas + "Mais" (folha com as outras telas, atalhos e acessibilidade);
    - computador (≥ 1024 px): menu lateral azul-escuro com tudo à vista.
-   Props: tela (id do item ativo), usuario ({ nome, tipo }), atalhos ([{ rotulo, Icone, aoClicar | href }]). */
+   Props: tela (id do item ativo), usuario ({ nome, tipo }), atalhos ([{ rotulo, Icone, aoClicar | href }]),
+   permissao (id da tela para conferir o acesso, quando difere de "tela"; ex.: cadastro de medicamentos).
+   O menu mostra só as telas do perfil (permissoes.js); uma tela proibida mostra um aviso. */
 
 const ITENS = [
   { id: 'inicio', rotulo: 'Início', curto: 'Início', Icone: IconeInicio, href: TELAS.inicio, aba: true },
@@ -23,8 +27,6 @@ const ITENS = [
   { id: 'cuidadores', rotulo: 'Cuidadores', descricao: 'Buscar e contratar', Icone: IconeCuidadores, href: TELAS.cuidadores },
   { id: 'perfis', rotulo: 'Perfil do idoso', descricao: 'Saúde, contatos e equipe', Icone: IconePerfis, href: TELAS.perfis },
 ];
-
-const PAPEIS = { cuidador: 'Cuidador(a)', cliente: 'Familiar responsável', idoso: 'Idoso(a)' };
 
 function primeiroNome(nome = '') {
   return nome.trim().split(/\s+/)[0] || '';
@@ -93,24 +95,29 @@ function Atalho({ atalho, aoUsar }) {
   );
 }
 
-function CartaoUsuario({ usuario, escuro = false }) {
+function CartaoUsuario({ usuario, perfil, escuro = false }) {
   if (!usuario?.nome) return null;
   return (
     <a className={'usuario' + (escuro ? ' usuario--escuro' : '')} href={TELAS.boasVindas} title="Trocar de perfil">
       <span className="avatar" aria-hidden="true">{usuario.nome[0]}</span>
       <span className="usuario-texto">
         <strong>{usuario.nome}</strong>
-        <small>{PAPEIS[usuario.tipo] || 'Trocar de perfil'}</small>
+        <small>{NOMES_PERFIL[perfil]} · trocar</small>
       </span>
       <IconeSair />
     </a>
   );
 }
 
-export default function Shell({ tela, usuario: usuarioApi, atalhos = [], children }) {
+export default function Shell({ tela, permissao = tela, usuario: usuarioApi, atalhos = [], children }) {
   const [maisAberto, setMaisAberto] = useState(false);
   const usuario = useUsuario(usuarioApi);
-  const atualNoMais = ITENS.some((i) => !i.aba && i.id === tela);
+  const { perfil, podeVer } = usePermissoes();
+  const itens = ITENS.filter((i) => podeVer(i.id));
+  const abas = itens.filter((i) => i.aba);
+  const atualNoMais = itens.some((i) => !i.aba && i.id === tela);
+  const liberada = podeVer(permissao);
+  const visiveis = liberada ? atalhos : [];
 
   return (
     <div className="shell">
@@ -121,7 +128,7 @@ export default function Shell({ tela, usuario: usuarioApi, atalhos = [], childre
         <Marca />
         <nav className="lateral-menu" aria-label="Navegação principal">
           <ul>
-            {ITENS.map(({ id, rotulo, Icone, href }) => (
+            {itens.map(({ id, rotulo, Icone, href }) => (
               <li key={id}>
                 <a href={href} className="lateral-item" aria-current={id === tela ? 'page' : undefined}>
                   <Icone />
@@ -132,11 +139,11 @@ export default function Shell({ tela, usuario: usuarioApi, atalhos = [], childre
           </ul>
         </nav>
 
-        {atalhos.length > 0 && (
+        {visiveis.length > 0 && (
           <div className="lateral-bloco">
             <p className="lateral-rotulo">Atalhos</p>
             <div className="lateral-atalhos">
-              {atalhos.map((a) => <Atalho key={a.rotulo} atalho={a} />)}
+              {visiveis.map((a) => <Atalho key={a.rotulo} atalho={a} />)}
             </div>
           </div>
         )}
@@ -146,7 +153,7 @@ export default function Shell({ tela, usuario: usuarioApi, atalhos = [], childre
           <Acessibilidade />
         </div>
 
-        <CartaoUsuario usuario={usuario} escuro />
+        <CartaoUsuario usuario={usuario} perfil={perfil} escuro />
       </aside>
 
       {/* celular: barra do topo */}
@@ -159,12 +166,22 @@ export default function Shell({ tela, usuario: usuarioApi, atalhos = [], childre
       </header>
 
       <main id="conteudo" className="conteudo" tabIndex={-1}>
-        {children}
+        {liberada ? children : (
+          <Estado
+            titulo="Esta tela não faz parte do seu perfil"
+            acao={<a className="btn btn-primario" href={TELAS.inicio}>Ir para o Início</a>}
+          >
+            <p>
+              Você está usando o AcessaMob como <strong>{NOMES_PERFIL[perfil].toLowerCase()}</strong>.
+              Se o perfil estiver errado, <a href={TELAS.boasVindas}>troque nas boas-vindas</a>.
+            </p>
+          </Estado>
+        )}
       </main>
 
       {/* celular: abas de baixo */}
-      <nav className="abas" aria-label="Navegação principal">
-        {ITENS.filter((i) => i.aba).map(({ id, curto, Icone, href }) => (
+      <nav className="abas" aria-label="Navegação principal" style={{ '--abas-n': abas.length + 1 }}>
+        {abas.map(({ id, curto, Icone, href }) => (
           <a key={id} href={href} className="aba" aria-current={id === tela ? 'page' : undefined}>
             <Icone />
             <span>{curto}</span>
@@ -185,7 +202,7 @@ export default function Shell({ tela, usuario: usuarioApi, atalhos = [], childre
       <Dialogo aberto={maisAberto} aoFechar={() => setMaisAberto(false)} titulo="Menu" className="dialogo--menu">
         <nav aria-label="Outras telas">
           <ul className="menu-mais">
-            {ITENS.filter((i) => !i.aba).map(({ id, rotulo, descricao, Icone, href }) => (
+            {itens.filter((i) => !i.aba).map(({ id, rotulo, descricao, Icone, href }) => (
               <li key={id}>
                 <a href={href} className="menu-mais-item" aria-current={id === tela ? 'page' : undefined}>
                   <span className="menu-mais-icone"><Icone /></span>
@@ -197,11 +214,11 @@ export default function Shell({ tela, usuario: usuarioApi, atalhos = [], childre
           </ul>
         </nav>
 
-        {atalhos.length > 0 && (
+        {visiveis.length > 0 && (
           <section className="menu-secao" aria-labelledby="menu-atalhos">
             <h3 id="menu-atalhos">Atalhos desta tela</h3>
             <div className="menu-atalhos">
-              {atalhos.map((a) => <Atalho key={a.rotulo} atalho={a} aoUsar={() => setMaisAberto(false)} />)}
+              {visiveis.map((a) => <Atalho key={a.rotulo} atalho={a} aoUsar={() => setMaisAberto(false)} />)}
             </div>
           </section>
         )}
@@ -211,7 +228,7 @@ export default function Shell({ tela, usuario: usuarioApi, atalhos = [], childre
           <Acessibilidade />
         </section>
 
-        <CartaoUsuario usuario={usuario} />
+        <CartaoUsuario usuario={usuario} perfil={perfil} />
       </Dialogo>
     </div>
   );
