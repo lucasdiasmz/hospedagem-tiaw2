@@ -36,29 +36,29 @@ function PerfilIdoso() {
 
   if (carregando) {
     return (
-      <main className="content">
+      <div className="pagina">
         <EstadoCarregando texto="Carregando perfil..." />
-      </main>
+      </div>
     );
   }
 
   if (erro) {
     return (
-      <main className="content">
+      <div className="pagina">
         <EstadoErro titulo="Não foi possível carregar os perfis" mensagem={erro} onTentarDeNovo={recarregar} />
-      </main>
+      </div>
     );
   }
 
   if (!idosoAtual) {
     return (
-      <main className="content">
+      <div className="pagina">
         <EstadoVazio
           icone="users"
           titulo="Nenhum idoso cadastrado ainda"
           texto='Rode o comando "npm run seed" no back-end para inserir os dados de exemplo.'
         />
-      </main>
+      </div>
     );
   }
 
@@ -114,7 +114,7 @@ function PerfilIdoso() {
   }
 
   return (
-    <main className="content">
+    <div className="pagina">
       <PerfilHeader idosos={idosos} idosoAtual={idosoAtual} onTrocarIdoso={handleTrocarIdoso} />
       <HeroIdoso
         idoso={idosoAtual}
@@ -138,7 +138,7 @@ function PerfilIdoso() {
 
       {modal}
       <Toast toast={toast} onFechar={handleFecharToast} />
-    </main>
+    </div>
   );
 }
 

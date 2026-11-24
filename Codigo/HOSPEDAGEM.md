@@ -77,7 +77,7 @@ project* no módulo certo e usando exatamente estes nomes de projeto:
 | Cuidadores | `Codigo/cuidadores` | `acessamob-cuidadores` |
 | Perfil e Linha do tempo | `Codigo/perfil-linha-do-tempo/frontend` | `acessamob-perfil` |
 
-Não é preciso cadastrar variáveis: `src/navegacao.js` sabe que, fora do `localhost`, as telas
+Não é preciso cadastrar variáveis: `design-system/navegacao.js` sabe que, fora do `localhost`, as telas
 ficam em `https://acessamob-<nome>.vercel.app` e as APIs em
 `https://acessamob-<api>-api.onrender.com` (os nomes do `render.yaml`).
 

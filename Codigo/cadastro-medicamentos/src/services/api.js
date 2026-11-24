@@ -1,5 +1,5 @@
 /* Chamadas à API de medicamentos (Codigo/cadastro-medicamentos/server) */
-import { urlApi } from '../navegacao.js';
+import { urlApi } from '@ds/navegacao.js';
 
 /* local: http://localhost:3003; publicado: a API no Render (src/navegacao.js) */
 const URL_API = urlApi('cadastro', 'http://localhost:3003');
@@ -29,4 +29,8 @@ export function criarMedicamento(med) {
 
 export function definirAtivo(id, ativo) {
   return chamar('/medicamentos/' + id, { method: 'PATCH', body: JSON.stringify({ ativo }) });
+}
+
+export function editarMedicamento(id, med) {
+  return chamar('/medicamentos/' + id, { method: 'PUT', body: JSON.stringify(med) });
 }

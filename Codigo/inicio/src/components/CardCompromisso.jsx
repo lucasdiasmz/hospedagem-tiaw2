@@ -1,47 +1,53 @@
-import { pad } from '../utils/hora.js';
-import { ICONES_RESUMO, IconeCheck } from './Icones.jsx';
+import { ReguaDoDia } from '@ds/Componentes.jsx';
+import { IconeCheck, IconeRelogio } from '@ds/Icones.jsx';
+import { horaAgora, pad } from '../utils/hora.js';
+import { ICONES_TIPO, IconeDespertador, IconeSinoTocando, NOMES_TIPO } from './Icones.jsx';
 
-/* despertador tocando: item atrasado */
-function IconeDespertador() {
-  return (
-    <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="12" cy="13" r="7.5" /><path d="M12 9.5V13l2.5 1.5" /><path d="M3.5 5.5l3-2.5M20.5 5.5l-3-2.5M6.5 19.5L5 21M17.5 19.5L19 21" />
-    </svg>
-  );
-}
-
-/* sino tocando: está na hora */
-function IconeSinoTocando() {
-  return (
-    <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 8 2.5 8h-17S6 15 6 9" /><path d="M10.3 20.5a1.9 1.9 0 0 0 3.4 0" /><path d="M2.5 8.5a9 9 0 0 1 2-4.5M21.5 8.5a9 9 0 0 0-2-4.5" />
-    </svg>
-  );
-}
-
-/* contagem regressiva do quadro branco: "EM 30 minutos", "EM 2h15"; na hora ou atrasado vira ícone animado */
+/* contagem regressiva: "em 30 min", "em 2h15"; na hora ou atrasado vira ícone */
 function contador(minutos) {
   if (minutos < -15) {
     const atraso = -minutos;
     const texto = atraso < 60 ? atraso + ' min' : Math.floor(atraso / 60) + 'h' + (atraso % 60 ? pad(atraso % 60) : '');
-    return { alerta: 'atrasado', base: 'há ' + texto };
+    return { alerta: 'atrasado', topo: 'Atrasado', base: 'há ' + texto };
   }
-  if (minutos <= 0) return { alerta: 'agora', base: 'agora' };
+  if (minutos <= 0) return { alerta: 'agora', topo: 'É agora', base: '' };
   if (minutos < 60) return { topo: 'Em', valor: String(minutos), base: minutos === 1 ? 'minuto' : 'minutos' };
   const m = minutos % 60;
   return { topo: 'Em', valor: Math.floor(minutos / 60) + 'h' + (m ? pad(m) : ''), base: m ? '' : 'horas' };
 }
 
-/* destaque do próximo item pendente do dia (remédio, consulta, visita ou tarefa) */
-export default function CardCompromisso({ item, minutos, aoConcluir, aoRecusar, aoAdiar }) {
+/* status de cada item na régua do dia */
+function paraRegua(linhaDoTempo, agora) {
+  return linhaDoTempo.map((e) => ({
+    id: e.id,
+    hora: e.hora,
+    titulo: e.titulo || e.texto,
+    tipo: e.tipo,
+    status: e.status || (e.tipo !== 'nota' && e.hora < agora ? 'atrasado' : null),
+  }));
+}
+
+/* destaque do próximo item pendente do dia (remédio, consulta, visita ou tarefa),
+   com a régua do dia embaixo mostrando tudo o que já passou e o que vem */
+export default function CardCompromisso({ item, minutos, linhaDoTempo, aoConcluir, aoRecusar, aoAdiar }) {
+  const agora = horaAgora();
+  const regua = <ReguaDoDia itens={paraRegua(linhaDoTempo, agora)} agora={agora} />;
+  const feitos = linhaDoTempo.filter((e) => e.status === 'feito').length;
+  const total = linhaDoTempo.filter((e) => e.tipo !== 'nota').length;
+
   if (!item) {
     return (
-      <section className="card-compromisso vazio" aria-label="Próximo compromisso">
-        <div className="compromisso-texto">
-          <small>Próximo compromisso</small>
-          <strong>Tudo em dia</strong>
-          <p className="compromisso-info">Não há mais nada pendente para hoje.</p>
+      <section className="destaque sobre-escuro destaque--vazio" aria-labelledby="destaque-titulo">
+        <div className="destaque-corpo">
+          <div className="destaque-texto">
+            <p className="destaque-rotulo">Próximo cuidado</p>
+            <h2 id="destaque-titulo">Tudo em dia</h2>
+            <p className="destaque-info">
+              {total ? `Os ${total} cuidados de hoje foram resolvidos.` : 'Não há cuidados marcados para hoje.'}
+            </p>
+          </div>
         </div>
+        {total > 0 && regua}
       </section>
     );
   }
@@ -50,37 +56,46 @@ export default function CardCompromisso({ item, minutos, aoConcluir, aoRecusar, 
   const ehMed = item.tipo === 'med';
 
   return (
-    <section className="card-compromisso" aria-label="Próximo compromisso">
-      <div className={'contador' + (c.alerta ? ' ' + c.alerta : '')} aria-hidden="true">
-        {c.alerta ? (
-          <span className="contador-icone">{c.alerta === 'atrasado' ? <IconeDespertador /> : <IconeSinoTocando />}</span>
-        ) : (
-          <>
-            <span className="contador-topo">{c.topo}</span>
+    <section className={"destaque sobre-escuro" + (c.alerta ? ' destaque--' + c.alerta : '')} aria-labelledby="destaque-titulo">
+      <div className="destaque-corpo">
+        <div className="contador" aria-hidden="true">
+          <span className="contador-topo">{c.topo}</span>
+          {c.alerta ? (
+            <span className="contador-icone">{c.alerta === 'atrasado' ? <IconeDespertador /> : <IconeSinoTocando />}</span>
+          ) : (
             <span className="contador-valor">{c.valor}</span>
-          </>
-        )}
-        {c.base && <span className="contador-base">{c.base}</span>}
-      </div>
-
-      <div className="compromisso-texto" aria-live="polite">
-        <small>Próximo compromisso · {item.hora}</small>
-        <strong>{item.titulo}</strong>
-        <p className="compromisso-info">
-          <span className="compromisso-icone">{ICONES_RESUMO[item.tipo]}</span>
-          {item.detalhe}
-        </p>
-      </div>
-
-      <div className="compromisso-acoes">
-        <button type="button" className="btn-claro" onClick={aoConcluir}>
-          <IconeCheck />
-          {ehMed ? 'Já tomei' : 'Marcar como feito'}
-        </button>
-        <div className="compromisso-sec">
-          {ehMed && <button type="button" className="btn-contorno" onClick={aoRecusar}>Recusou</button>}
-          <button type="button" className="btn-contorno" onClick={aoAdiar}>Adiar 30 min</button>
+          )}
+          {c.base && <span className="contador-base">{c.base}</span>}
         </div>
+
+        <div className="destaque-texto">
+          <p className="destaque-rotulo">
+            <IconeRelogio />
+            <span>Próximo cuidado · <time>{item.hora}</time></span>
+            {c.alerta === 'atrasado' && <span className="somente-leitor">, atrasado</span>}
+          </p>
+          <h2 id="destaque-titulo">{item.titulo}</h2>
+          <p className="destaque-info">
+            <span className="destaque-tipo">{ICONES_TIPO[item.tipo]}{NOMES_TIPO[item.tipo]}</span>
+            {item.detalhe && item.detalhe !== NOMES_TIPO[item.tipo] && <span>{item.detalhe}</span>}
+          </p>
+        </div>
+      </div>
+
+      <div className="destaque-acoes">
+        <button type="button" className="btn btn-claro" onClick={aoConcluir}>
+          <IconeCheck />
+          {ehMed ? 'Já tomou' : 'Marcar como feito'}
+        </button>
+        <div className="destaque-sec">
+          {ehMed && <button type="button" className="btn btn-contorno" onClick={aoRecusar}>Recusou</button>}
+          <button type="button" className="btn btn-contorno" onClick={aoAdiar}>Adiar 30 min</button>
+        </div>
+      </div>
+
+      <div className="destaque-dia">
+        <p><strong>{feitos}</strong> de {total} cuidados feitos hoje</p>
+        {regua}
       </div>
     </section>
   );

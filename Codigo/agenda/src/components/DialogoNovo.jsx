@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { DIAS_SEMANA, diaDaSemana } from '../utils/datas.js';
-import Dialogo from './Dialogo.jsx';
+import Dialogo from '@ds/Dialogo.jsx';
 
 const ROTULO_DIA = { dom: 'D', seg: 'S', ter: 'T', qua: 'Q', qui: 'Q', sex: 'S', sab: 'S' };
 const NOME_DIA = { dom: 'Domingo', seg: 'Segunda', ter: 'Terça', qua: 'Quarta', qui: 'Quinta', sex: 'Sexta', sab: 'Sábado' };

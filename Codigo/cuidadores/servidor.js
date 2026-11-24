@@ -1,9 +1,29 @@
 import { createServer } from 'node:http';
-import { readFile } from 'node:fs/promises';
+import { readFile, rename, writeFile } from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
 import { setServers } from 'node:dns';
+
+/* API dos cuidadores (RF002, RF003, RF004 e RF005):
+   GET  /api/cuidadores                     lista com resumo para busca e filtros
+   GET  /api/cuidadores/:id                 perfil completo, com avaliações
+   POST /api/cuidadores/:id/avaliacoes      { nota 1–5, comentario }
+   GET  /api/idosos                         idosos que podem receber atendimento
+   POST /api/solicitacoes                   { cuidadorId, idosoId, servico, data, horaInicio, horaFim, mensagem }
+   Sem MONGODB_URI usa o db.json desta pasta (e grava nele). */
+
+const arquivo = new URL('./db.json', import.meta.url);
+const temporario = new URL('./db.json.tmp', import.meta.url);
+/* enquanto não há login, quem avalia e solicita é o familiar responsável padrão */
+const CLIENTE_PADRAO = process.env.CLIENTE_PADRAO || 'cli-1';
+const SERVICOS = ['acompanhante', 'tecnico-enfermagem', 'companhia', 'outro'];
+const HORA = /^([01]\d|2[0-3]):[0-5]\d$/;
+const DATA = /^\d{4}-\d{2}-\d{2}$/;
+/* registros de conselho profissional que aparecem nas qualificações */
+const REGISTRO = /\b(COREN|CRM|CREFITO|CRF|CRESS|CRN)\b/i;
 
 let cliente;
 let banco;
+let fila = Promise.resolve();
 
 /* no MongoDB o id do db.json fica no _id (padrão do Codigo/inicio); devolve sempre com "id" */
 function comId({ _id, ...resto }) {
@@ -12,33 +32,29 @@ function comId({ _id, ...resto }) {
 
 async function lerDados() {
     if (banco) {
-        const [usuarios, cuidadores, avaliacoes, clientes] = await Promise.all([
+        const [usuarios, cuidadores, avaliacoes, clientes, idosos] = await Promise.all([
             banco.collection('usuarios').find({}, { projection: { _id: 1, id: 1, nome: 1 } }).toArray(),
             banco.collection('cuidadores').find({}).toArray(),
             banco.collection('avaliacoes').find({}).toArray(),
-            banco.collection('clientes').find({}, { projection: { _id: 1, id: 1, usuarioId: 1 } }).toArray()
+            banco.collection('clientes').find({}, { projection: { _id: 1, id: 1, usuarioId: 1 } }).toArray(),
+            banco.collection('idosos').find({}, { projection: { _id: 1, id: 1, nome: 1, apelido: 1, clienteId: 1 } }).toArray()
         ]);
 
         return {
             usuarios: usuarios.map(comId),
             cuidadores: cuidadores.map(comId),
             avaliacoes: avaliacoes.map(comId),
-            clientes: clientes.map(comId)
+            clientes: clientes.map(comId),
+            idosos: idosos.map(comId)
         };
     }
 
-    return JSON.parse(await readFile(new URL('./db.json', import.meta.url), 'utf8'));
+    return JSON.parse(await readFile(arquivo, 'utf8'));
 }
 
-function montarPerfil(cuidador, dados) {
-    const usuario = dados.usuarios.find(item => item.id === cuidador.usuarioId);
-
-    if (!usuario) {
-        return null;
-    }
-
-    const avaliacoes = (dados.avaliacoes || [])
-        .filter(item => item.cuidadorId === cuidador.id && Number.isFinite(item.nota) && item.nota >= 1 && item.nota <= 5)
+function avaliacoesDe(cuidadorId, dados) {
+    return (dados.avaliacoes || [])
+        .filter(item => item.cuidadorId === cuidadorId && Number.isFinite(item.nota) && item.nota >= 1 && item.nota <= 5)
         .map(item => {
             const cliente = (dados.clientes || []).find(pessoa => pessoa.id === item.clienteId);
             const autor = dados.usuarios.find(pessoa => pessoa.id === cliente?.usuarioId);
@@ -50,17 +66,53 @@ function montarPerfil(cuidador, dados) {
                 data: item.data,
                 autor: autor?.nome?.trim().split(/\s+/)[0] || 'Cliente'
             };
-        });
+        })
+        .sort((a, b) => String(b.data).localeCompare(String(a.data)));
+}
 
-    // Somente os campos apresentados na tela, sem dados de login.
+function media(avaliacoes) {
+    if (!avaliacoes.length) return null;
+    return Math.round((avaliacoes.reduce((total, a) => total + a.nota, 0) / avaliacoes.length) * 10) / 10;
+}
+
+/* resumo usado na lista com busca e filtros */
+function montarResumo(cuidador, dados) {
+    const usuario = dados.usuarios.find(item => item.id === cuidador.usuarioId);
+    if (!usuario) return null;
+    const avaliacoes = avaliacoesDe(cuidador.id, dados);
+
     return {
         id: cuidador.id,
         nome: usuario.nome,
         foto: cuidador.foto || '',
-        sobre: cuidador.sobre || '',
         experiencia: cuidador.experiencia || '',
         servicos: cuidador.servicos || [],
+        bairro: cuidador.localizacao?.bairro || '',
+        cidade: cuidador.localizacao?.cidade || '',
+        dias: cuidador.disponibilidade?.dias || [],
+        disponibilidade: cuidador.disponibilidade?.descricao || '',
+        valorHora: Number.isFinite(cuidador.valorHora) ? cuidador.valorHora : null,
+        /* primeira frase da apresentação, para o cartão da lista */
+        resumo: (cuidador.sobre || '').split(/(?<=[.!?])\s/)[0],
+        especialidades: cuidador.especialidades || [],
+        media: media(avaliacoes),
+        totalAvaliacoes: avaliacoes.length,
+        registroProfissional: (cuidador.qualificacoes || []).some(q => REGISTRO.test(q))
+    };
+}
+
+function montarPerfil(cuidador, dados) {
+    const resumo = montarResumo(cuidador, dados);
+    if (!resumo) return null;
+
+    // Somente os campos apresentados na tela, sem dados de login.
+    return {
+        ...resumo,
+        sobre: cuidador.sobre || '',
         qualificacoes: cuidador.qualificacoes || [],
+        fazNoAtendimento: cuidador.fazNoAtendimento || [],
+        naoFaz: cuidador.naoFaz || [],
+        diferenciais: cuidador.diferenciais || [],
         referencias: (cuidador.referencias || []).map(item => ({
             nome: item.nome,
             telefone: item.telefone
@@ -75,15 +127,57 @@ function montarPerfil(cuidador, dados) {
             inicio: cuidador.disponibilidade?.inicio || '',
             fim: cuidador.disponibilidade?.fim || ''
         },
-        valorHora: Number.isFinite(cuidador.valorHora) ? cuidador.valorHora : null,
-        avaliacoes
+        avaliacoes: avaliacoesDe(cuidador.id, dados)
     };
+}
+
+function hoje() {
+    return new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' });
+}
+
+function agora() {
+    return new Date().toLocaleString('sv-SE', { timeZone: 'America/Sao_Paulo' }).replace(' ', 'T');
+}
+
+/* grava um documento novo na coleção (MongoDB ou db.json), uma gravação por vez */
+function inserir(colecao, documento) {
+    const tarefa = fila.then(async () => {
+        if (banco) {
+            const { id, ...resto } = documento;
+            await banco.collection(colecao).insertOne({ _id: id, ...resto });
+            return;
+        }
+        const dados = JSON.parse(await readFile(arquivo, 'utf8'));
+        dados[colecao] = [...(dados[colecao] || []), documento];
+        await writeFile(temporario, JSON.stringify(dados, null, 4) + '\n');
+        await rename(temporario, arquivo);
+    });
+    fila = tarefa.catch(() => {});
+    return tarefa;
+}
+
+function validarAvaliacao(corpo) {
+    const nota = Number(corpo?.nota);
+    if (!Number.isInteger(nota) || nota < 1 || nota > 5) return 'Escolha de 1 a 5 estrelas.';
+    if (corpo.comentario && String(corpo.comentario).length > 400) return 'O comentário pode ter até 400 caracteres.';
+    return null;
+}
+
+function validarSolicitacao(corpo, dados) {
+    if (!corpo) return 'Requisição inválida.';
+    if (!dados.cuidadores.some(c => c.id === corpo.cuidadorId)) return 'Cuidador não encontrado.';
+    if (!(dados.idosos || []).some(i => i.id === corpo.idosoId)) return 'Escolha para quem é o atendimento.';
+    if (!SERVICOS.includes(corpo.servico)) return 'Escolha o tipo de serviço.';
+    if (!DATA.test(corpo.data || '') || corpo.data < hoje()) return 'Escolha uma data a partir de hoje.';
+    if (!HORA.test(corpo.horaInicio || '') || !HORA.test(corpo.horaFim || '')) return 'Informe o horário de início e de fim.';
+    if (corpo.mensagem && String(corpo.mensagem).length > 500) return 'A mensagem pode ter até 500 caracteres.';
+    return null;
 }
 
 function cabecalhosCors() {
     return {
         'Access-Control-Allow-Origin': process.env.CORS_ORIGIN || '*',
-        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type'
     };
 }
@@ -95,6 +189,15 @@ function responder(resposta, codigo, dados) {
         'Cache-Control': 'no-store'
     });
     resposta.end(JSON.stringify(dados));
+}
+
+async function lerCorpo(requisicao) {
+    let corpo = '';
+    for await (const parte of requisicao) {
+        corpo += parte;
+        if (Buffer.byteLength(corpo) > 8192) throw new Error('Corpo muito grande.');
+    }
+    return JSON.parse(corpo || '{}');
 }
 
 async function iniciar() {
@@ -114,36 +217,31 @@ async function iniciar() {
     const servidor = createServer(async (requisicao, resposta) => {
         try {
             const url = new URL(requisicao.url, 'http://localhost');
+            const metodo = requisicao.method;
 
             /* pré-verificação do navegador quando o site está em outro endereço */
-            if (requisicao.method === 'OPTIONS') {
+            if (metodo === 'OPTIONS') {
                 resposta.writeHead(204, cabecalhosCors());
                 resposta.end();
                 return;
             }
 
-            if (requisicao.method !== 'GET') {
-                responder(resposta, 405, { mensagem: 'Esta tela permite somente consultar os perfis.' });
+            if (metodo === 'GET' && url.pathname === '/api/cuidadores') {
+                const dados = await lerDados();
+                responder(resposta, 200, dados.cuidadores.map(c => montarResumo(c, dados)).filter(Boolean));
                 return;
             }
 
-            if (url.pathname === '/api/cuidadores') {
+            if (metodo === 'GET' && url.pathname === '/api/idosos') {
                 const dados = await lerDados();
-                const lista = dados.cuidadores.map(cuidador => {
-                    const usuario = dados.usuarios.find(item => item.id === cuidador.usuarioId);
-
-                    return usuario ? { id: cuidador.id, nome: usuario.nome } : null;
-                }).filter(Boolean);
-
-                responder(resposta, 200, lista);
+                responder(resposta, 200, (dados.idosos || []).map(i => ({ id: i.id, nome: i.nome, apelido: i.apelido || '' })));
                 return;
             }
 
-            const rota = url.pathname.match(/^\/api\/cuidadores\/([a-zA-Z0-9-]+)$/);
-
-            if (rota) {
+            const rotaPerfil = url.pathname.match(/^\/api\/cuidadores\/([a-zA-Z0-9-]+)$/);
+            if (metodo === 'GET' && rotaPerfil) {
                 const dados = await lerDados();
-                const cuidador = dados.cuidadores.find(item => item.id === rota[1]);
+                const cuidador = dados.cuidadores.find(item => item.id === rotaPerfil[1]);
                 const perfil = cuidador ? montarPerfil(cuidador, dados) : null;
 
                 if (!perfil) {
@@ -155,9 +253,66 @@ async function iniciar() {
                 return;
             }
 
+            const rotaAvaliar = url.pathname.match(/^\/api\/cuidadores\/([a-zA-Z0-9-]+)\/avaliacoes$/);
+            if (metodo === 'POST' && rotaAvaliar) {
+                const corpo = await lerCorpo(requisicao).catch(() => null);
+                const dados = await lerDados();
+                if (!dados.cuidadores.some(c => c.id === rotaAvaliar[1])) {
+                    responder(resposta, 404, { mensagem: 'Perfil não encontrado.' });
+                    return;
+                }
+                const problema = validarAvaliacao(corpo);
+                if (problema) {
+                    responder(resposta, 400, { mensagem: problema });
+                    return;
+                }
+                const avaliacao = {
+                    id: 'ava-' + randomUUID(),
+                    agendamentoId: null,
+                    clienteId: CLIENTE_PADRAO,
+                    cuidadorId: rotaAvaliar[1],
+                    nota: Number(corpo.nota),
+                    comentario: String(corpo.comentario || '').trim(),
+                    data: hoje()
+                };
+                await inserir('avaliacoes', avaliacao);
+                const atualizados = await lerDados();
+                responder(resposta, 201, montarPerfil(atualizados.cuidadores.find(c => c.id === rotaAvaliar[1]), atualizados));
+                return;
+            }
+
+            if (metodo === 'POST' && url.pathname === '/api/solicitacoes') {
+                const corpo = await lerCorpo(requisicao).catch(() => null);
+                const dados = await lerDados();
+                const problema = validarSolicitacao(corpo, dados);
+                if (problema) {
+                    responder(resposta, 400, { mensagem: problema });
+                    return;
+                }
+                const solicitacao = {
+                    id: 'sol-' + randomUUID(),
+                    clienteId: CLIENTE_PADRAO,
+                    cuidadorId: corpo.cuidadorId,
+                    idosoId: corpo.idosoId,
+                    servico: corpo.servico,
+                    data: corpo.data,
+                    horaInicio: corpo.horaInicio,
+                    horaFim: corpo.horaFim,
+                    recorrencia: [],
+                    mensagem: String(corpo.mensagem || '').trim(),
+                    status: 'pendente',
+                    criadaEm: agora(),
+                    respondidaEm: null
+                };
+                await inserir('solicitacoes', solicitacao);
+                responder(resposta, 201, solicitacao);
+                return;
+            }
+
             responder(resposta, 404, { mensagem: 'Página não encontrada.' });
-        } catch {
-            responder(resposta, 500, { mensagem: 'Não foi possível carregar os dados.' });
+        } catch (erro) {
+            console.error(erro);
+            responder(resposta, 500, { mensagem: 'Não foi possível acessar os dados.' });
         }
     });
 
@@ -176,6 +331,7 @@ async function iniciar() {
 
     function encerrar() {
         servidor.close(async () => {
+            await fila;
             await cliente?.close();
             process.exit(0);
         });
@@ -185,8 +341,9 @@ async function iniciar() {
     process.on('SIGTERM', encerrar);
 }
 
-iniciar().catch(async () => {
+iniciar().catch(async erro => {
     console.error('Não foi possível abrir o banco. Confira o db.json ou a conexão no .env.');
+    console.error(erro.message);
     await cliente?.close();
     process.exit(1);
 });

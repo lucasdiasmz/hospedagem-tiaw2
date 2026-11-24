@@ -56,7 +56,7 @@
   "usuarios": [
     {
       "id": "usr-1",
-      "nome": "Usuário",
+      "nome": "Maria Silva",
       "email": "maria.silva@email.com",
       "telefone": "(31) 99700-1122",
       "senhaHash": "",
@@ -127,7 +127,11 @@
         "fim": "18:00"
       },
       "valorHora": 35.0,
-      "sobre": "Cuido de idosos há 7 anos, com experiência em pacientes com mobilidade reduzida."
+      "sobre": "Cuido de idosos há 7 anos, a maior parte do tempo com pessoas que usam cadeira de rodas ou andador. Gosto de manter a rotina da casa do jeito que a família já faz e de deixar tudo anotado no fim do dia: o que comeu, se dormiu bem, como estava o humor. Acompanho em consultas e ajudo a organizar os remédios da semana.",
+      "especialidades": ["Mobilidade reduzida","Prevenção de quedas","Organização de medicamentos"],
+      "fazNoAtendimento": ["Banho e higiene","Ajuda para se levantar e se locomover","Preparo de refeições leves","Dar os remédios no horário","Acompanhar em consultas e exames","Registro diário para a família"],
+      "naoFaz": ["Faxina pesada da casa","Procedimentos de enfermagem (curativos, sondas, injeções)"],
+      "diferenciais": ["Tem carro para levar a consultas","Curso de primeiros socorros em dia"]
     },
     {
       "id": "cui-2",
@@ -144,7 +148,11 @@
         "fim": "18:00"
       },
       "valorHora": 30.0,
-      "sobre": "Faço visitas semanais e acompanhamento em consultas."
+      "sobre": "Sou cuidadora de companhia: faço visitas para conversar, caminhar, jogar, ler o jornal e tirar o idoso de casa um pouco. Também acompanho em consultas e na fisioterapia. Meu foco é a autonomia e o bom humor, então incentivo a pessoa a fazer o que ainda consegue sozinha.",
+      "especialidades": ["Companhia e estímulo cognitivo","Caminhadas e passeios","Acompanhamento em consultas"],
+      "fazNoAtendimento": ["Conversa, leitura e jogos","Caminhadas acompanhadas","Acompanhar em consultas e fisioterapia","Lembrar os horários dos remédios","Lanches simples"],
+      "naoFaz": ["Banho e higiene íntima","Pernoite","Procedimentos de enfermagem"],
+      "diferenciais": ["Atende também aos sábados com combinação prévia","Experiência com idosos com Alzheimer leve"]
     },
     {
       "id": "cui-3",
@@ -161,7 +169,11 @@
         "fim": "07:00"
       },
       "valorHora": 45.0,
-      "sobre": "Técnica de enfermagem com foco em plantões noturnos."
+      "sobre": "Técnica de enfermagem com registro no COREN-MG e mais de 10 anos em hospital. Hoje faço plantões noturnos em casa, principalmente para idosos em recuperação de cirurgia, acamados ou com doenças crônicas que precisam de cuidado técnico durante a noite.",
+      "especialidades": ["Pós-operatório","Idosos acamados","Diabetes e hipertensão","Cuidados paliativos"],
+      "fazNoAtendimento": ["Curativos","Medição de pressão, glicemia e saturação","Aplicação de insulina e medicação injetável com receita","Mudança de posição para evitar escaras","Banho no leito","Relatório do plantão para a família"],
+      "naoFaz": ["Serviços domésticos","Preparo de refeições completas"],
+      "diferenciais": ["Registro profissional COREN-MG","Aceita pernoite (plantão de 12 horas)","Experiência em cuidados paliativos"]
     }
   ],
 

@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CATALOGOS, USUARIO } from '../data/db.js';
 import { FREQUENCIAS, agoraIso, horariosPadrao, validar } from '../utils/medicamentos.js';
-import { IconePilula } from './Icones.jsx';
 
 const { formasMedicamento, viasMedicamento } = CATALOGOS;
 
@@ -13,11 +12,19 @@ const VAZIO = {
   frequencia: 1,
   categoria: '',
   observacoes: '',
+  horarios: horariosPadrao(1),
 };
 
-export default function FormMedicamento({ idoso, categorias, aoSalvar, nomeRef }) {
-  const [med, setMed] = useState({ ...VAZIO, horarios: horariosPadrao(1) });
+/* formulário de cadastro; com "editando" preenchido, vira o formulário de edição */
+export default function FormMedicamento({ idoso, categorias, editando, aoSalvar, aoCancelar, formRef }) {
+  const [med, setMed] = useState(VAZIO);
   const [erros, setErros] = useState({});
+  const [salvando, setSalvando] = useState(false);
+
+  useEffect(() => {
+    setErros({});
+    setMed(editando ? { ...VAZIO, ...editando, horarios: editando.horarios.slice() } : { ...VAZIO, horarios: horariosPadrao(1) });
+  }, [editando]);
 
   function alterar(campo, valor) {
     setMed((m) => ({ ...m, [campo]: valor }));
@@ -39,10 +46,13 @@ export default function FormMedicamento({ idoso, categorias, aoSalvar, nomeRef }
     e.preventDefault();
     const encontrados = validar(med);
     setErros(encontrados);
-    if (Object.keys(encontrados).length) return;
+    if (Object.keys(encontrados).length) {
+      /* leva o foco ao primeiro campo com erro */
+      e.currentTarget.querySelector('[aria-invalid="true"]')?.focus();
+      return;
+    }
 
-    const salvou = await aoSalvar({
-      idosoId: idoso.id,
+    const dados = {
       nome: med.nome.trim(),
       dosagem: med.dosagem.trim(),
       forma: med.forma,
@@ -51,38 +61,43 @@ export default function FormMedicamento({ idoso, categorias, aoSalvar, nomeRef }
       horarios: med.horarios.slice().sort(),
       categoria: med.categoria.trim(),
       observacoes: med.observacoes.trim(),
+    };
+
+    setSalvando(true);
+    const salvou = await aoSalvar(editando ? dados : {
+      ...dados,
+      idosoId: idoso.id,
       ativo: true,
       cadastradoPor: USUARIO.id,
       criadoEm: agoraIso(),
     });
-    if (salvou) setMed({ ...VAZIO, horarios: horariosPadrao(1) });
+    setSalvando(false);
+    if (salvou && !editando) setMed({ ...VAZIO, horarios: horariosPadrao(1) });
   }
 
   return (
-    <form className="card form" onSubmit={enviar} noValidate>
-      <h2>
-        <span className="icone-tile" aria-hidden="true"><IconePilula /></span>
-        <span>
-          Novo medicamento
-          <small className="para">Para {idoso.apelido}</small>
-        </span>
-      </h2>
+    <form className={'card form' + (editando ? ' form--editando' : '')} onSubmit={enviar} noValidate ref={formRef} aria-labelledby="form-titulo">
+      <div className="form-topo">
+        <h2 id="form-titulo">{editando ? 'Editar ' + editando.nome : 'Novo medicamento'}</h2>
+        <p>Para {idoso.apelido || idoso.nome}</p>
+      </div>
 
       <label className="campo">
         Nome do medicamento
         <input
-          ref={nomeRef}
           type="text"
           value={med.nome}
           onChange={(e) => alterar('nome', e.target.value)}
           placeholder="Ex.: Losartana"
           maxLength="60"
+          autoComplete="off"
           aria-invalid={erros.nome ? 'true' : undefined}
+          aria-describedby={erros.nome ? 'erro-nome' : undefined}
         />
-        {erros.nome && <span className="erro" role="alert">{erros.nome}</span>}
+        {erros.nome && <span className="campo-erro" id="erro-nome">{erros.nome}</span>}
       </label>
 
-      <div className="linha">
+      <div className="campos-linha">
         <label className="campo">
           Dosagem
           <input
@@ -92,12 +107,13 @@ export default function FormMedicamento({ idoso, categorias, aoSalvar, nomeRef }
             placeholder="Ex.: 50 mg"
             maxLength="30"
             aria-invalid={erros.dosagem ? 'true' : undefined}
+            aria-describedby={erros.dosagem ? 'erro-dosagem' : undefined}
           />
-          {erros.dosagem && <span className="erro" role="alert">{erros.dosagem}</span>}
+          {erros.dosagem && <span className="campo-erro" id="erro-dosagem">{erros.dosagem}</span>}
         </label>
 
         <label className="campo">
-          Categoria (opcional)
+          <span>Categoria <small>(opcional)</small></span>
           <input
             type="text"
             list="categorias"
@@ -112,7 +128,7 @@ export default function FormMedicamento({ idoso, categorias, aoSalvar, nomeRef }
         </label>
       </div>
 
-      <div className="linha">
+      <div className="campos-linha">
         <label className="campo">
           Forma
           <select value={med.forma} onChange={(e) => alterar('forma', e.target.value)}>
@@ -121,19 +137,23 @@ export default function FormMedicamento({ idoso, categorias, aoSalvar, nomeRef }
         </label>
 
         <label className="campo">
-          Via de administração
+          Via de uso
           <select value={med.via} onChange={(e) => alterar('via', e.target.value)}>
             {viasMedicamento.map((v) => <option key={v}>{v}</option>)}
           </select>
         </label>
       </div>
 
-      <label className="campo">
-        Frequência
-        <select value={med.frequencia} onChange={(e) => alterarFrequencia(Number(e.target.value))}>
-          {FREQUENCIAS.map((f) => <option key={f.valor} value={f.valor}>{f.rotulo}</option>)}
-        </select>
-      </label>
+      <fieldset className="campo">
+        <legend>Quantas vezes por dia?</legend>
+        <div className="segmentado">
+          {FREQUENCIAS.map((f) => (
+            <button key={f.valor} type="button" aria-pressed={med.frequencia === f.valor} onClick={() => alterarFrequencia(f.valor)}>
+              {f.valor}×
+            </button>
+          ))}
+        </div>
+      </fieldset>
 
       <fieldset className="campo">
         <legend>Horários</legend>
@@ -145,14 +165,15 @@ export default function FormMedicamento({ idoso, categorias, aoSalvar, nomeRef }
               value={h}
               onChange={(e) => alterarHorario(i, e.target.value)}
               aria-label={'Horário ' + (i + 1)}
+              aria-invalid={erros.horarios ? 'true' : undefined}
             />
           ))}
         </div>
-        {erros.horarios && <span className="erro" role="alert">{erros.horarios}</span>}
+        {erros.horarios && <span className="campo-erro">{erros.horarios}</span>}
       </fieldset>
 
       <label className="campo">
-        Observações (opcional)
+        <span>Observações <small>(opcional)</small></span>
         <textarea
           rows="3"
           maxLength="120"
@@ -162,7 +183,12 @@ export default function FormMedicamento({ idoso, categorias, aoSalvar, nomeRef }
         ></textarea>
       </label>
 
-      <button type="submit" className="btn btn-primario">Cadastrar medicamento</button>
+      <div className="form-botoes">
+        {editando && <button type="button" className="btn" onClick={aoCancelar}>Cancelar edição</button>}
+        <button type="submit" className="btn btn-primario" disabled={salvando}>
+          {salvando ? 'Salvando…' : editando ? 'Salvar alterações' : 'Cadastrar medicamento'}
+        </button>
+      </div>
     </form>
   );
 }

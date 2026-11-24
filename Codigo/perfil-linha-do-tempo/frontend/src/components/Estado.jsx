@@ -15,7 +15,7 @@ export function EstadoErro({ titulo, mensagem, onTentarDeNovo }) {
       <Icon name="alert" />
       <strong>{titulo}</strong>
       <p>{mensagem}</p>
-      <button type="button" className="btn btn-primary" onClick={onTentarDeNovo}>
+      <button type="button" className="btn btn-primario" onClick={onTentarDeNovo}>
         Tentar de novo
       </button>
     </div>

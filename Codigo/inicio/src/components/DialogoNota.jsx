@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
+import Dialogo from '@ds/Dialogo.jsx';
 import { horaAgora } from '../utils/hora.js';
-import Dialogo from './Dialogo.jsx';
 
-/* janela para adicionar anotação na linha do tempo */
+const SUGESTOES = ['Pressão medida', 'Comeu bem', 'Dormiu mal', 'Sentiu dor', 'Tomou banho'];
+
+/* janela para adicionar anotação na linha do dia */
 export default function DialogoNota({ aberto, aoFechar, aoSalvar }) {
   const [hora, setHora] = useState('');
   const [texto, setTexto] = useState('');
@@ -12,7 +14,8 @@ export default function DialogoNota({ aberto, aoFechar, aoSalvar }) {
     if (!aberto) return;
     setHora(horaAgora());
     setTexto('');
-    textoRef.current.focus();
+    /* o conteúdo do diálogo só existe aberto; espera ele montar para focar */
+    requestAnimationFrame(() => textoRef.current?.focus());
   }, [aberto]);
 
   function enviar(e) {
@@ -23,17 +26,10 @@ export default function DialogoNota({ aberto, aoFechar, aoSalvar }) {
   }
 
   return (
-    <Dialogo aberto={aberto} aoFechar={aoFechar} tituloId="dlg-titulo">
+    <Dialogo aberto={aberto} aoFechar={aoFechar} titulo="Nova anotação" descricao="Fica registrada no dia de hoje para toda a rede de apoio.">
       <form onSubmit={enviar}>
-        <h2 id="dlg-titulo">Nova anotação</h2>
-
         <label className="campo">
-          Horário
-          <input type="time" value={hora} onChange={(e) => setHora(e.target.value)} required />
-        </label>
-
-        <label className="campo">
-          Anotação
+          O que aconteceu?
           <textarea
             ref={textoRef}
             rows="3"
@@ -43,11 +39,25 @@ export default function DialogoNota({ aberto, aoFechar, aoSalvar }) {
             onChange={(e) => setTexto(e.target.value)}
             required
           ></textarea>
+          <small>{texto.length}/120 caracteres</small>
+        </label>
+
+        <div className="pilulas" role="group" aria-label="Sugestões">
+          {SUGESTOES.map((s) => (
+            <button key={s} type="button" className="pilula" onClick={() => setTexto((t) => (t ? t + '. ' + s : s).slice(0, 120))}>
+              {s}
+            </button>
+          ))}
+        </div>
+
+        <label className="campo">
+          Horário
+          <input type="time" value={hora} onChange={(e) => setHora(e.target.value)} required />
         </label>
 
         <div className="dialogo-botoes">
           <button type="button" className="btn" onClick={aoFechar}>Cancelar</button>
-          <button type="submit" className="btn btn-primario">Salvar</button>
+          <button type="submit" className="btn btn-primario">Salvar anotação</button>
         </div>
       </form>
     </Dialogo>

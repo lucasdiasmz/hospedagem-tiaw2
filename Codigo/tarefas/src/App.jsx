@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import Shell from '@ds/Shell.jsx';
+import Toast from '@ds/Toast.jsx';
+import { Estado, PaginaTopo } from '@ds/Componentes.jsx';
+import { IconeMais } from '@ds/Icones.jsx';
 import DivisaoCuidado from './components/DivisaoCuidado.jsx';
 import FormTarefa from './components/FormTarefa.jsx';
 import ListaCompras from './components/ListaCompras.jsx';
 import ListaTarefas from './components/ListaTarefas.jsx';
-import Sidebar from './components/Sidebar.jsx';
-import Toast from './components/Toast.jsx';
-import { IconeTarefas } from './components/Icones.jsx';
-import { IDOSOS, membrosDaRede } from './data/db.js';
+import { IconeCarrinho } from './components/Icones.jsx';
+import { IDOSOS, USUARIO, membrosDaRede } from './data/db.js';
 import { criarTarefa, listarTarefas, marcarComprados, mudarStatus } from './services/api.js';
 import { ABAS } from './utils/tarefas.js';
 
@@ -23,6 +25,7 @@ export default function App() {
   const idoso = IDOSOS.find((i) => i.id === idosoId);
   const membros = membrosDaRede(idosoId);
   const doIdoso = tarefas.filter((t) => t.idosoId === idosoId);
+  const pendentes = doIdoso.filter((t) => t.status !== 'concluido').length;
 
   useEffect(() => {
     listarTarefas()
@@ -31,8 +34,8 @@ export default function App() {
       .finally(() => setCarregando(false));
   }, []);
 
-  function avisar(msg) {
-    setAviso({ msg, id: Date.now() });
+  function avisar(msg, tipo) {
+    setAviso({ msg, tipo, id: Date.now() });
   }
 
   function trocar(atualizada) {
@@ -48,7 +51,7 @@ export default function App() {
       avisar('Tarefa criada: ' + criada.titulo);
       return true;
     } catch (e) {
-      avisar(e.message);
+      avisar('Não foi possível salvar: ' + e.message, 'erro');
       return false;
     }
   }
@@ -57,9 +60,9 @@ export default function App() {
     try {
       trocar(await mudarStatus(tarefa.id, status));
       const destino = ABAS.find((a) => a.status === status).rotulo;
-      avisar('"' + tarefa.titulo + '" foi para ' + destino);
+      avisar('“' + tarefa.titulo + '” foi para ' + destino);
     } catch (e) {
-      avisar(e.message);
+      avisar('Não foi possível salvar: ' + e.message, 'erro');
     }
   }
 
@@ -74,7 +77,7 @@ export default function App() {
       avisar(concluidas ? 'Itens comprados. Compra concluída!' : 'Itens marcados como comprados.');
       return true;
     } catch (e) {
-      avisar(e.message);
+      avisar('Não foi possível salvar: ' + e.message, 'erro');
       return false;
     }
   }
@@ -82,50 +85,64 @@ export default function App() {
   const fecharForm = useCallback(() => setCriando(false), []);
 
   function verCompras() {
-    comprasRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    comprasRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  const atalhos = [
+    { rotulo: 'Nova tarefa', Icone: IconeMais, aoClicar: () => setCriando(true) },
+    { rotulo: 'Lista de compras', Icone: IconeCarrinho, aoClicar: verCompras },
+  ];
+
   return (
-    <>
-      <div className="app">
-        <Sidebar aoNovaTarefa={() => setCriando(true)} aoVerCompras={verCompras} />
+    <Shell tela="tarefas" usuario={{ nome: USUARIO.nomeCompleto, tipo: 'cuidador' }} atalhos={atalhos}>
+      <PaginaTopo
+        titulo="Tarefas da rede"
+        subtitulo={carregando
+          ? 'Divida os cuidados entre a família e os cuidadores, sem sobrecarregar ninguém.'
+          : (pendentes === 1 ? '1 tarefa em aberto' : pendentes + ' tarefas em aberto') + ' para ' + idoso.apelido + '.'}
+      >
+        <button type="button" className="btn btn-primario botao-nova" onClick={() => setCriando(true)}>
+          <IconeMais />
+          Nova tarefa
+        </button>
+      </PaginaTopo>
 
-        <div className="coluna">
-          <main className="conteudo">
-            <header className="titulo-pagina">
-              <span className="titulo-icone" aria-hidden="true"><IconeTarefas /></span>
-              <div>
-                <h1>Tarefas da rede de apoio</h1>
-                <p>Divida os cuidados entre a família e os cuidadores, sem sobrecarregar ninguém.</p>
-                <label className="seletor-idoso">
-                  Idoso
-                  <select value={idosoId} onChange={(e) => setIdosoId(e.target.value)}>
-                    {IDOSOS.map((i) => <option key={i.id} value={i.id}>{i.nome}</option>)}
-                  </select>
-                </label>
-              </div>
-            </header>
+      {IDOSOS.length > 1 && (
+        <div className="pilulas seletor-idoso" role="radiogroup" aria-label="Tarefas de">
+          {IDOSOS.map((i) => (
+            <button key={i.id} type="button" role="radio" className="pilula" aria-checked={i.id === idosoId} aria-pressed={i.id === idosoId}
+              onClick={() => setIdosoId(i.id)}>
+              {i.nome}
+            </button>
+          ))}
+        </div>
+      )}
 
-            {erroApi && <p className="aviso-erro" role="alert">{erroApi}</p>}
+      {erroApi && (
+        <Estado tipo="erro" titulo="Não foi possível falar com a API">
+          <p>{erroApi} No computador, a API das tarefas roda na porta 3004.</p>
+        </Estado>
+      )}
 
-            <div className="grade">
-              <ListaTarefas
-                tarefas={doIdoso}
-                membros={membros}
-                carregando={carregando}
-                aba={aba}
-                aoMudarAba={setAba}
-                aoMudarStatus={alterarStatus}
-                aoCriar={() => setCriando(true)}
-              />
-              <div className="coluna-lateral">
-                <ListaCompras key={idosoId} secaoRef={comprasRef} tarefas={doIdoso} aoComprar={comprar} />
-                <DivisaoCuidado membros={membros} tarefas={doIdoso} />
-              </div>
-            </div>
-          </main>
+      <div className="grade">
+        <ListaTarefas
+          tarefas={doIdoso}
+          membros={membros}
+          carregando={carregando}
+          aba={aba}
+          aoMudarAba={setAba}
+          aoMudarStatus={alterarStatus}
+        />
+        <div className="coluna-lateral">
+          <ListaCompras key={idosoId} secaoRef={comprasRef} tarefas={doIdoso} aoComprar={comprar} />
+          <DivisaoCuidado membros={membros} tarefas={doIdoso} />
         </div>
       </div>
+
+      <button type="button" className="fab" onClick={() => setCriando(true)}>
+        <IconeMais />
+        Nova tarefa
+      </button>
 
       {criando && (
         <FormTarefa
@@ -138,6 +155,6 @@ export default function App() {
       )}
 
       <Toast aviso={aviso} />
-    </>
+    </Shell>
   );
 }

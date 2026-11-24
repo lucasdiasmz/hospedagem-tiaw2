@@ -1,7 +1,8 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { comDesignSystem } from '../design-system/vite.js';
 
-export default defineConfig({
+export default defineConfig(comDesignSystem({
   plugins: [react()],
   server: {
     /* 5174 para rodar junto com a homepage (5173) */
@@ -12,4 +13,4 @@ export default defineConfig({
     proxy: { '/api': 'http://localhost:3002' },
   },
   preview: { port: 4174 },
-});
+}));

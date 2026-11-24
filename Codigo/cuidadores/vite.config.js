@@ -1,7 +1,8 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { comDesignSystem } from '../design-system/vite.js';
 
-export default defineConfig({
+export default defineConfig(comDesignSystem({
     plugins: [react()],
     base: './',
     server: {
@@ -24,4 +25,4 @@ export default defineConfig({
             }
         }
     }
-});
+}));

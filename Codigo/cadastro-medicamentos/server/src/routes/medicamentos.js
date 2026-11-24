@@ -5,8 +5,9 @@ const rotas = Router();
 
 /* próximo id no formato do JSON: med-1, med-2... */
 async function proximoId() {
-  const todos = await Medicamento.find({}, { id: 1, _id: 0 }).lean();
-  const maior = todos.reduce((n, m) => Math.max(n, Number(m.id.replace('med-', '')) || 0), 0);
+  const todos = await Medicamento.find({}, { id: 1, _id: 1 }).lean();
+  /* documentos criados pelo seed do início têm o id só no _id: considera os dois */
+  const maior = todos.reduce((n, m) => Math.max(n, Number(String(m.id ?? m._id).replace('med-', '')) || 0), 0);
   return 'med-' + (maior + 1);
 }
 
@@ -54,6 +55,24 @@ rotas.patch('/:id', async (req, res, next) => {
     res.json(med);
   } catch (e) {
     next(e);
+  }
+});
+
+/* PUT /medicamentos/:id — edita os dados do medicamento (nome, dosagem, horários...) */
+const EDITAVEIS = ['nome', 'dosagem', 'forma', 'via', 'frequencia', 'horarios', 'categoria', 'observacoes'];
+
+rotas.put('/:id', async (req, res, next) => {
+  try {
+    const mudanca = Object.fromEntries(EDITAVEIS.filter((c) => c in req.body).map((c) => [c, req.body[c]]));
+    const med = await Medicamento.findOneAndUpdate(
+      { id: req.params.id },
+      mudanca,
+      { new: true, runValidators: true },
+    );
+    if (!med) return res.status(404).json({ erro: 'Medicamento não encontrado.' });
+    res.json(med);
+  } catch (e) {
+    erroDeValidacao(e, res, next);
   }
 });
 

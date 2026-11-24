@@ -1,19 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
+import Shell from '@ds/Shell.jsx';
+import Toast from '@ds/Toast.jsx';
+import { Estado, PaginaTopo } from '@ds/Componentes.jsx';
+import { IconeMais, IconePilula, IconeVoltar } from '@ds/Icones.jsx';
+import { TELAS } from '@ds/navegacao.js';
 import FormMedicamento from './components/FormMedicamento.jsx';
 import ListaMedicamentos from './components/ListaMedicamentos.jsx';
-import Sidebar from './components/Sidebar.jsx';
-import Toast from './components/Toast.jsx';
-import { IconePilula } from './components/Icones.jsx';
-import { IDOSOS } from './data/db.js';
-import { criarMedicamento, definirAtivo, listarMedicamentos } from './services/api.js';
+import { IDOSOS, USUARIO } from './data/db.js';
+import { criarMedicamento, definirAtivo, editarMedicamento, listarMedicamentos } from './services/api.js';
 
 export default function App() {
   const [medicamentos, setMedicamentos] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erroApi, setErroApi] = useState('');
   const [idosoId, setIdosoId] = useState(IDOSOS[0].id);
+  const [editando, setEditando] = useState(null);
   const [aviso, setAviso] = useState(null);
-  const nomeRef = useRef(null);
+  const formRef = useRef(null);
   const listaRef = useRef(null);
 
   const idoso = IDOSOS.find((i) => i.id === idosoId);
@@ -27,19 +30,26 @@ export default function App() {
       .finally(() => setCarregando(false));
   }, []);
 
-  function avisar(msg) {
-    setAviso({ msg, id: Date.now() });
+  function avisar(msg, tipo) {
+    setAviso({ msg, tipo, id: Date.now() });
   }
 
   /* devolve true quando salvou, para o formulário saber se pode limpar os campos */
-  async function cadastrar(med) {
+  async function salvar(med) {
     try {
-      const criado = await criarMedicamento(med);
-      setMedicamentos((lista) => [...lista, criado]);
-      avisar('Medicamento cadastrado: ' + criado.nome);
+      if (editando) {
+        const atualizado = await editarMedicamento(editando.id, med);
+        setMedicamentos((lista) => lista.map((m) => (m.id === atualizado.id ? atualizado : m)));
+        avisar('Alterações salvas: ' + atualizado.nome);
+        setEditando(null);
+      } else {
+        const criado = await criarMedicamento(med);
+        setMedicamentos((lista) => [...lista, criado]);
+        avisar('Medicamento cadastrado: ' + criado.nome);
+      }
       return true;
     } catch (e) {
-      avisar(e.message);
+      avisar('Não foi possível salvar: ' + e.message, 'erro');
       return false;
     }
   }
@@ -49,59 +59,78 @@ export default function App() {
     try {
       const atualizado = await definirAtivo(id, !med.ativo);
       setMedicamentos((lista) => lista.map((m) => (m.id === id ? atualizado : m)));
-      avisar((atualizado.ativo ? 'Reativado: ' : 'Desativado: ') + med.nome);
+      avisar((atualizado.ativo ? 'Reativado: ' : 'Pausado: ') + med.nome);
     } catch (e) {
-      avisar(e.message);
+      avisar('Não foi possível salvar: ' + e.message, 'erro');
     }
   }
 
+  function editar(med) {
+    setEditando(med);
+    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   function novoMedicamento() {
-    nomeRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    nomeRef.current.focus({ preventScroll: true });
+    setEditando(null);
+    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    formRef.current?.querySelector('input')?.focus({ preventScroll: true });
   }
 
   function verCadastrados() {
-    listaRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    listaRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  const atalhos = [
+    { rotulo: 'Novo medicamento', Icone: IconeMais, aoClicar: novoMedicamento },
+    { rotulo: 'Ver cadastrados', Icone: IconePilula, aoClicar: verCadastrados },
+  ];
+
   return (
-    <>
-      <div className="app">
-        <Sidebar aoNovoMedicamento={novoMedicamento} aoVerCadastrados={verCadastrados} />
+    <Shell tela="medicamentos" usuario={{ nome: USUARIO.nomeCompleto, tipo: 'cuidador' }} atalhos={atalhos}>
+      <PaginaTopo
+        titulo="Cadastro de medicamentos"
+        subtitulo="Registre remédio, dosagem e horários. As doses aparecem na tela de Medicamentos e no Início."
+        voltar={<a className="voltar" href={TELAS.medicamentos}><IconeVoltar />Doses de hoje</a>}
+      />
 
-        <div className="coluna">
-          <main className="conteudo">
-            <header className="titulo-pagina">
-              <span className="titulo-icone" aria-hidden="true"><IconePilula /></span>
-              <div>
-                <h1>Cadastro de medicamentos</h1>
-                <p>Registre os remédios, as dosagens e os horários para que ninguém esqueça de nenhuma dose.</p>
-                <label className="seletor-idoso">
-                  Idoso
-                  <select value={idosoId} onChange={(e) => setIdosoId(e.target.value)}>
-                    {IDOSOS.map((i) => <option key={i.id} value={i.id}>{i.nome}</option>)}
-                  </select>
-                </label>
-              </div>
-            </header>
-
-            {erroApi && <p className="aviso-erro" role="alert">{erroApi}</p>}
-
-            <div className="grade">
-              <FormMedicamento nomeRef={nomeRef} idoso={idoso} categorias={categorias} aoSalvar={cadastrar} />
-              <ListaMedicamentos
-                secaoRef={listaRef}
-                idoso={idoso}
-                medicamentos={doIdoso}
-                carregando={carregando}
-                aoAlternar={alternar}
-              />
-            </div>
-          </main>
+      {IDOSOS.length > 1 && (
+        <div className="pilulas seletor-idoso" role="radiogroup" aria-label="Para quem é o medicamento">
+          {IDOSOS.map((i) => (
+            <button key={i.id} type="button" role="radio" className="pilula" aria-checked={i.id === idosoId} aria-pressed={i.id === idosoId}
+              onClick={() => { setIdosoId(i.id); setEditando(null); }}>
+              {i.nome}
+            </button>
+          ))}
         </div>
+      )}
+
+      {erroApi && (
+        <Estado tipo="erro" titulo="Não foi possível falar com a API">
+          <p>{erroApi} No computador, a API do cadastro roda na porta 3003.</p>
+        </Estado>
+      )}
+
+      <div className="grade">
+        <FormMedicamento
+          formRef={formRef}
+          idoso={idoso}
+          categorias={categorias}
+          editando={editando}
+          aoCancelar={() => setEditando(null)}
+          aoSalvar={salvar}
+        />
+        <ListaMedicamentos
+          secaoRef={listaRef}
+          idoso={idoso}
+          medicamentos={doIdoso}
+          carregando={carregando}
+          editandoId={editando?.id}
+          aoAlternar={alternar}
+          aoEditar={editar}
+        />
       </div>
 
       <Toast aviso={aviso} />
-    </>
+    </Shell>
   );
 }

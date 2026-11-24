@@ -1,4 +1,4 @@
-import { urlApi } from "../navegacao.js";
+import { urlApi } from "@ds/navegacao.js";
 
 /* local: o Vite repassa /api para o backend; publicado: a API no Render (src/navegacao.js) */
 const API_URL = urlApi("perfil") + "/api";

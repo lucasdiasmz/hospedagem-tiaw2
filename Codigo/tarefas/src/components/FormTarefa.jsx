@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { CATALOGOS, USUARIO } from '../data/db.js';
 import { agoraIso, hojeIso, nomeCurto, sugerirResponsavel, validar } from '../utils/tarefas.js';
-import { IconeFechar, IconeLixeira, IconeMais, IconeTarefas } from './Icones.jsx';
+import Dialogo from '@ds/Dialogo.jsx';
+import { IconeLixeira, IconeMais } from './Icones.jsx';
 
 const { categoriasTarefaRede } = CATALOGOS;
 
@@ -27,14 +28,10 @@ export default function FormTarefa({ idoso, membros, tarefas, aoSalvar, aoFechar
   const [salvando, setSalvando] = useState(false);
   const tituloRef = useRef(null);
 
+  /* o <dialog> já fecha com Esc e prende o foco; só leva o foco ao título depois de abrir */
   useEffect(() => {
-    tituloRef.current.focus();
-    function teclas(e) {
-      if (e.key === 'Escape') aoFechar();
-    }
-    document.addEventListener('keydown', teclas);
-    return () => document.removeEventListener('keydown', teclas);
-  }, [aoFechar]);
+    requestAnimationFrame(() => tituloRef.current?.focus());
+  }, []);
 
   function alterar(campo, valor) {
     setT((x) => ({ ...x, [campo]: valor }));
@@ -86,19 +83,8 @@ export default function FormTarefa({ idoso, membros, tarefas, aoSalvar, aoFechar
   }
 
   return (
-    <div className="fundo-modal" onMouseDown={(e) => { if (e.target === e.currentTarget) aoFechar(); }}>
-      <form className="card form modal" onSubmit={enviar} noValidate role="dialog" aria-modal="true" aria-labelledby="form-titulo">
-        <div className="modal-topo">
-          <h2 id="form-titulo">
-            <span className="icone-tile" aria-hidden="true"><IconeTarefas /></span>
-            <span>
-              Criar tarefa
-              <small className="para">Distribua o cuidado de {idoso.apelido} entre a rede de apoio.</small>
-            </span>
-          </h2>
-          <button type="button" className="fechar" onClick={aoFechar} aria-label="Fechar"><IconeFechar /></button>
-        </div>
-
+    <Dialogo aberto aoFechar={aoFechar} titulo="Nova tarefa" descricao={'Distribua o cuidado de ' + idoso.apelido + ' entre a rede de apoio.'} largo>
+      <form className="form-tarefa" onSubmit={enviar} noValidate>
         <label className="campo">
           Título da tarefa
           <input
@@ -110,7 +96,7 @@ export default function FormTarefa({ idoso, membros, tarefas, aoSalvar, aoFechar
             maxLength="60"
             aria-invalid={erros.titulo ? 'true' : undefined}
           />
-          {erros.titulo && <span className="erro" role="alert">{erros.titulo}</span>}
+          {erros.titulo && <span className="campo-erro" role="alert">{erros.titulo}</span>}
         </label>
 
         <fieldset className="campo">
@@ -166,10 +152,10 @@ export default function FormTarefa({ idoso, membros, tarefas, aoSalvar, aoFechar
                 </div>
               ))}
             </div>
-            <button type="button" className="btn-acao adicionar" onClick={adicionarItem}>
+            <button type="button" className="btn btn-texto adicionar" onClick={adicionarItem}>
               <IconeMais /> Adicionar item
             </button>
-            {erros.itens && <span className="erro" role="alert">{erros.itens}</span>}
+            {erros.itens && <span className="campo-erro" role="alert">{erros.itens}</span>}
           </fieldset>
         )}
 
@@ -189,7 +175,7 @@ export default function FormTarefa({ idoso, membros, tarefas, aoSalvar, aoFechar
           <span className="dica">
             Sugestão: {nomeCurto(sugerido)}, quem tem menos tarefas abertas no momento.
           </span>
-          {erros.responsavelId && <span className="erro" role="alert">{erros.responsavelId}</span>}
+          {erros.responsavelId && <span className="campo-erro" role="alert">{erros.responsavelId}</span>}
         </label>
 
         <fieldset className="campo">
@@ -211,7 +197,7 @@ export default function FormTarefa({ idoso, membros, tarefas, aoSalvar, aoFechar
               aria-invalid={erros.prazo ? 'true' : undefined}
             />
           </div>
-          {erros.prazo && <span className="erro" role="alert">{erros.prazo}</span>}
+          {erros.prazo && <span className="campo-erro" role="alert">{erros.prazo}</span>}
         </fieldset>
 
         <label className="campo">
@@ -228,8 +214,8 @@ export default function FormTarefa({ idoso, membros, tarefas, aoSalvar, aoFechar
         <fieldset className="campo">
           <legend>Lembrete</legend>
           <label className="interruptor">
-            <span>
-              Avisar o responsável
+            <span className="interruptor-texto">
+              <strong>Avisar o responsável</strong>
               <small>1 hora antes do prazo</small>
             </span>
             <input
@@ -240,8 +226,8 @@ export default function FormTarefa({ idoso, membros, tarefas, aoSalvar, aoFechar
             />
           </label>
           <label className="interruptor">
-            <span>
-              Avisar a rede se atrasar
+            <span className="interruptor-texto">
+              <strong>Avisar a rede se atrasar</strong>
               <small>Envia aos demais membros</small>
             </span>
             <input
@@ -253,13 +239,13 @@ export default function FormTarefa({ idoso, membros, tarefas, aoSalvar, aoFechar
           </label>
         </fieldset>
 
-        <div className="botoes">
-          <button type="button" className="btn btn-secundario" onClick={aoFechar}>Cancelar</button>
+        <div className="dialogo-botoes">
+          <button type="button" className="btn" onClick={aoFechar}>Cancelar</button>
           <button type="submit" className="btn btn-primario" disabled={salvando}>
             {salvando ? 'Salvando...' : 'Salvar tarefa'}
           </button>
         </div>
       </form>
-    </div>
+    </Dialogo>
   );
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ABAS, atrasada, dinheiro, formatarPrazo, nomeCurto } from '../utils/tarefas.js';
-import { IconeCarrinho, IconeEstetoscopio, IconeEstrela, IconeMais, IconePilula, IconeTarefas, SetaBaixo } from './Icones.jsx';
+import { IconeCarrinho, IconeEstetoscopio, IconeEstrela, IconePilula, SetaBaixo } from './Icones.jsx';
 
 const ICONE_CATEGORIA = {
   Consulta: IconeEstetoscopio,
@@ -16,7 +16,7 @@ const ACOES = {
   concluido: [{ para: 'a_fazer', rotulo: 'Reabrir' }],
 };
 
-export default function ListaTarefas({ tarefas, membros, carregando, aba, aoMudarAba, aoMudarStatus, aoCriar, secaoRef }) {
+export default function ListaTarefas({ tarefas, membros, carregando, aba, aoMudarAba, aoMudarStatus, secaoRef }) {
   const [aberta, setAberta] = useState(null);
   const daAba = tarefas.filter((t) => t.status === aba);
 
@@ -25,31 +25,27 @@ export default function ListaTarefas({ tarefas, membros, carregando, aba, aoMuda
   }
 
   return (
-    <section className="card lista-tarefas" ref={secaoRef} aria-labelledby="tarefas-titulo">
-      <h2 id="tarefas-titulo">
-        <span className="icone-tile" aria-hidden="true"><IconeTarefas /></span>
-        Tarefas da rede
-      </h2>
+    <section className="lista-tarefas" ref={secaoRef} aria-labelledby="tarefas-titulo">
+      <h2 id="tarefas-titulo" className="somente-leitor">Tarefas da rede</h2>
 
-      <div className="abas" role="tablist" aria-label="Status das tarefas">
+      <div className="segmentado abas-status" role="tablist" aria-label="Status das tarefas">
         {ABAS.map((a) => (
           <button
             key={a.status}
             type="button"
             role="tab"
             aria-selected={aba === a.status}
-            className={'aba' + (aba === a.status ? ' ativa' : '')}
             onClick={() => { aoMudarAba(a.status); setAberta(null); }}
           >
-            {a.rotulo} <span className="contador">{tarefas.filter((t) => t.status === a.status).length}</span>
+            {a.rotulo} <span className="pilula-num">{tarefas.filter((t) => t.status === a.status).length}</span>
           </button>
         ))}
       </div>
 
       {carregando ? (
-        <p className="vazio">Carregando...</p>
+        <div className="esqueleto tarefas-esqueleto" aria-hidden="true" />
       ) : daAba.length === 0 ? (
-        <p className="vazio">Nenhuma tarefa nesta aba.</p>
+        <p className="vazio">{aba === 'concluido' ? 'Nenhuma tarefa concluída ainda.' : 'Nenhuma tarefa aqui. Use “Nova tarefa” para criar.'}</p>
       ) : (
         <ul className="tarefas">
           {daAba.map((t) => {
@@ -68,8 +64,8 @@ export default function ListaTarefas({ tarefas, membros, carregando, aba, aoMuda
                   <span className="tarefa-texto">
                     <strong>{t.titulo}</strong>
                     <span className="chips-linha">
-                      <span className="chip">{t.categoria}</span>
-                      {atrasada(t) && <span className="chip chip-atraso">Atrasada</span>}
+                      <span className="tag">{t.categoria}</span>
+                      {atrasada(t) && <span className="tag tag--vermelho">Atrasada</span>}
                     </span>
                     <small>Responsável: {nomeCurto(membro(t.responsavelId))}</small>
                     <small>Prazo: {formatarPrazo(t.prazo)}</small>
@@ -98,7 +94,7 @@ export default function ListaTarefas({ tarefas, membros, carregando, aba, aoMuda
                         <button
                           key={a.para}
                           type="button"
-                          className={'btn-acao' + (a.para === 'concluido' ? ' forte' : '')}
+                          className={'btn' + (a.para === 'concluido' ? ' btn-primario' : '')}
                           onClick={() => aoMudarStatus(t, a.para)}
                         >
                           {a.rotulo}
@@ -112,10 +108,6 @@ export default function ListaTarefas({ tarefas, membros, carregando, aba, aoMuda
           })}
         </ul>
       )}
-
-      <button type="button" className="btn btn-primario btn-largo" onClick={aoCriar}>
-        <IconeMais /> Criar tarefa
-      </button>
     </section>
   );
 }
