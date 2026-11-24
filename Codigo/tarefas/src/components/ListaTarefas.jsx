@@ -45,7 +45,7 @@ export default function ListaTarefas({ tarefas, membros, carregando, aba, aoMuda
       {carregando ? (
         <div className="esqueleto tarefas-esqueleto" aria-hidden="true" />
       ) : daAba.length === 0 ? (
-        <p className="vazio">{aba === 'concluido' ? 'Nenhuma tarefa concluída ainda.' : 'Nenhuma tarefa aqui. Use “Nova tarefa” para criar.'}</p>
+        <p className="vazio">{aba === 'concluido' ? 'Nenhuma tarefa concluída ainda.' : 'Nenhuma tarefa aqui.'}</p>
       ) : (
         <ul className="tarefas">
           {daAba.map((t) => {

@@ -11,6 +11,7 @@ import GrupoPeriodo from "../components/linha-do-tempo/GrupoPeriodo.jsx";
 import ResumoSemana from "../components/linha-do-tempo/ResumoSemana.jsx";
 import ModalPassagemPlantao from "../components/linha-do-tempo/ModalPassagemPlantao.jsx";
 import { useIdosos } from "../hooks/useIdosos.js";
+import { usePermissoes } from "@ds/permissoes.js";
 import { listarRelatos, buscarResumoSemana, marcarComoVisto } from "../services/api.js";
 import { hojeNoFuso } from "../utils/datas.js";
 import { agruparPorPeriodo, getMembros, montarTextoPassagem } from "../utils/relatos.js";
@@ -18,6 +19,8 @@ import { getNomeCurto } from "../utils/formatadores.js";
 
 function LinhaDoTempo() {
   const { idosos, idosoAtual, setIdosoAtualId, carregando, erro, recarregar } = useIdosos();
+  /* idoso só consulta; familiar e cuidador marcam como visto e fazem a passagem de plantão */
+  const { pode } = usePermissoes();
   const hoje = hojeNoFuso();
 
   const [data, setData] = useState(hoje);
@@ -222,7 +225,7 @@ function LinhaDoTempo() {
           key={grupo.periodo.id}
           grupo={grupo}
           marcandoId={marcandoId}
-          onMarcarVisto={handleMarcarVisto}
+          onMarcarVisto={pode("linha.marcarVisto") ? handleMarcarVisto : null}
         />
       );
     });
@@ -271,7 +274,7 @@ function LinhaDoTempo() {
 
         <aside className="ldt-side">
           <ResumoSemana resumo={resumo} carregando={carregandoRelatos} />
-          <button
+          {pode("linha.plantao") && <button
             type="button"
             className="btn btn-primario btn-bloco"
             disabled={carregandoRelatos || erroRelatos !== ""}
@@ -281,7 +284,7 @@ function LinhaDoTempo() {
           >
             <Icon name="clipboard" />
             Passagem de plantão
-          </button>
+          </button>}
         </aside>
       </div>
 

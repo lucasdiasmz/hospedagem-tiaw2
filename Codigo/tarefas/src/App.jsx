@@ -11,6 +11,7 @@ import { IconeCarrinho } from './components/Icones.jsx';
 import { IDOSOS, USUARIO, membrosDaRede } from './data/db.js';
 import { criarTarefa, listarTarefas, marcarComprados, mudarStatus } from './services/api.js';
 import { ABAS } from './utils/tarefas.js';
+import { usePermissoes } from '@ds/permissoes.js';
 
 export default function App() {
   const [tarefas, setTarefas] = useState([]);
@@ -24,7 +25,10 @@ export default function App() {
 
   const idoso = IDOSOS.find((i) => i.id === idosoId);
   const membros = membrosDaRede(idosoId);
-  const doIdoso = tarefas.filter((t) => t.idosoId === idosoId);
+  /* familiar vê e cria todas; cuidador vê só as tarefas em que é o responsável */
+  const { pode } = usePermissoes();
+  const podeCriar = pode('tarefas.criar');
+  const doIdoso = tarefas.filter((t) => t.idosoId === idosoId && (pode('tarefas.todas') || t.responsavelId === USUARIO.id));
   const pendentes = doIdoso.filter((t) => t.status !== 'concluido').length;
 
   useEffect(() => {
@@ -89,9 +93,9 @@ export default function App() {
   }
 
   const atalhos = [
-    { rotulo: 'Nova tarefa', Icone: IconeMais, aoClicar: () => setCriando(true) },
+    podeCriar && { rotulo: 'Nova tarefa', Icone: IconeMais, aoClicar: () => setCriando(true) },
     { rotulo: 'Lista de compras', Icone: IconeCarrinho, aoClicar: verCompras },
-  ];
+  ].filter(Boolean);
 
   return (
     <Shell tela="tarefas" usuario={{ nome: USUARIO.nomeCompleto, tipo: 'cuidador' }} atalhos={atalhos}>
@@ -101,10 +105,12 @@ export default function App() {
           ? 'Divida os cuidados entre a família e os cuidadores, sem sobrecarregar ninguém.'
           : (pendentes === 1 ? '1 tarefa em aberto' : pendentes + ' tarefas em aberto') + ' para ' + idoso.apelido + '.'}
       >
-        <button type="button" className="btn btn-primario botao-nova" onClick={() => setCriando(true)}>
-          <IconeMais />
-          Nova tarefa
-        </button>
+        {podeCriar && (
+          <button type="button" className="btn btn-primario botao-nova" onClick={() => setCriando(true)}>
+            <IconeMais />
+            Nova tarefa
+          </button>
+        )}
       </PaginaTopo>
 
       {IDOSOS.length > 1 && (
@@ -139,12 +145,14 @@ export default function App() {
         </div>
       </div>
 
-      <button type="button" className="fab" onClick={() => setCriando(true)}>
-        <IconeMais />
-        Nova tarefa
-      </button>
+      {podeCriar && (
+        <button type="button" className="fab" onClick={() => setCriando(true)}>
+          <IconeMais />
+          Nova tarefa
+        </button>
+      )}
 
-      {criando && (
+      {criando && podeCriar && (
         <FormTarefa
           idoso={idoso}
           membros={membros}

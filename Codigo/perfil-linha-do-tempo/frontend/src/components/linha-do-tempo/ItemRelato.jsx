@@ -23,7 +23,7 @@ function ItemRelato({ relato, marcando, onMarcarVisto }) {
   }
 
   let acao = null;
-  if (!relato.visto) {
+  if (!relato.visto && onMarcarVisto) {
     let texto = "Marcar como visto";
     if (marcando) {
       texto = "Marcando...";

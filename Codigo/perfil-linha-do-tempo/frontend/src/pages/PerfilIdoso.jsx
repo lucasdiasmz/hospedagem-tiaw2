@@ -16,10 +16,13 @@ import Toast from "../components/Toast.jsx";
 import { EstadoCarregando, EstadoErro, EstadoVazio } from "../components/Estado.jsx";
 import { useIdosos } from "../hooks/useIdosos.js";
 import { atualizarIdoso } from "../services/api.js";
+import { usePermissoes } from "@ds/permissoes.js";
 
 function PerfilIdoso() {
   const { idosos, setIdosos, idosoAtual, setIdosoAtualId, carregando, erro, recarregar } = useIdosos();
   const [modalAberto, setModalAberto] = useState(false);
+  /* só o familiar responsável edita o perfil; idoso e cuidador consultam */
+  const { pode } = usePermissoes();
   const [toast, setToast] = useState(null);
 
   useEffect(function () {
@@ -118,9 +121,9 @@ function PerfilIdoso() {
       <PerfilHeader idosos={idosos} idosoAtual={idosoAtual} onTrocarIdoso={handleTrocarIdoso} />
       <HeroIdoso
         idoso={idosoAtual}
-        onEditar={function () {
+        onEditar={pode("perfil.editar") ? function () {
           setModalAberto(true);
-        }}
+        } : null}
       />
       <ResumoStats idoso={idosoAtual} />
       <AlertaAlergias alergias={idosoAtual.alergias} />

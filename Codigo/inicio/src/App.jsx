@@ -6,6 +6,7 @@ import { Estado } from '@ds/Componentes.jsx';
 import { IconeAgenda, IconeLapis, IconeMais } from '@ds/Icones.jsx';
 import { TELAS } from '@ds/navegacao.js';
 import { useUsuario } from '@ds/preferencias.js';
+import { usePermissoes } from '@ds/permissoes.js';
 import AcoesRapidas from './components/AcoesRapidas.jsx';
 import AindaHoje from './components/AindaHoje.jsx';
 import CardCompromisso from './components/CardCompromisso.jsx';
@@ -28,6 +29,9 @@ export default function App() {
   const cuidados = useCuidadosDoDia();
   const { medAtual, proximo } = cuidados;
   const usuario = useUsuario(cuidados.usuario);
+  const { perfil, pode } = usePermissoes();
+  /* o idoso vê um início mais simples: o próximo cuidado, pedir ajuda e o resto do dia */
+  const simples = perfil === 'idoso';
 
   const [notaAberta, setNotaAberta] = useState(false);
   const [sosAberto, setSosAberto] = useState(false);
@@ -107,10 +111,10 @@ export default function App() {
   }
 
   const atalhos = [
-    { rotulo: 'Nova anotação', Icone: IconeLapis, aoClicar: () => setNotaAberta(true) },
+    pode('inicio.anotar') && { rotulo: 'Nova anotação', Icone: IconeLapis, aoClicar: () => setNotaAberta(true) },
     { rotulo: 'Ver o resto do dia', Icone: IconeAgenda, aoClicar: verHorarios },
-    { rotulo: 'Cadastrar medicamento', Icone: IconeMais, href: TELAS.cadastroMedicamentos },
-  ];
+    pode('medicamentos.cadastrar') && { rotulo: 'Cadastrar medicamento', Icone: IconeMais, href: TELAS.cadastroMedicamentos },
+  ].filter(Boolean);
 
   return (
     <Shell tela="inicio" usuario={cuidados.usuario} atalhos={atalhos}>
@@ -133,6 +137,7 @@ export default function App() {
           item={proximo}
           minutos={minutos}
           linhaDoTempo={cuidados.linhaDoTempo}
+          simples={simples}
           aoConcluir={() => concluir(proximo)}
           aoRecusar={recusar}
           aoAdiar={adiar}
@@ -142,7 +147,7 @@ export default function App() {
       <AcoesRapidas
         med={medAtual}
         aoRegistrarRemedio={() => concluir(medAtual)}
-        aoAbrirNota={() => setNotaAberta(true)}
+        aoAbrirNota={pode('inicio.anotar') ? () => setNotaAberta(true) : null}
         aoAbrirAjuda={() => setSosAberto(true)}
       />
 
@@ -153,8 +158,8 @@ export default function App() {
           carregando={cuidados.carregando}
           novaNotaId={novaNotaId}
           aoConcluir={(id) => concluir(restantes.find((e) => e.id === id))}
-          aoRemoverNota={removerNota}
-          aoNovaNota={() => setNotaAberta(true)}
+          aoRemoverNota={pode('inicio.anotar') ? removerNota : null}
+          aoNovaNota={pode('inicio.anotar') ? () => setNotaAberta(true) : null}
         />
       )}
 

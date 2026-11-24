@@ -61,7 +61,7 @@ export default function PainelDia({
       {carregado && eventos.length === 0 ? (
         <div className="painel-vazio">
           <p>Nenhum compromisso neste dia.</p>
-          <button type="button" className="link-acao" onClick={aoNovo}>Adicionar compromisso</button>
+          {aoNovo && <button type="button" className="link-acao" onClick={aoNovo}>Adicionar compromisso</button>}
         </div>
       ) : (
         <ol className="linha-tempo">

@@ -5,7 +5,7 @@ import { ICONES_TIPO, IconeFechar, IconeRelogio, IconeRepetir, IconeSino } from 
 
 /* Detalhes de um compromisso, com as ações possíveis.
    Status só muda em compromisso que não se repete (num recorrente valeria para todos os dias). */
-export default function DialogoDetalhes({ evento, rotuloTipo, statusInfo, aoFechar, aoMudarStatus, aoExcluir }) {
+export default function DialogoDetalhes({ evento, rotuloTipo, statusInfo, podeEditar = true, podeConcluir = true, aoFechar, aoMudarStatus, aoExcluir }) {
   const [confirmarExclusao, setConfirmarExclusao] = useState(false);
 
   useEffect(() => {
@@ -15,6 +15,8 @@ export default function DialogoDetalhes({ evento, rotuloTipo, statusInfo, aoFech
   const e = evento;
   const status = e && statusInfo(e.status);
   const podeMudarStatus = e && !e.recorrencia;
+  /* sem permissão de editar, sobra no máximo o "concluído" (cuidador) */
+  const editar = podeMudarStatus && podeEditar;
 
   return (
     <Dialogo aberto={!!e} aoFechar={aoFechar} tituloId="detalhe-titulo" className="dialogo-detalhe">
@@ -63,23 +65,25 @@ export default function DialogoDetalhes({ evento, rotuloTipo, statusInfo, aoFech
             </div>
           ) : (
             <div className="dialogo-botoes detalhe-acoes">
-              {podeMudarStatus && e.status !== 'concluido' && e.status !== 'cancelado' && (
+              {podeMudarStatus && podeConcluir && e.status !== 'concluido' && e.status !== 'cancelado' && (
                 <button type="button" className="btn btn-primario" onClick={() => aoMudarStatus(e, 'concluido')}>
                   Marcar como concluído
                 </button>
               )}
-              {podeMudarStatus && e.status === 'pendente' && (
+              {editar && e.status === 'pendente' && (
                 <button type="button" className="btn" onClick={() => aoMudarStatus(e, 'confirmado')}>Confirmar</button>
               )}
-              {podeMudarStatus && (e.status === 'concluido' || e.status === 'cancelado') && (
+              {editar && (e.status === 'concluido' || e.status === 'cancelado') && (
                 <button type="button" className="btn" onClick={() => aoMudarStatus(e, 'confirmado')}>Reabrir</button>
               )}
-              {podeMudarStatus && e.status !== 'cancelado' && e.status !== 'concluido' && (
+              {editar && e.status !== 'cancelado' && e.status !== 'concluido' && (
                 <button type="button" className="btn" onClick={() => aoMudarStatus(e, 'cancelado')}>Desmarcar</button>
               )}
-              <button type="button" className="btn btn-texto-perigo" onClick={() => setConfirmarExclusao(true)}>
-                Excluir
-              </button>
+              {podeEditar && (
+                <button type="button" className="btn btn-texto-perigo" onClick={() => setConfirmarExclusao(true)}>
+                  Excluir
+                </button>
+              )}
             </div>
           )}
         </>

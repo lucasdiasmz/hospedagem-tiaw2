@@ -9,6 +9,7 @@ import Shell from '@ds/Shell.jsx';
 import Toast from '@ds/Toast.jsx';
 import { Estado } from '@ds/Componentes.jsx';
 import { IconeAgenda, IconeMais } from '@ds/Icones.jsx';
+import { usePermissoes } from '@ds/permissoes.js';
 import { useAgenda } from './hooks/useAgenda.js';
 import { hoje } from './utils/datas.js';
 
@@ -18,6 +19,9 @@ const DIAS_PADRAO = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
 
 export default function App() {
   const agenda = useAgenda();
+  /* familiar cria e edita; cuidador só marca como concluído; idoso só vê */
+  const { pode } = usePermissoes();
+  const podeCriar = pode('agenda.criar');
   const { catalogos } = agenda;
 
   const [novoAberto, setNovoAberto] = useState(false);
@@ -115,7 +119,7 @@ export default function App() {
           statusInfo={statusInfo}
           aoSelecionar={agenda.selecionar}
           aoAbrir={setAberto}
-          aoNovo={() => setNovoAberto(true)}
+          aoNovo={podeCriar ? () => setNovoAberto(true) : null}
         />
       </div>
     );
@@ -123,9 +127,9 @@ export default function App() {
 
   const idoso = agenda.idosos.find((i) => i.id === agenda.idosoId);
   const atalhos = [
-    { rotulo: 'Novo compromisso', Icone: IconeMais, aoClicar: () => setNovoAberto(true) },
+    podeCriar && { rotulo: 'Novo compromisso', Icone: IconeMais, aoClicar: () => setNovoAberto(true) },
     { rotulo: 'Ver próximos compromissos', Icone: IconeAgenda, aoClicar: verProximos },
-  ];
+  ].filter(Boolean);
 
   return (
     <Shell tela="agenda" usuario={agenda.usuario} atalhos={atalhos}>
@@ -136,13 +140,15 @@ export default function App() {
         visao={agenda.visao}
         aoMudarVisao={agenda.mudarVisao}
         aoHoje={() => agenda.selecionar(hoje())}
-        aoNovo={() => setNovoAberto(true)}
+        aoNovo={podeCriar ? () => setNovoAberto(true) : null}
       />
       {conteudo}
-      <button type="button" className="fab" onClick={() => setNovoAberto(true)}>
-        <IconeMais />
-        Novo
-      </button>
+      {podeCriar && (
+        <button type="button" className="fab" onClick={() => setNovoAberto(true)}>
+          <IconeMais />
+          Novo
+        </button>
+      )}
       <Toast aviso={aviso} />
 
       <DialogoNovo
@@ -158,6 +164,8 @@ export default function App() {
         rotuloTipo={rotuloTipo}
         statusInfo={statusInfo}
         aoFechar={() => setAberto(null)}
+        podeEditar={pode('agenda.editar')}
+        podeConcluir={pode('agenda.concluir')}
         aoMudarStatus={mudarStatus}
         aoExcluir={excluir}
       />
