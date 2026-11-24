@@ -44,10 +44,12 @@ export default function Cabecalho({ idoso, mes, resumo, visao, aoMudarVisao, aoH
           ))}
         </div>
         <button type="button" className="btn" onClick={aoHoje}>Hoje</button>
-        <button type="button" className="btn btn-primario btn-novo" onClick={aoNovo}>
-          <IconeMais />
-          Novo compromisso
-        </button>
+        {aoNovo && (
+          <button type="button" className="btn btn-primario btn-novo" onClick={aoNovo}>
+            <IconeMais />
+            Novo compromisso
+          </button>
+        )}
       </div>
     </header>
   );
