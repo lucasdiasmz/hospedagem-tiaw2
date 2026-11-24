@@ -4,6 +4,7 @@ import Toast from '@ds/Toast.jsx';
 import { Estado, PaginaTopo, ReguaDoDia } from '@ds/Componentes.jsx';
 import { IconeBusca, IconeCheck, IconeMais, IconeRelogio } from '@ds/Icones.jsx';
 import { TELAS, urlApi } from '@ds/navegacao.js';
+import { usePermissoes } from '@ds/permissoes.js';
 import Detalhes from './Detalhes.jsx';
 
 /* local: o Vite repassa /api para servidor.js; publicado: a API no Render */
@@ -68,6 +69,9 @@ export default function App() {
     const [selecionado, setSelecionado] = useState(null);
     const [tentativa, setTentativa] = useState(0);
     const agora = horaAgora();
+    /* só o familiar cadastra remédio novo; todos registram as doses */
+    const { pode } = usePermissoes();
+    const podeCadastrar = pode('medicamentos.cadastrar');
 
     useEffect(() => {
         const controle = new AbortController();
@@ -152,15 +156,17 @@ export default function App() {
         status: { Tomado: 'feito', Recusado: 'recusou', Atrasado: 'atrasado' }[m.statusTela] || null,
     }));
 
-    const atalhos = [{ rotulo: 'Cadastrar medicamento', Icone: IconeMais, href: TELAS.cadastroMedicamentos }];
+    const atalhos = podeCadastrar ? [{ rotulo: 'Cadastrar medicamento', Icone: IconeMais, href: TELAS.cadastroMedicamentos }] : [];
 
     return (
         <Shell tela="medicamentos" atalhos={atalhos}>
             <PaginaTopo titulo="Medicamentos" subtitulo={subtitulo}>
-                <a className="btn btn-suave" href={TELAS.cadastroMedicamentos}>
-                    <IconeMais />
-                    Cadastrar medicamento
-                </a>
+                {podeCadastrar && (
+                    <a className="btn btn-suave" href={TELAS.cadastroMedicamentos}>
+                        <IconeMais />
+                        Cadastrar medicamento
+                    </a>
+                )}
             </PaginaTopo>
 
             {idosos.length > 1 && (
@@ -193,10 +199,12 @@ export default function App() {
             )}
 
             {!carregando && !erro && medicamentos.length === 0 && (
-                <Estado titulo="Nenhum medicamento ativo" acao={
+                <Estado titulo="Nenhum medicamento ativo" acao={podeCadastrar && (
                     <a className="btn btn-primario" href={TELAS.cadastroMedicamentos}><IconeMais />Cadastrar o primeiro</a>
-                }>
-                    <p>Cadastre os remédios com dosagem e horários para acompanhar cada dose aqui.</p>
+                )}>
+                    <p>{podeCadastrar
+                        ? 'Cadastre os remédios com dosagem e horários para acompanhar cada dose aqui.'
+                        : 'Quando o familiar responsável cadastrar os remédios, as doses aparecem aqui.'}</p>
                 </Estado>
             )}
 

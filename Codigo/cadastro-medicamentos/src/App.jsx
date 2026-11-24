@@ -86,7 +86,7 @@ export default function App() {
   ];
 
   return (
-    <Shell tela="medicamentos" usuario={{ nome: USUARIO.nomeCompleto, tipo: 'cuidador' }} atalhos={atalhos}>
+    <Shell tela="medicamentos" permissao="cadastro-medicamentos" usuario={{ nome: USUARIO.nomeCompleto, tipo: 'cuidador' }} atalhos={atalhos}>
       <PaginaTopo
         titulo="Cadastro de medicamentos"
         subtitulo="Registre remédio, dosagem e horários. As doses aparecem na tela de Medicamentos e no Início."
