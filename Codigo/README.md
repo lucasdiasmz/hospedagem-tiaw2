@@ -59,8 +59,26 @@ ambiente local, defina as variáveis `VITE_URL_*` no `.env` de cada módulo.
 | Perfil do idoso | `perfil-linha-do-tempo/` em `/perfil` |
 
 A tela de boas-vindas (`boas-vindas/`) é a entrada do sistema: guarda o perfil, o nome e as
-preferências de acessibilidade (valem em todas as telas) e leva para o Início ou, para cuidadores,
-para Cuidadores. No celular, Linha do tempo, Cuidadores e Perfil do idoso ficam na aba "Mais".
+preferências de acessibilidade (valem em todas as telas) e leva para o Início. No celular, Linha do
+tempo, Cuidadores e Perfil do idoso ficam na aba "Mais".
+
+## O que cada perfil acessa
+
+Definido em `design-system/permissoes.js` (o menu e os botões seguem essa tabela). Quem não passou
+pelas boas-vindas é tratado como familiar e vê tudo.
+
+| Tela | Idoso | Familiar responsável | Cuidador |
+|---|---|---|---|
+| Início | simplificado (próximo cuidado, remédio, ajuda) | completo | completo |
+| Agenda | só ver | cria e edita | ver e marcar como concluído |
+| Medicamentos do dia | registrar dose | tudo | registrar dose |
+| Cadastro de medicamentos | — | tudo | — |
+| Tarefas | — | cria e distribui | só as tarefas dele |
+| Linha do tempo | só ver | tudo | marcar como visto e passagem de plantão |
+| Perfil do idoso | só ver | edita | só ver |
+| Cuidadores | buscar, pedir e avaliar | tudo | — |
+
+Esconder no front só organiza a tela: quando houver login, as APIs também precisam conferir o papel.
 
 ## Como rodar tudo
 

@@ -135,8 +135,8 @@ export default function App() {
       mobilidade: perfil === 'cuidador' ? undefined : mobilidade,
       cuidador: perfil === 'cuidador' ? cuidador : undefined,
     });
-    /* cuidador vai para a busca de famílias/cuidadores; os outros perfis para o dia a dia */
-    window.location.assign(perfil === 'cuidador' ? TELAS.cuidadores : TELAS.inicio);
+    /* todos começam pelo Início; o menu de cada um mostra só as telas do seu perfil */
+    window.location.assign(TELAS.inicio);
   }
 
   const primeiroNome = dados.nome.trim().split(/\s+/)[0];
@@ -173,7 +173,7 @@ export default function App() {
               ))}
             </ul>
             {salvo.perfil && (
-              <a className="btn btn-texto bv-pular" href={salvo.perfil === 'cuidador' ? TELAS.cuidadores : TELAS.inicio}>
+              <a className="btn btn-texto bv-pular" href={TELAS.inicio}>
                 Continuar como {salvo.nome ? salvo.nome.split(' ')[0] : 'antes'}
               </a>
             )}
