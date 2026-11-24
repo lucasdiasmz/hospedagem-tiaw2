@@ -11,12 +11,12 @@ export default function AcoesRapidas({ med, aoRegistrarRemedio, aoAbrirNota, aoA
       aoClicar: aoRegistrarRemedio,
       desativado: !med,
     },
-    { id: 'nota', titulo: 'Nova anotação', detalhe: 'Pressão, sintomas…', Icone: IconeLapis, aoClicar: aoAbrirNota },
+    aoAbrirNota && { id: 'nota', titulo: 'Nova anotação', detalhe: 'Pressão, sintomas…', Icone: IconeLapis, aoClicar: aoAbrirNota },
     { id: 'ajuda', titulo: 'Chamar ajuda', detalhe: 'Avisa a equipe', Icone: IconeSos, aoClicar: aoAbrirAjuda },
-  ];
+  ].filter(Boolean);
 
   return (
-    <section className="acoes" aria-labelledby="acoes-titulo">
+    <section className={'acoes acoes--' + acoes.length} aria-labelledby="acoes-titulo">
       <h2 id="acoes-titulo" className="somente-leitor">Ações rápidas</h2>
       {acoes.map(({ id, titulo, detalhe, Icone, aoClicar, desativado }) => (
         <button key={id} type="button" className={'acao acao--' + id} onClick={aoClicar} disabled={desativado}>

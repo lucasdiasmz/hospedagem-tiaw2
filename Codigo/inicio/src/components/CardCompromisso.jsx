@@ -29,7 +29,7 @@ function paraRegua(linhaDoTempo, agora) {
 
 /* destaque do próximo item pendente do dia (remédio, consulta, visita ou tarefa),
    com a régua do dia embaixo mostrando tudo o que já passou e o que vem */
-export default function CardCompromisso({ item, minutos, linhaDoTempo, aoConcluir, aoRecusar, aoAdiar }) {
+export default function CardCompromisso({ item, minutos, linhaDoTempo, simples, aoConcluir, aoRecusar, aoAdiar }) {
   const agora = horaAgora();
   const regua = <ReguaDoDia itens={paraRegua(linhaDoTempo, agora)} agora={agora} />;
   const feitos = linhaDoTempo.filter((e) => e.status === 'feito').length;
@@ -87,10 +87,10 @@ export default function CardCompromisso({ item, minutos, linhaDoTempo, aoConclui
           <IconeCheck />
           {ehMed ? 'Já tomou' : 'Marcar como feito'}
         </button>
-        <div className="destaque-sec">
+        {!simples && <div className="destaque-sec">
           {ehMed && <button type="button" className="btn btn-contorno" onClick={aoRecusar}>Recusou</button>}
           <button type="button" className="btn btn-contorno" onClick={aoAdiar}>Adiar 30 min</button>
-        </div>
+        </div>}
       </div>
 
       <div className="destaque-dia">

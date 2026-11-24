@@ -17,13 +17,13 @@ export default function AindaHoje({ secaoRef, entradas, carregando, novaNotaId, 
     <section className="ainda-hoje" ref={secaoRef} aria-labelledby="ainda-hoje-titulo">
       <div className="secao-cabeca">
         <h2 id="ainda-hoje-titulo">Ainda hoje</h2>
-        <button type="button" className="btn btn-texto" onClick={aoNovaNota}>Anotar</button>
+        {aoNovaNota && <button type="button" className="btn btn-texto" onClick={aoNovaNota}>Anotar</button>}
       </div>
 
       {carregando ? (
         <div className="esqueleto ainda-esqueleto" aria-hidden="true" />
       ) : !entradas.length ? (
-        <p className="ainda-vazio">Nada mais para hoje. Use “Anotar” para registrar algo do dia.</p>
+        <p className="ainda-vazio">Nada mais para hoje.{aoNovaNota && ' Use “Anotar” para registrar algo do dia.'}</p>
       ) : (
         <ol className="ainda-lista" ref={listaRef}>
           {entradas.map((e) => {
@@ -36,7 +36,7 @@ export default function AindaHoje({ secaoRef, entradas, carregando, novaNotaId, 
                   <strong>{nota ? e.texto : e.titulo}</strong>
                   <small>{nota ? NOMES_TIPO.nota : e.detalhe || NOMES_TIPO[e.tipo]}</small>
                 </span>
-                {nota ? (
+                {nota ? aoRemoverNota && (
                   <button type="button" className="btn-icone" aria-label={'Remover anotação: ' + e.texto} onClick={() => aoRemoverNota(e.id)}>
                     <IconeFechar />
                   </button>
