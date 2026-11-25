@@ -278,3 +278,53 @@
     font-size: var(--t-2xl);
   }
 }
+
+/* login e cadastro */
+.bv-form3 {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-4);
+}
+
+.bv-form3 .bv-sub {
+  margin: 0;
+}
+
+.bv-dica {
+  color: var(--tinta-2);
+  font-weight: 400;
+}
+
+.bv-senha {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--e-2);
+}
+
+.bv-aceite {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--e-3);
+  min-height: 2.75rem;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.bv-aceite > input[type] {
+  flex: none;
+  width: 1.5rem;
+  min-height: 0;
+  height: 1.5rem;
+  padding: 0;
+  accent-color: var(--azul);
+}
+
+.bv-outro {
+  display: grid;
+  justify-items: center;
+  gap: var(--e-2);
+  margin-top: var(--e-6);
+  padding-top: var(--e-5);
+  border-top: 1px solid var(--linha);
+  color: var(--tinta-2);
+}
