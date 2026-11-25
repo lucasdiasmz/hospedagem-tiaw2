@@ -52,7 +52,7 @@ recarrega o `db.json`.
 
 O usuário vem da sessão: um cookie assinado, criado ao entrar e conferido por todas as APIs
 (`Codigo/auth`). Cuidadores só acessam os idosos com vínculo ativo; clientes, os
-idosos que cadastraram. Quando houver autenticação, basta trocar o middleware em `src/app.js`.
+idosos que cadastraram.
 
 ## Rotas
 
