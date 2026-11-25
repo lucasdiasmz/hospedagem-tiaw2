@@ -29,7 +29,7 @@
 
 .cabecalho h1 {
   font-size: var(--t-xl);
-  letter-spacing: -0.025em;
+  letter-spacing: -0.02em;
 }
 
 .cabecalho-sub {
@@ -136,9 +136,7 @@
 
 .semana-dia-nome {
   font-size: var(--t-xs);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
+  font-weight: 500;
 }
 
 .semana-dia-num {
@@ -148,7 +146,7 @@
   height: 2.25rem;
   border-radius: 50%;
   font-size: var(--t-md);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--tinta);
   font-variant-numeric: tabular-nums;
 }
@@ -170,12 +168,12 @@
 }
 
 .semana-dia.selecionado .semana-cabeca {
-  background: var(--azul-suave);
+  background: var(--superficie-2);
 }
 
 .semana-dia.selecionado .semana-dia-num {
-  background: var(--azul);
-  color: #fff;
+  background: var(--selecao);
+  color: var(--sobre-selecao);
   box-shadow: none;
 }
 
@@ -252,8 +250,8 @@
 }
 
 .mes-dia.selecionado .mes-num {
-  background: var(--azul);
-  color: #fff;
+  background: var(--selecao);
+  color: var(--sobre-selecao);
   box-shadow: none;
 }
 
@@ -300,15 +298,16 @@
   color: var(--tinta);
   font-size: var(--t-xs);
   text-align: left;
-  transition: filter 0.15s;
+  transition: background var(--m-sai);
 }
 
 .chip:hover {
-  filter: brightness(0.96);
+  background: var(--superficie-2);
+  transition-duration: var(--m-entra);
 }
 
 .chip-hora {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--tipo);
   font-variant-numeric: tabular-nums;
 }
@@ -328,9 +327,11 @@
   color: var(--verde);
 }
 
+/* rotina: só a barra do tipo, sem fundo */
 .chip.rotina {
+  border-radius: 0;
   background: transparent;
-  box-shadow: inset 0 0 0 1px var(--linha);
+  box-shadow: inset 2px 0 0 var(--tipo);
 }
 
 .chip.status-concluido .chip-titulo {
@@ -381,12 +382,12 @@
   background: var(--superficie-2);
   color: var(--tinta-2);
   font-size: var(--t-xs);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .tag-relativo.hoje {
-  background: var(--azul);
-  color: #fff;
+  background: var(--azul-suave);
+  color: var(--azul-escuro);
 }
 
 .painel-vazio {
@@ -416,7 +417,7 @@
 }
 
 .tempo-hora {
-  font-weight: 700;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
@@ -430,27 +431,25 @@
   border: 1px solid var(--linha);
   background: var(--superficie);
   text-align: left;
-  transition: border-color 0.15s;
+  transition: border-color var(--m-sai), transform var(--m-sai) var(--ease);
 }
 
-.tempo-cartao:hover {
-  border-color: var(--tipo);
+@media (hover: hover) {
+  .tempo-cartao:hover {
+    border-color: var(--linha-forte);
+    background: var(--superficie-2);
+    transition-duration: var(--m-entra);
+  }
 }
 
 .tipo-icone {
-  display: grid;
-  place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
   flex-shrink: 0;
-  border-radius: var(--r-sm);
-  background: var(--tipo-claro);
   color: var(--tipo);
 }
 
 .tipo-icone svg {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: 1.375rem;
+  height: 1.375rem;
 }
 
 .tempo-texto {
@@ -484,7 +483,7 @@
   background: color-mix(in srgb, var(--status) 14%, var(--superficie));
   color: color-mix(in srgb, var(--status) 75%, var(--tinta));
   font-size: var(--t-xs);
-  font-weight: 700;
+  font-weight: 600;
   white-space: nowrap;
 }
 
@@ -516,7 +515,7 @@
   background: var(--vermelho);
   color: #fff;
   font-size: var(--t-xs);
-  font-weight: 700;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
@@ -670,8 +669,13 @@ fieldset.campo {
 }
 
 .opcao-tipo:has(input:checked) {
-  border-color: var(--tipo);
-  background: var(--tipo-claro);
+  border-color: var(--selecao);
+  background: var(--selecao);
+  color: var(--sobre-selecao);
+}
+
+.opcao-tipo:has(input:checked) .ponto {
+  box-shadow: 0 0 0 2px #fff;
 }
 
 .opcao-tipo:has(input:focus-visible),
@@ -692,14 +696,14 @@ fieldset.campo {
   height: var(--toque);
   border-radius: var(--r-sm);
   border: 1.5px solid var(--linha-forte);
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
 }
 
 .opcao-dia:has(input:checked) {
-  background: var(--azul);
-  border-color: var(--azul);
-  color: #fff;
+  background: var(--selecao);
+  border-color: var(--selecao);
+  color: var(--sobre-selecao);
 }
 
 .form-erro {
@@ -719,16 +723,15 @@ fieldset.campo {
   flex: 1;
 }
 
-.detalhe-topo .tipo-icone {
-  width: 3rem;
-  height: 3rem;
-  border-radius: var(--r-md);
+.detalhe-topo .tipo-icone svg {
+  width: 2rem;
+  height: 2rem;
 }
 
 .detalhe-tipo {
   color: var(--tipo);
   font-size: var(--t-sm);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .detalhe-sub {
@@ -964,7 +967,7 @@ fieldset.campo {
   }
 
   .semana-dia.selecionado {
-    background: var(--azul-suave);
+    background: var(--superficie-2);
   }
 
   .semana-dia.selecionado .semana-cabeca {
@@ -1029,7 +1032,7 @@ fieldset.campo {
   }
 
   .mes-dia.selecionado {
-    background: var(--azul-suave);
+    background: var(--superficie-2);
   }
 
   .mes-cabeca {
