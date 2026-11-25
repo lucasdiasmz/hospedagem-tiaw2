@@ -64,16 +64,16 @@
   --t-xl: 1.75rem;
   --t-2xl: 2.125rem;
 
-  /* espaço (base 4) */
-  --e-1: 0.25rem;
-  --e-2: 0.5rem;
-  --e-3: 0.75rem;
-  --e-4: 1rem;
-  --e-5: 1.25rem;
-  --e-6: 1.5rem;
-  --e-8: 2rem;
-  --e-10: 2.5rem;
-  --e-12: 3rem;
+  /* espaço (base 4), em px: com a letra maior crescem o texto e os ícones, não os vãos */
+  --e-1: 4px;
+  --e-2: 8px;
+  --e-3: 12px;
+  --e-4: 16px;
+  --e-5: 20px;
+  --e-6: 24px;
+  --e-8: 32px;
+  --e-10: 40px;
+  --e-12: 48px;
 
   /* forma: cantos generosos, como o abraço do logo */
   --r-sm: 10px;
@@ -88,13 +88,13 @@
   --sombra-3: 0 24px 48px -16px rgba(8, 26, 69, 0.35);
 
   /* toque: alvo mínimo de 48 px (público idoso) */
-  --toque: 3rem;
+  --toque: 48px;
   --foco: 0 0 0 3px var(--superficie), 0 0 0 6px var(--azul);
 
-  --topo-altura: 3.75rem;
-  --abas-altura: 4.5rem;
-  --lateral-largura: 17rem;
-  --conteudo-max: 72rem;
+  --topo-altura: 60px;
+  --abas-altura: 4.25rem;
+  --lateral-largura: calc(9rem + 124px);
+  --conteudo-max: 96rem;
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   color-scheme: light;
@@ -126,9 +126,20 @@
   --foco: 0 0 0 3px #ffffff, 0 0 0 6px #000000;
 }
 
-/* Letra maior: tudo é em rem, então basta aumentar a raiz */
+/* Letra maior: textos e ícones são em rem, então basta aumentar a raiz. Os títulos, que já são
+   grandes, crescem menos, para sobrar tela para o conteúdo. */
 :root.fonte-maior {
   font-size: 118.75%;
+  --t-lg: 1.3125rem;
+  --t-xl: 1.5625rem;
+  --t-2xl: 1.8125rem;
+}
+
+/* altura que falta mostrar no fim de uma lista que rola (veja .rolavel) */
+@property --sumir {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
 }
 
 /* ---------- Base ---------- */
@@ -168,6 +179,12 @@ svg {
 
 svg {
   flex-shrink: 0;
+}
+
+/* ícone sem tamanho próprio acompanha a letra */
+:where(svg:not([width])) {
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 button,
@@ -298,10 +315,21 @@ time,
   line-height: 1.1;
 }
 
+.marca img {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.marca--compacta img {
+  width: 2.125rem;
+  height: 2.125rem;
+}
+
 .marca-slogan {
   display: block;
   margin-top: 3px;
-  font-size: var(--t-xs);
+  line-height: 1.25;
+  font-size: 0.75rem;
   color: var(--sobre-escuro-2);
 }
 
@@ -329,7 +357,7 @@ time,
   display: inline-flex;
   align-items: center;
   gap: var(--e-2);
-  min-height: 2.75rem;
+  min-height: 44px;
   padding: var(--e-1) var(--e-3) var(--e-1) var(--e-1);
   border-radius: var(--r-pilula);
   background: rgba(255, 255, 255, 0.1);
@@ -347,8 +375,8 @@ time,
 }
 
 .topo-perfil .avatar {
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 36px;
+  height: 36px;
   font-size: var(--t-sm);
 }
 
@@ -369,11 +397,11 @@ time,
 .conteudo {
   display: flex;
   flex-direction: column;
-  gap: var(--e-6);
+  gap: var(--e-5);
   width: 100%;
   max-width: var(--conteudo-max);
   margin: 0 auto;
-  padding: var(--e-5) var(--e-4) calc(var(--abas-altura) + var(--e-8) + env(safe-area-inset-bottom));
+  padding: var(--e-4) var(--e-4) calc(var(--abas-altura) + var(--e-6) + env(safe-area-inset-bottom));
   outline: none;
 }
 
@@ -430,9 +458,9 @@ time,
 .aba[aria-current='page']::before {
   content: '';
   position: absolute;
-  top: 6px;
+  top: calc(50% - 1.6rem);
   left: 50%;
-  width: 3.5rem;
+  width: min(3.5rem, 100%);
   height: 2rem;
   border-radius: var(--r-pilula);
   background: var(--azul-suave);
@@ -449,22 +477,31 @@ time,
   display: none;
 }
 
-/* folha "Mais" */
+/* folha "Mais": as outras telas em blocos, os atalhos e a acessibilidade, sem rolar */
 .menu-mais {
   display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--e-2);
+}
+
+.menu-mais li {
+  display: grid;
 }
 
 .menu-mais-item {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: var(--e-3);
-  min-height: 4rem;
-  padding: var(--e-3);
+  gap: var(--e-2);
+  padding: var(--e-3) var(--e-1);
   border-radius: var(--r-md);
   background: var(--superficie-2);
   border: 1px solid var(--linha);
   color: var(--tinta);
+  font-size: var(--t-sm);
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
   text-decoration: none;
 }
 
@@ -487,54 +524,37 @@ time,
   color: var(--azul-escuro);
 }
 
-.menu-mais-texto {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.menu-mais-texto small {
-  color: var(--tinta-3);
-  font-size: var(--t-sm);
-}
-
-.menu-mais-item > svg:last-child {
-  color: var(--tinta-3);
-}
-
-.menu-secao {
-  margin-top: var(--e-6);
-}
-
-.menu-secao h3 {
+.dialogo--menu .dialogo-topo {
   margin-bottom: var(--e-3);
-  font-size: var(--t-sm);
-  font-weight: 600;
-  color: var(--tinta-3);
+}
+
+.dialogo--menu .menu-atalhos,
+.dialogo--menu .acess {
+  margin-top: var(--e-3);
 }
 
 .menu-atalhos {
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
   gap: var(--e-2);
 }
 
 .atalho {
   display: flex;
   align-items: center;
-  gap: var(--e-3);
+  gap: var(--e-2);
   width: 100%;
   min-height: var(--toque);
   padding: var(--e-2) var(--e-3);
   border-radius: var(--r-sm);
-  color: var(--tinta);
-  font-weight: 600;
-  text-align: left;
-  text-decoration: none;
-}
-
-.menu-atalhos .atalho {
   background: var(--superficie-2);
   border: 1px solid var(--linha);
+  color: var(--tinta);
+  font-size: var(--t-sm);
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: left;
+  text-decoration: none;
 }
 
 .atalho svg {
@@ -543,12 +563,58 @@ time,
   color: var(--azul);
 }
 
-/* interruptores de acessibilidade */
-.acessibilidade {
+/* letra maior e alto contraste: dois botões que ficam marcados */
+.acess {
   display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: var(--e-2);
 }
 
+.acess-botao {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 60px;
+  padding: var(--e-2) var(--e-1);
+  border-radius: var(--r-md);
+  border: 1.5px solid var(--linha-forte);
+  background: var(--superficie);
+  color: var(--tinta);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.acess-botao[aria-pressed='true'] {
+  border-color: var(--azul);
+  background: var(--azul);
+  color: #fff;
+}
+
+.acess--escuro .acess-botao,
+.lateral .acess-botao {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: transparent;
+  color: #fff;
+}
+
+.acess--escuro .acess-botao:hover,
+.lateral .acess-botao:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.acess--escuro .acess-botao[aria-pressed='true'],
+.lateral .acess-botao[aria-pressed='true'] {
+  border-color: #fff;
+  background: #fff;
+  color: var(--marinho-800);
+}
+
+/* interruptores */
 .interruptor {
   display: flex;
   align-items: center;
@@ -620,8 +686,8 @@ input[role='switch']:focus-visible {
   display: flex;
   align-items: center;
   gap: var(--e-3);
-  margin-top: var(--e-6);
-  padding: var(--e-3);
+  margin-top: var(--e-3);
+  padding: var(--e-2) var(--e-2) var(--e-2) var(--e-3);
   border-radius: var(--r-md);
   border: 1px solid var(--linha);
   color: var(--tinta);
@@ -637,9 +703,9 @@ input[role='switch']:focus-visible {
 }
 
 .usuario-texto strong {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: var(--t-sm);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 .usuario-texto small {
@@ -687,13 +753,9 @@ input[role='switch']:focus-visible {
     height: 2.75rem;
     transform: translate(-50%, -50%);
   }
-
-  .menu-atalhos {
-    grid-template-columns: 1fr 1fr;
-  }
 }
 
-/* ---------- Computador: menu lateral ---------- */
+/* ---------- Computador: menu lateral e conteúdo preso à janela ---------- */
 @media (min-width: 64rem) {
   html {
     scroll-padding-top: var(--e-6);
@@ -702,6 +764,8 @@ input[role='switch']:focus-visible {
   .shell {
     display: grid;
     grid-template-columns: var(--lateral-largura) minmax(0, 1fr);
+    height: 100dvh;
+    overflow: hidden;
   }
 
   .topo,
@@ -709,14 +773,13 @@ input[role='switch']:focus-visible {
     display: none;
   }
 
+  /* o menu cabe inteiro a partir de 600 px de altura; só abaixo disso ele rola */
   .lateral {
-    position: sticky;
-    top: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--e-6);
+    gap: var(--e-4);
     height: 100dvh;
-    padding: var(--e-6) var(--e-4) var(--e-5);
+    padding: var(--e-5) var(--e-4) var(--e-4);
     overflow-y: auto;
     background: var(--marinho-800);
     color: var(--sobre-escuro);
@@ -724,7 +787,12 @@ input[role='switch']:focus-visible {
   }
 
   .lateral .marca {
-    padding: var(--e-1) var(--e-2);
+    gap: 10px;
+    padding: 0 var(--e-1);
+  }
+
+  .lateral-menu {
+    flex: 1 0 auto;
   }
 
   .lateral-menu ul {
@@ -737,11 +805,12 @@ input[role='switch']:focus-visible {
     display: flex;
     align-items: center;
     gap: var(--e-3);
-    min-height: var(--toque);
+    min-height: clamp(2.375rem, 6.6dvh, 3rem);
     padding: 0 var(--e-3);
     border-radius: var(--r-sm);
     color: var(--sobre-escuro);
     font-weight: 500;
+    line-height: 1.2;
     text-decoration: none;
     transition: background 0.15s;
   }
@@ -757,84 +826,84 @@ input[role='switch']:focus-visible {
   }
 
   .lateral-item:focus-visible,
-  .lateral .atalho:focus-visible,
-  .lateral .marca:focus-visible,
-  .lateral .usuario:focus-visible {
+  .lateral .acess-botao:focus-visible,
+  .lateral .usuario-sair:focus-visible,
+  .lateral .marca:focus-visible {
     box-shadow: 0 0 0 3px var(--marinho-800), 0 0 0 6px #fff;
   }
 
-  .lateral-bloco {
-    padding-top: var(--e-5);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .lateral-rotulo {
-    margin: 0 var(--e-3) var(--e-2);
-    font-size: var(--t-xs);
-    font-weight: 600;
-    color: var(--sobre-escuro-2);
-  }
-
-  .lateral .atalho {
-    color: var(--sobre-escuro);
-    font-weight: 500;
-    font-size: var(--t-sm);
-  }
-
-  .lateral .atalho:hover {
-    background: rgba(255, 255, 255, 0.07);
-  }
-
-  .lateral .atalho svg {
-    color: var(--azul-logo);
-  }
-
-  .lateral .interruptor {
-    min-height: var(--toque);
-    background: transparent;
-    border-color: transparent;
-    padding-block: var(--e-1);
-  }
-
-  .lateral .interruptor-icone {
-    color: var(--azul-logo);
-  }
-
-  .lateral .interruptor-texto small {
-    display: none;
-  }
-
-  .lateral .interruptor-texto strong {
-    font-weight: 500;
-    font-size: var(--t-sm);
-  }
-
-  .lateral input[role='switch'] {
-    background: var(--marinho-600);
-  }
-
-  .lateral input[role='switch']:checked {
-    background: var(--azul-logo);
-  }
-
   .lateral .usuario {
-    margin-top: auto;
+    gap: 10px;
+    margin-top: 0;
     border-color: rgba(255, 255, 255, 0.12);
     color: #fff;
   }
 
-  .lateral .usuario:hover {
-    background: rgba(255, 255, 255, 0.06);
-  }
-
-  .lateral .usuario-texto small,
-  .lateral .usuario > svg {
+  .lateral .usuario-texto small {
     color: var(--sobre-escuro-2);
   }
 
+  /* as telas medem esta área, e não a janela: com a letra maior (rem maior) elas trocam de
+     layout na hora certa. Uso: @container palco (min-width: 46rem) */
+  .palco {
+    height: 100dvh;
+    min-width: 0;
+    overflow-y: auto;
+    container: palco / inline-size;
+  }
+
   .conteudo {
-    padding: var(--e-8) var(--e-8) var(--e-12);
-    gap: var(--e-8);
+    min-height: 100%;
+    padding: var(--e-6) var(--e-8);
+    gap: var(--e-5);
+  }
+}
+
+/* modo fixo: título e ações parados, e só as listas rolam por dentro */
+@media (min-width: 64rem) and (min-height: 35rem) {
+  .conteudo {
+    height: 100%;
+  }
+
+  .rolavel {
+    min-height: 0;
+    overflow-y: auto;
+    /* folga para o anel de foco não ser cortado pela borda da lista */
+    margin: -6px;
+    padding: 6px;
+  }
+
+  /* enquanto há mais para ver, o fim da lista esmaece */
+  @supports (animation-timeline: scroll(self)) {
+    .rolavel {
+      -webkit-mask-image: linear-gradient(#000 calc(100% - var(--sumir)), transparent);
+      mask-image: linear-gradient(#000 calc(100% - var(--sumir)), transparent);
+      animation: ha-mais linear both;
+      animation-timeline: scroll(self);
+    }
+  }
+}
+
+/* sem largura para duas colunas (janela estreita ou letra maior), a área rola inteira */
+@container palco (max-width: 45.99rem) {
+  .conteudo {
+    height: auto;
+  }
+
+  .rolavel {
+    overflow: visible;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
+@keyframes ha-mais {
+  0%, 92% {
+    --sumir: 2rem;
+  }
+
+  100% {
+    --sumir: 0px;
   }
 }
 
@@ -844,7 +913,12 @@ input[role='switch']:focus-visible {
 .pagina-topo {
   display: flex;
   flex-direction: column;
-  gap: var(--e-4);
+  gap: var(--e-3);
+}
+
+.pagina-topo-texto {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .pagina-topo h1 {
@@ -893,12 +967,8 @@ input[role='switch']:focus-visible {
 @media (min-width: 48rem) {
   .pagina-topo {
     flex-direction: row;
-    align-items: flex-end;
+    align-items: center;
     justify-content: space-between;
-  }
-
-  .pagina-topo h1 {
-    font-size: var(--t-2xl);
   }
 
   .pagina-topo-acoes > .btn {
@@ -917,7 +987,7 @@ input[role='switch']:focus-visible {
 
 @media (min-width: 40rem) {
   .card {
-    padding: var(--e-6);
+    padding: var(--e-5);
   }
 }
 
@@ -931,7 +1001,8 @@ input[role='switch']:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: var(--e-3);
-  margin-bottom: var(--e-4);
+  min-height: 44px;
+  margin-bottom: var(--e-2);
 }
 
 .secao-cabeca h2 {
@@ -1114,8 +1185,10 @@ input[role='switch']:focus-visible {
 }
 
 /* espaço para o botão flutuante não cobrir o fim da lista */
-.conteudo:has(> .fab) {
-  padding-bottom: calc(var(--abas-altura) + 6rem + env(safe-area-inset-bottom));
+@media (max-width: 63.99rem) {
+  .conteudo:has(> .fab) {
+    padding-bottom: calc(var(--abas-altura) + 5.5rem + env(safe-area-inset-bottom));
+  }
 }
 
 @media (min-width: 64rem) {
@@ -1158,7 +1231,7 @@ input[role='switch']:focus-visible {
 }
 
 .campo textarea {
-  min-height: 6rem;
+  min-height: 4.5rem;
   resize: vertical;
   line-height: 1.5;
 }
@@ -1166,10 +1239,12 @@ input[role='switch']:focus-visible {
 .campo select,
 select.entrada {
   appearance: none;
-  padding-right: var(--e-10);
+  padding-left: 10px;
+  padding-right: 26px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%235d6a84' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 0.75rem center;
+  background-position: right 6px center;
+  background-size: 18px;
 }
 
 .campo input::placeholder,
@@ -1431,7 +1506,7 @@ select.entrada {
 .dialogo {
   width: 100%;
   max-width: 100%;
-  max-height: 92dvh;
+  max-height: 94dvh;
   margin: auto 0 0;
   padding: 0;
   border: 0;
@@ -1452,7 +1527,9 @@ select.entrada {
 }
 
 .dialogo-corpo {
-  padding: var(--e-3) var(--e-5) calc(var(--e-6) + env(safe-area-inset-bottom));
+  --dlg-lado: var(--e-5);
+  --dlg-fim: calc(var(--e-4) + env(safe-area-inset-bottom));
+  padding: var(--e-3) var(--dlg-lado) var(--dlg-fim);
 }
 
 /* alça da folha */
@@ -1471,7 +1548,7 @@ select.entrada {
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--e-3);
-  margin-bottom: var(--e-5);
+  margin-bottom: var(--e-4);
 }
 
 .dialogo-topo h2,
@@ -1498,13 +1575,24 @@ select.entrada {
 
 .dialogo-botoes {
   display: flex;
-  flex-direction: column-reverse;
   gap: var(--e-2);
   margin-top: var(--e-2);
 }
 
 .dialogo-botoes .btn {
-  width: 100%;
+  flex: 1 1 0;
+  padding-inline: var(--e-3);
+}
+
+/* num formulário comprido os botões ficam parados embaixo e os campos rolam */
+.dialogo form > .dialogo-botoes {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  margin: 0 calc(var(--dlg-lado) * -1) calc(var(--dlg-fim) * -1);
+  padding: var(--e-3) var(--dlg-lado) var(--dlg-fim);
+  border-top: 1px solid var(--linha);
+  background: var(--superficie);
 }
 
 @keyframes subir {
@@ -1522,11 +1610,13 @@ select.entrada {
   }
 
   .dialogo--largo {
-    width: min(44rem, calc(100% - 2rem));
+    width: min(50rem, calc(100% - 2rem));
   }
 
   .dialogo-corpo {
-    padding: var(--e-6);
+    --dlg-lado: var(--e-6);
+    --dlg-fim: var(--e-5);
+    padding: var(--e-5) var(--dlg-lado) var(--dlg-fim);
   }
 
   .dialogo-corpo::before {
@@ -1534,12 +1624,12 @@ select.entrada {
   }
 
   .dialogo-botoes {
-    flex-direction: row;
     justify-content: flex-end;
   }
 
   .dialogo-botoes .btn {
-    width: auto;
+    flex: 0 0 auto;
+    padding-inline: var(--e-5);
   }
 }
 

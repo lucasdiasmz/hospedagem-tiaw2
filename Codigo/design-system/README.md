@@ -10,6 +10,7 @@ o que é comum mora aqui, e cada tela guarda só o que é dela.
 |---|---|
 | `acessamob.css` | Tokens (cores, tipografia, espaços, cantos), base, estrutura da tela e componentes: `.btn`, `.card`, `.campo`, `.pilula`, `.segmentado`, `.tag`, `.estado`, `.dialogo`, `.toast`, `.fab`, régua do dia. Mobile-first. |
 | `Shell.jsx` | Estrutura de toda tela: barra do topo + abas de baixo no celular, menu lateral azul-escuro no computador (≥ 1024 px), folha "Mais" com as outras telas, atalhos e acessibilidade. |
+| `Acessibilidade.jsx` | Botões "Letra maior" e "Alto contraste", no menu e nas boas-vindas. |
 | `Componentes.jsx` | `PaginaTopo` (título da tela), `Estado` (carregando / vazio / erro) e `ReguaDoDia`. |
 | `Dialogo.jsx` | `<dialog>` nativo: folha que sobe no celular, centralizado no computador; Esc, foco preso, botão fechar. |
 | `Toast.jsx` | Aviso rápido de confirmação ou erro. |
@@ -45,9 +46,10 @@ Ids de `tela`: `inicio`, `agenda`, `medicamentos`, `tarefas`, `linha-do-tempo`, 
 - **Identidade:** logo, nome, slogan "Mais cuidado, todos os dias.", azul `#1d63dc`, azul-escuro
   `#0c2152` no menu e nos cartões de destaque, fonte Inter. Não mude sem combinar com o grupo.
 - **Mobile-first:** escreva o CSS para o celular e use `@media (min-width: ...)` para telas maiores
-  (40rem tablet, 64rem computador, 72rem tela larga).
+  (40rem tablet, 64rem computador). No computador, a largura se mede com `@container palco (...)`,
+  que conta a letra maior; o layout fica preso à janela e só o que tem `.rolavel` rola por dentro.
 - **Toque:** nada clicável menor que 48 px (`var(--toque)`). O público inclui pessoas idosas.
-- **Texto:** tudo em `rem`, para a opção "Letra maior" funcionar. Base de 17 px.
+- **Texto e ícones:** em `rem`, para a opção "Letra maior" funcionar. Base de 17 px. Espaços (`--e-*`) em px: não crescem junto.
 - **Cor só com função:** azul = ação, verde = feito, âmbar = atenção/recusa, vermelho = atraso,
   erro e pedido de ajuda. Cores por tipo de cuidado: `--tipo-medicamento`, `--tipo-consulta`...
 - **Assinatura:** a régua do dia (`ReguaDoDia`) mostra o dia de 6h às 22h com cada cuidado no seu

@@ -1,12 +1,12 @@
-/* Ícones do AcessaMob: grade de 24 px, traço de 1.8, pontas arredondadas.
+/* Ícones do AcessaMob: grade de 24 px (em rem, para acompanhar a letra maior), traço de 1.8, pontas arredondadas.
    Todos herdam a cor do texto (currentColor) e são decorativos (aria-hidden);
    o nome acessível fica no botão ou link que os contém. */
 
 function Svg({ children, tamanho = 24, traco = 1.8, ...resto }) {
   return (
     <svg
-      width={tamanho}
-      height={tamanho}
+      width={tamanho / 16 + 'rem'}
+      height={tamanho / 16 + 'rem'}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
