@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { MongoMemoryServer } from "mongodb-memory-server";
+import { carregarSegredo } from "../../../auth/sessao.js";
 import app from "./app.js";
 import { conectarBanco, desconectarBanco } from "./config/db.js";
 import { popularBanco } from "./seed/popular.js";
@@ -13,6 +14,7 @@ async function iniciarDemo() {
     console.log("Iniciando o MongoDB de demonstração...");
     console.log("(na primeira vez ele baixa o MongoDB, pode levar 1 ou 2 minutos)");
 
+    carregarSegredo();
     mongo = await MongoMemoryServer.create();
     process.env.MONGODB_URI = mongo.getUri("acessamob");
 
@@ -22,6 +24,7 @@ async function iniciarDemo() {
     app.listen(PORT, function () {
       console.log("");
       console.log("API de demonstração rodando em http://localhost:" + PORT);
+      console.log("Para entrar, suba a API do início com MONGODB_URI=" + mongo.getUri());
       console.log("Os dados são de exemplo e voltam ao normal toda vez que o comando é reiniciado.");
     });
   } catch (erro) {

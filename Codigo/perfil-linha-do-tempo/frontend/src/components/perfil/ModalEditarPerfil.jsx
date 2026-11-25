@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Dialogo from "@ds/Dialogo.jsx";
 import Icon from "../Icon.jsx";
 
-const tiposSanguineos = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+const tiposSanguineos = ["", "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 const niveisMobilidade = ["Independente", "Parcial", "Dependente"];
 
 function criarFormInicial(idoso) {
@@ -11,7 +11,7 @@ function criarFormInicial(idoso) {
     apelido: idoso.apelido || "",
     dataNascimento: idoso.dataNascimento,
     telefone: idoso.telefone || "",
-    tipoSanguineo: idoso.tipoSanguineo,
+    tipoSanguineo: idoso.tipoSanguineo || "",
     planoSaude: idoso.planoSaude || "",
     nivel: idoso.mobilidade.nivel,
     endereco: idoso.endereco || "",
@@ -125,7 +125,7 @@ function ModalEditarPerfil({ idoso, onSalvar, onFechar }) {
             <label htmlFor="campoSangue">Tipo sanguíneo</label>
             <select id="campoSangue" name="tipoSanguineo" value={form.tipoSanguineo} onChange={handleChange}>
               {tiposSanguineos.map(function (tipo) {
-                return <option key={tipo}>{tipo}</option>;
+                return <option key={tipo} value={tipo}>{tipo || "Não informado"}</option>;
               })}
             </select>
           </div>

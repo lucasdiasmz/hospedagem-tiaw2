@@ -43,10 +43,12 @@ function HeroIdoso({ idoso, onEditar }) {
             <Icon name="accessibility" />
             Mobilidade {idoso.mobilidade.nivel.toLowerCase()}
           </span>
-          <span className="tag">
-            <Icon name="droplet" />
-            Sangue {idoso.tipoSanguineo}
-          </span>
+          {idoso.tipoSanguineo && (
+            <span className="tag">
+              <Icon name="droplet" />
+              Sangue {idoso.tipoSanguineo}
+            </span>
+          )}
         </div>
       </div>
       <div className="hero-actions">

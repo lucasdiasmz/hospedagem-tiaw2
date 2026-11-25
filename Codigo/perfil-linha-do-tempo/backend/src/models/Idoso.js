@@ -64,6 +64,8 @@ function dataNaoFutura(valor) {
 
 const idosoSchema = new Schema(
   {
+    /* id no banco principal (ido-1); é por ele que se confere quem pode ver este perfil */
+    idosoId: { type: String, unique: true, sparse: true },
     nome: { type: String, required: [true, "Nome é obrigatório"], trim: true },
     apelido: { type: String, trim: true, default: "" },
     dataNascimento: {
@@ -74,8 +76,9 @@ const idosoSchema = new Schema(
     sexo: { type: String, enum: ["Masculino", "Feminino", "Outro"], default: "Outro" },
     tipoSanguineo: {
       type: String,
-      enum: { values: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"], message: "Tipo sanguíneo inválido" },
-      default: "O+"
+      enum: { values: ["", "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"], message: "Tipo sanguíneo inválido" },
+      /* vazio = não informado; um padrão aqui seria um dado de saúde inventado */
+      default: ""
     },
     telefone: { type: String, trim: true, default: "" },
     endereco: { type: String, trim: true, default: "" },

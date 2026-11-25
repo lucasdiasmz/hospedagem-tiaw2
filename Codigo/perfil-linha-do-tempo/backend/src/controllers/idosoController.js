@@ -1,24 +1,34 @@
 import mongoose from "mongoose";
 import Idoso from "../models/Idoso.js";
-import Relato from "../models/Relato.js";
+import { completar, perfisDoUsuario, podeVerPerfil } from "../services/acessoPerfil.js";
 
-function limparCorpo(body) {
-  const dados = { ...body };
-  delete dados.id;
-  delete dados._id;
-  delete dados.createdAt;
-  delete dados.updatedAt;
-  return dados;
-}
+const EDITAVEIS = [
+  "nome", "apelido", "dataNascimento", "sexo", "tipoSanguineo", "telefone", "endereco", "planoSaude",
+  "mobilidade", "condicoes", "alergias", "rotina", "contatos", "sobre", "observacoes"
+];
 
-function idValido(id) {
-  return mongoose.Types.ObjectId.isValid(id);
+/* idoso de outra família responde 404, como se não existisse */
+export async function carregarIdoso(req, res, next, id) {
+  try {
+    const idoso = mongoose.Types.ObjectId.isValid(id) ? await Idoso.findById(id) : null;
+    if (!(await podeVerPerfil(req.usuario, idoso))) {
+      return res.status(404).json({ mensagem: "Idoso não encontrado" });
+    }
+    req.idoso = idoso;
+    return next();
+  } catch (erro) {
+    return next(erro);
+  }
 }
 
 export async function listarIdosos(req, res, next) {
   try {
-    const idosos = await Idoso.find().sort({ nome: 1 });
-    res.json(idosos);
+    const perfis = await perfisDoUsuario(req.usuario);
+    const completos = await Promise.all(perfis.map(completar));
+    completos.sort(function (a, b) {
+      return a.nome.localeCompare(b.nome);
+    });
+    res.json(completos);
   } catch (erro) {
     next(erro);
   }
@@ -26,28 +36,7 @@ export async function listarIdosos(req, res, next) {
 
 export async function buscarIdoso(req, res, next) {
   try {
-    const { id } = req.params;
-
-    if (!idValido(id)) {
-      return res.status(400).json({ mensagem: "ID inválido" });
-    }
-
-    const idoso = await Idoso.findById(id);
-
-    if (!idoso) {
-      return res.status(404).json({ mensagem: "Idoso não encontrado" });
-    } else {
-      return res.json(idoso);
-    }
-  } catch (erro) {
-    next(erro);
-  }
-}
-
-export async function criarIdoso(req, res, next) {
-  try {
-    const idoso = await Idoso.create(limparCorpo(req.body));
-    res.status(201).json(idoso);
+    res.json(await completar(req.idoso));
   } catch (erro) {
     next(erro);
   }
@@ -55,43 +44,13 @@ export async function criarIdoso(req, res, next) {
 
 export async function atualizarIdoso(req, res, next) {
   try {
-    const { id } = req.params;
-
-    if (!idValido(id)) {
-      return res.status(400).json({ mensagem: "ID inválido" });
-    }
-
-    const idoso = await Idoso.findByIdAndUpdate(id, limparCorpo(req.body), {
-      new: true,
-      runValidators: true
+    EDITAVEIS.forEach(function (campo) {
+      if (req.body[campo] !== undefined) {
+        req.idoso.set(campo, req.body[campo]);
+      }
     });
-
-    if (!idoso) {
-      return res.status(404).json({ mensagem: "Idoso não encontrado" });
-    } else {
-      return res.json(idoso);
-    }
-  } catch (erro) {
-    next(erro);
-  }
-}
-
-export async function removerIdoso(req, res, next) {
-  try {
-    const { id } = req.params;
-
-    if (!idValido(id)) {
-      return res.status(400).json({ mensagem: "ID inválido" });
-    }
-
-    const idoso = await Idoso.findByIdAndDelete(id);
-
-    if (!idoso) {
-      return res.status(404).json({ mensagem: "Idoso não encontrado" });
-    } else {
-      await Relato.deleteMany({ idoso: id });
-      return res.status(204).send();
-    }
+    await req.idoso.save();
+    res.json(await completar(req.idoso));
   } catch (erro) {
     next(erro);
   }

@@ -1,14 +1,15 @@
 import express from "express";
-import cors from "cors";
 import mongoose from "mongoose";
+import { exigirLogin } from "../../../auth/express.js";
+import { repo } from "./services/acessoPerfil.js";
 import idosoRoutes from "./routes/idosoRoutes.js";
 import relatoRoutes from "./routes/relatoRoutes.js";
 import { rotaNaoEncontrada, tratarErros } from "./middlewares/tratarErros.js";
 
 const app = express();
 
-app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:5179" }));
-app.use(express.json());
+app.disable("x-powered-by");
+app.use(express.json({ limit: "50kb" }));
 
 app.get("/api/health", function (req, res) {
   let banco = "desconectado";
@@ -17,6 +18,9 @@ app.get("/api/health", function (req, res) {
   }
   res.json({ status: "ok", banco: banco });
 });
+
+/* daqui para baixo, só com a sessão (cookie assinado; Codigo/auth) */
+app.use("/api", exigirLogin(repo, "mensagem"));
 
 app.use("/api/idosos", idosoRoutes);
 app.use("/api/relatos", relatoRoutes);

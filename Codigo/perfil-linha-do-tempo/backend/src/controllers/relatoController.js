@@ -1,11 +1,25 @@
 import mongoose from "mongoose";
 import Idoso from "../models/Idoso.js";
+import { podeVerPerfil } from "../services/acessoPerfil.js";
 import Relato from "../models/Relato.js";
 import { montarResumoSemana } from "../services/resumoSemana.js";
 import { dataValida, hojeNoFuso, inicioDoDia, somarDias } from "../utils/datas.js";
 
-function idValido(id) {
-  return mongoose.Types.ObjectId.isValid(id);
+const PAPEL_NO_RELATO = { cliente: "familiar", cuidador: "cuidador", idoso: "idoso" };
+
+/* o relato precisa ser de um idoso da pessoa (fica em req.relato) */
+export async function carregarRelato(req, res, next, id) {
+  try {
+    const relato = mongoose.Types.ObjectId.isValid(id) ? await Relato.findById(id) : null;
+    const idoso = relato && (await Idoso.findById(relato.idoso));
+    if (!(await podeVerPerfil(req.usuario, idoso))) {
+      return res.status(404).json({ mensagem: "Relato não encontrado" });
+    }
+    req.relato = relato;
+    return next();
+  } catch (erro) {
+    return next(erro);
+  }
 }
 
 function lerData(req) {
@@ -19,16 +33,12 @@ function lerData(req) {
   }
 }
 
-async function idosoExiste(id) {
-  const total = await Idoso.countDocuments({ _id: id });
-  return total > 0;
-}
-
 function limparCorpo(body) {
   const dados = { ...body };
   delete dados.id;
   delete dados._id;
   delete dados.idoso;
+  delete dados.registradoPor;
   delete dados.visto;
   delete dados.vistoEm;
   delete dados.createdAt;
@@ -41,16 +51,9 @@ export async function listarRelatosDoIdoso(req, res, next) {
     const { id } = req.params;
     const data = lerData(req);
 
-    if (!idValido(id)) {
-      return res.status(400).json({ mensagem: "ID inválido" });
-    }
     if (data === null) {
       return res.status(400).json({ mensagem: "Data inválida. Use o formato AAAA-MM-DD" });
     }
-    if (!(await idosoExiste(id))) {
-      return res.status(404).json({ mensagem: "Idoso não encontrado" });
-    }
-
     const relatos = await Relato.find({
       idoso: id,
       dataHora: { $gte: inicioDoDia(data), $lt: inicioDoDia(somarDias(data, 1)) }
@@ -67,16 +70,9 @@ export async function resumoDaSemana(req, res, next) {
     const { id } = req.params;
     const data = lerData(req);
 
-    if (!idValido(id)) {
-      return res.status(400).json({ mensagem: "ID inválido" });
-    }
     if (data === null) {
       return res.status(400).json({ mensagem: "Data inválida. Use o formato AAAA-MM-DD" });
     }
-    if (!(await idosoExiste(id))) {
-      return res.status(404).json({ mensagem: "Idoso não encontrado" });
-    }
-
     const inicio = somarDias(data, -6);
     const relatos = await Relato.find({
       idoso: id,
@@ -91,62 +87,34 @@ export async function resumoDaSemana(req, res, next) {
 
 export async function criarRelato(req, res, next) {
   try {
-    const { id } = req.params;
-
-    if (!idValido(id)) {
-      return res.status(400).json({ mensagem: "ID inválido" });
-    }
-    if (!(await idosoExiste(id))) {
-      return res.status(404).json({ mensagem: "Idoso não encontrado" });
-    }
-
-    const relato = await Relato.create({ ...limparCorpo(req.body), idoso: id });
+    /* quem registrou vem da sessão, não do corpo */
+    const relato = await Relato.create({
+      ...limparCorpo(req.body),
+      idoso: req.idoso._id,
+      registradoPor: { nome: req.usuario.nome, papel: PAPEL_NO_RELATO[req.papel] }
+    });
     return res.status(201).json(relato);
   } catch (erro) {
-    next(erro);
+    return next(erro);
   }
 }
 
 export async function marcarComoVisto(req, res, next) {
   try {
-    const { id } = req.params;
-
-    if (!idValido(id)) {
-      return res.status(400).json({ mensagem: "ID inválido" });
-    }
-
-    const relato = await Relato.findByIdAndUpdate(
-      id,
-      { visto: true, vistoEm: new Date() },
-      { new: true }
-    );
-
-    if (!relato) {
-      return res.status(404).json({ mensagem: "Relato não encontrado" });
-    } else {
-      return res.json(relato);
-    }
+    req.relato.visto = true;
+    req.relato.vistoEm = new Date();
+    await req.relato.save();
+    return res.json(req.relato);
   } catch (erro) {
-    next(erro);
+    return next(erro);
   }
 }
 
 export async function removerRelato(req, res, next) {
   try {
-    const { id } = req.params;
-
-    if (!idValido(id)) {
-      return res.status(400).json({ mensagem: "ID inválido" });
-    }
-
-    const relato = await Relato.findByIdAndDelete(id);
-
-    if (!relato) {
-      return res.status(404).json({ mensagem: "Relato não encontrado" });
-    } else {
-      return res.status(204).send();
-    }
+    await req.relato.deleteOne();
+    return res.status(204).send();
   } catch (erro) {
-    next(erro);
+    return next(erro);
   }
 }
