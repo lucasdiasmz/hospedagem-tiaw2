@@ -58,6 +58,17 @@ function mascararTelefone(valor) {
   return '(' + d.slice(0, 2) + ') ' + d.slice(2, 7) + '-' + d.slice(7);
 }
 
+/* nome e sobrenome, só com letras (aceita acento, hífen, apóstrofo e abreviação) */
+function nomeValido(nome) {
+  const partes = nome.trim().split(/\s+/);
+  return partes.length >= 2 && partes.every((p) => /^\p{L}[\p{L}\p{M}'’.-]*$/u.test(p));
+}
+
+/* DDD sem zero + celular (9 dígitos, começa com 9) ou fixo (8 dígitos, começa de 2 a 5) */
+function telefoneValido(telefone) {
+  return /^[1-9]{2}(9\d{8}|[2-5]\d{7})$/.test(telefone.replace(/\D/g, ''));
+}
+
 function Passos({ atual }) {
   return (
     <ol className="passos" aria-label={'Passo ' + atual + ' de 3'}>
@@ -87,7 +98,7 @@ export default function App() {
   const salvo = lerPreferencias();
   const [passo, setPasso] = useState(1);
   const [perfil, setPerfil] = useState(salvo.perfil);
-  const [dados, setDados] = useState({ nome: salvo.nome || '', telefone: '' });
+  const [dados, setDados] = useState({ nome: salvo.nome || '', telefone: salvo.telefone || '' });
   const [erros, setErros] = useState({});
   const [mobilidade, setMobilidade] = useState('nenhuma');
   const [cuidador, setCuidador] = useState({ experiencia: '', servicos: [], dias: [], inicio: '08:00', fim: '18:00' });
@@ -108,8 +119,8 @@ export default function App() {
   function enviarDados(e) {
     e.preventDefault();
     const novos = {};
-    if (dados.nome.trim().split(/\s+/).length < 2) novos.nome = 'Escreva nome e sobrenome.';
-    if (dados.telefone && dados.telefone.replace(/\D/g, '').length < 10) novos.telefone = 'Confira o telefone com DDD.';
+    if (!nomeValido(dados.nome)) novos.nome = 'Escreva nome e sobrenome, só com letras.';
+    if (dados.telefone && !telefoneValido(dados.telefone)) novos.telefone = 'Confira o telefone com DDD.';
     setErros(novos);
     if (Object.keys(novos).length) {
       e.currentTarget.querySelector('[aria-invalid="true"]')?.focus();
