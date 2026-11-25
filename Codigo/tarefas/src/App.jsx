@@ -140,8 +140,9 @@ export default function App() {
           aoMudarStatus={alterarStatus}
         />
         <div className="coluna-lateral">
-          <ListaCompras key={idosoId} secaoRef={comprasRef} tarefas={doIdoso} aoComprar={comprar} />
-          <DivisaoCuidado membros={membros} tarefas={doIdoso} />
+          <ListaCompras key={idosoId} secaoRef={comprasRef} tarefas={doIdoso} podeCriar={podeCriar} aoComprar={comprar} />
+          {/* a divisão conta a rede inteira, senão cada perfil vê uma porcentagem */}
+          <DivisaoCuidado membros={membros} tarefas={tarefas.filter((t) => t.idosoId === idosoId)} />
         </div>
       </div>
 

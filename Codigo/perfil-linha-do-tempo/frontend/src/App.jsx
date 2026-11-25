@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Shell from "@ds/Shell.jsx";
-import { USUARIO_LOGADO } from "./data/usuario.js";
+import { Estado } from "@ds/Componentes.jsx";
 import PerfilIdoso from "./pages/PerfilIdoso.jsx";
 import LinhaDoTempo from "./pages/LinhaDoTempo.jsx";
 
@@ -10,12 +10,12 @@ function Telas() {
   const tela = pathname.startsWith("/linha-do-tempo") ? "linha-do-tempo" : "perfis";
 
   return (
-    <Shell tela={tela} usuario={{ nome: USUARIO_LOGADO.nome, tipo: "cuidador" }}>
+    <Shell tela={tela}>
       <Routes>
         <Route path="/" element={<Navigate to="/perfil" replace />} />
         <Route path="/perfil" element={<PerfilIdoso />} />
         <Route path="/linha-do-tempo" element={<LinhaDoTempo />} />
-        <Route path="*" element={<Navigate to="/perfil" replace />} />
+        <Route path="*" element={<Estado titulo="Página não encontrada"><p>Confira o endereço ou use o menu.</p></Estado>} />
       </Routes>
     </Shell>
   );

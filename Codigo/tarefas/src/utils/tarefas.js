@@ -1,4 +1,4 @@
-import { USUARIO } from '../data/db.js';
+import { lerPreferencias } from '@ds/preferencias.js';
 
 export const ABAS = [
   { status: 'a_fazer', rotulo: 'A fazer' },
@@ -36,7 +36,8 @@ export function atrasada(tarefa) {
 
 export function nomeCurto(membro) {
   if (!membro) return 'Sem responsável';
-  if (membro.id === USUARIO.id) return 'Você';
+  /* "Você" só quando o nome das boas-vindas é o do membro; antes valia sempre para a cuidadora padrão */
+  if (membro.nome === lerPreferencias().nome) return 'Você';
   return membro.nome.split(' ')[0];
 }
 

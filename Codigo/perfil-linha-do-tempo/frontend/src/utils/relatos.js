@@ -1,5 +1,5 @@
 import { PERIODOS, getNivel, getRotuloPapel } from "../data/relatos.js";
-import { USUARIO_LOGADO } from "../data/usuario.js";
+import { getUsuario } from "../data/usuario.js";
 import { formatarHora, getHora, formatarDataLonga, getRotuloDia, formatarDataCurta } from "./datas.js";
 
 export function nomeCurto(nome) {
@@ -12,7 +12,7 @@ export function nomeCurto(nome) {
 }
 
 export function ehUsuarioLogado(autor) {
-  return autor.nome === USUARIO_LOGADO.nome;
+  return autor.nome === getUsuario().nome;
 }
 
 export function getRotuloAutor(autor) {
@@ -99,7 +99,8 @@ export function montarTextoPassagem({ idoso, data, hoje, relatos, resumo }) {
 
   linhas.push("PASSAGEM DE PLANTÃO — " + nomeIdoso);
   linhas.push(getRotuloDia(data, hoje) + ", " + formatarDataLonga(data).toLowerCase());
-  linhas.push("Responsável: " + USUARIO_LOGADO.nome + " (" + USUARIO_LOGADO.papel + ")");
+  const usuario = getUsuario();
+  linhas.push("Responsável: " + usuario.nome + " (" + usuario.papel + ")");
   linhas.push("");
 
   const urgentes = relatos.filter(function (relato) {
