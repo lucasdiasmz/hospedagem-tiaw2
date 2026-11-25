@@ -7,7 +7,7 @@
 .saudacao h1 {
   margin-top: var(--e-1);
   font-size: var(--t-xl);
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
 }
 
 .saudacao-data {
@@ -55,104 +55,60 @@
   border-radius: var(--r-xl);
 }
 
-/* ===== Destaque: próximo cuidado + régua do dia ===== */
+/* ===== Destaque: próximo cuidado + régua do dia (a faixa da marca) ===== */
 .destaque {
-  position: relative;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: var(--e-4);
-  padding: var(--e-4);
-  border-radius: var(--r-xl);
+  gap: var(--e-5);
+  padding: var(--e-5);
+  border-radius: var(--r-lg);
   background: var(--marinho-800);
   color: #fff;
-  box-shadow: var(--sombra-2);
-  isolation: isolate;
-}
-
-/* o abraço do logo, em grande e quase invisível, no canto do cartão */
-.destaque::before {
-  content: '';
-  position: absolute;
-  right: -5rem;
-  top: -6rem;
-  z-index: -1;
-  width: 16rem;
-  height: 16rem;
-  border-radius: 50%;
-  border: 2.5rem solid rgba(111, 151, 227, 0.12);
-}
-
-.destaque--atrasado {
-  box-shadow: inset 0 0 0 2px var(--ambar-vivo), var(--sombra-2);
 }
 
 .destaque-corpo {
   display: flex;
-  gap: var(--e-4);
+  gap: var(--e-5);
   align-items: center;
 }
 
+/* quanto falta: número solto, sem caixa, separado por uma linha */
 .contador {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  width: 5.25rem;
-  min-height: 5.25rem;
+  min-width: 5.25rem;
+  min-height: 5rem;
   flex-shrink: 0;
-  padding: var(--e-2);
-  border-radius: var(--r-lg);
-  background: #fff;
-  color: var(--marinho-800);
-  text-align: center;
-  line-height: 1.05;
+  padding-right: var(--e-5);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  line-height: 1.15;
 }
 
-.contador-topo {
-  font-size: var(--t-xs);
-  font-weight: 600;
-  color: var(--tinta-3);
+.contador-topo,
+.contador-base {
+  color: var(--sobre-escuro-2);
+  font-size: var(--t-sm);
+  font-weight: 500;
 }
 
 .contador-valor {
-  margin: 2px 0;
-  font-size: 2.125rem;
-  font-weight: 800;
-  letter-spacing: -0.04em;
+  font-size: 2.375rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
 }
 
-.contador-base {
-  font-size: var(--t-xs);
-  font-weight: 600;
-  color: var(--tinta-2);
-}
-
-.contador-icone {
-  margin: 4px 0;
-  color: var(--azul);
-}
-
-.destaque--agora .contador-icone svg {
-  animation: balancar 1.4s ease-in-out infinite;
-  transform-origin: 50% 10%;
-}
-
-.destaque--atrasado .contador {
-  background: var(--ambar-claro);
+.contador-icone svg {
+  width: 2.25rem;
+  height: 2.25rem;
 }
 
 .destaque--atrasado .contador-topo,
-.destaque--atrasado .contador-icone {
-  color: var(--ambar);
-}
-
-@keyframes balancar {
-  0%, 60%, 100% { transform: rotate(0); }
-  15% { transform: rotate(-12deg); }
-  30% { transform: rotate(10deg); }
-  45% { transform: rotate(-6deg); }
+.destaque--atrasado .contador-icone,
+.destaque--atrasado .contador-base {
+  color: #ffcf7d;
+  font-weight: 600;
 }
 
 .destaque-texto {
@@ -176,7 +132,7 @@
 .destaque h2 {
   margin-top: var(--e-1);
   font-size: var(--t-lg);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
 }
 
 .destaque-info {
@@ -218,7 +174,7 @@
 
 .destaque-dia {
   padding-top: var(--e-3);
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .destaque-dia > p {
@@ -239,59 +195,69 @@
 .acoes {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--e-2);
+  gap: var(--e-3);
 }
 
 .acao {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: space-between;
   gap: var(--e-2);
   min-height: 6rem;
-  padding: var(--e-3);
+  padding: var(--e-4);
   border-radius: var(--r-lg);
   border: 1px solid var(--linha);
   background: var(--superficie);
-  box-shadow: var(--sombra-1);
   text-align: left;
-  transition: border-color 0.15s, transform 0.2s var(--ease);
+  transition: border-color var(--m-sai), transform var(--m-sai) var(--ease), box-shadow var(--m-sai);
 }
 
-.acao:hover:not(:disabled) {
-  border-color: var(--linha-forte);
+@media (hover: hover) {
+  .acao:hover:not(:disabled) {
+    border-color: var(--linha-forte);
+    box-shadow: var(--sombra-2);
+    transform: translateY(-2px);
+    transition-duration: var(--m-entra);
+  }
 }
 
 .acao:active:not(:disabled) {
-  transform: scale(0.97);
+  transform: translateY(1px) scale(0.985);
 }
 
 .acao:disabled {
-  opacity: 0.55;
+  opacity: 0.6;
 }
 
 .acao-icone {
-  display: grid;
-  place-items: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: var(--r-md);
-  background: var(--tipo-medicamento-claro);
+  flex: none;
   color: var(--tipo-medicamento);
 }
 
+.acao-icone svg {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
 .acao--nota .acao-icone {
-  background: var(--azul-suave);
   color: var(--azul);
 }
 
 .acao--ajuda {
-  border-color: #f4c7c2;
-  background: var(--vermelho-claro);
+  border-color: var(--vermelho);
 }
 
-.acao--ajuda .acao-icone {
-  background: var(--vermelho);
-  color: #fff;
+.acao--ajuda .acao-icone,
+.acao--ajuda .acao-texto strong {
+  color: var(--vermelho);
+}
+
+@media (hover: hover) {
+  .acao--ajuda:hover:not(:disabled) {
+    border-color: var(--vermelho-forte);
+    background: var(--vermelho-claro);
+  }
 }
 
 .acao-texto {
@@ -302,18 +268,14 @@
 }
 
 .acao-texto strong {
-  font-size: var(--t-sm);
+  font-size: var(--t-base);
+  font-weight: 600;
   line-height: 1.25;
 }
 
 .acao-texto small {
-  display: none;
   color: var(--tinta-3);
-  font-size: var(--t-xs);
-}
-
-.acao--ajuda .acao-texto strong {
-  color: var(--vermelho-forte);
+  font-size: var(--t-sm);
 }
 
 /* idoso: só remédio e ajuda, em blocos maiores */
@@ -354,16 +316,15 @@
   border-radius: var(--r-lg);
   border: 1px solid var(--linha);
   background: var(--superficie);
-  box-shadow: var(--sombra-1);
 }
 
 .ainda-item {
   display: grid;
-  grid-template-columns: 3.1rem 2.25rem minmax(0, 1fr) auto;
+  grid-template-columns: 3.1rem 1.5rem minmax(0, 1fr) auto;
   align-items: center;
-  gap: var(--e-2) 10px;
+  gap: var(--e-2) var(--e-3);
   min-height: 64px;
-  padding: 6px var(--e-2) 6px var(--e-3);
+  padding: 6px var(--e-3) 6px var(--e-4);
   scroll-margin: var(--e-4);
 }
 
@@ -372,30 +333,26 @@
 }
 
 .ainda-hora {
-  font-weight: 700;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
-  color: var(--tinta);
 }
 
+/* o ícone diz o tipo pela forma e pela cor, sem caixa em volta */
 .ainda-icone {
   display: grid;
   place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: var(--r-sm);
-  background: var(--tipo-tarefa-claro);
   color: var(--tipo-tarefa);
 }
 
 .ainda-icone svg {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: 1.375rem;
+  height: 1.375rem;
 }
 
-.tipo-med .ainda-icone { background: var(--tipo-medicamento-claro); color: var(--tipo-medicamento); }
-.tipo-consulta .ainda-icone { background: var(--tipo-consulta-claro); color: var(--tipo-consulta); }
-.tipo-visita .ainda-icone { background: var(--tipo-visita-claro); color: var(--tipo-visita); }
-.tipo-nota .ainda-icone { background: var(--ambar-claro); color: var(--ambar); }
+.tipo-med .ainda-icone { color: var(--tipo-medicamento); }
+.tipo-consulta .ainda-icone { color: var(--tipo-consulta); }
+.tipo-visita .ainda-icone { color: var(--tipo-visita); }
+.tipo-nota .ainda-icone { color: var(--ambar); }
 
 .ainda-texto {
   display: flex;
@@ -404,6 +361,7 @@
 }
 
 .ainda-texto strong {
+  font-weight: 600;
   line-height: 1.25;
   overflow-wrap: anywhere;
 }
@@ -425,15 +383,26 @@
   width: var(--toque);
   height: var(--toque);
   border-radius: 50%;
-  border: 2px solid var(--linha-forte);
-  color: var(--linha-forte);
-  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  border: 1.5px solid #8a93a6;
+  color: #8a93a6;
+  transition: border-color var(--m-sai), background var(--m-sai), color var(--m-sai);
 }
 
-.ainda-feito:hover {
+.alto-contraste .ainda-feito {
+  border-color: var(--tinta);
+  color: var(--tinta);
+}
+
+.ainda-feito:hover,
+.alto-contraste .ainda-feito:hover {
   border-color: var(--verde);
-  background: var(--verde-claro);
-  color: var(--verde);
+  background: var(--verde);
+  color: #fff;
+  transition-duration: var(--m-entra);
+}
+
+.ainda-feito:active {
+  transform: scale(0.96);
 }
 
 /* ===== Telas maiores ===== */
@@ -454,8 +423,7 @@
   }
 
   .contador {
-    width: 6.5rem;
-    min-height: 6rem;
+    min-width: 6.5rem;
   }
 
   .destaque h2 {
@@ -481,6 +449,8 @@
   .acao {
     flex-direction: row;
     align-items: center;
+    justify-content: flex-start;
+    gap: var(--e-3);
     min-height: 4.5rem;
   }
 
@@ -605,10 +575,10 @@
 .convite-codigo {
   padding: var(--e-4);
   border-radius: var(--r-md);
-  background: var(--azul-suave);
-  color: var(--azul-escuro);
+  background: var(--superficie-2);
+  color: var(--tinta);
   font-size: var(--t-xl);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-align: center;
 }
