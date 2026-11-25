@@ -139,7 +139,7 @@ export default function App() {
           titulo="Não foi possível carregar o dia"
           acao={<button type="button" className="btn" onClick={() => window.location.reload()}>Tentar de novo</button>}
         >
-          <p>{cuidados.erro}. Confira a conexão; se estiver rodando no computador, veja se a API do início (porta 3001) está ligada.</p>
+          <p>{cuidados.erro}. Confira a internet e tente de novo.</p>
         </Estado>
       )}
 

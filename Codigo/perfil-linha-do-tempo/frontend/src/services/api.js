@@ -12,7 +12,7 @@ async function requisicao(caminho, opcoes) {
       ...opcoes
     });
   } catch (erro) {
-    throw new Error("Não foi possível conectar ao servidor. O back-end está rodando?");
+    throw new Error("Sem conexão com o servidor. Confira a internet e tente de novo.");
   }
 
   if (resposta.status === 204) {
@@ -30,7 +30,7 @@ async function requisicao(caminho, opcoes) {
     if (dados && dados.mensagem) {
       throw new Error(dados.mensagem);
     } else if (resposta.status >= 500) {
-      throw new Error("Não foi possível conectar ao servidor. O back-end está rodando?");
+      throw new Error("Sem conexão com o servidor. Confira a internet e tente de novo.");
     } else {
       throw new Error("Erro " + resposta.status + " ao falar com o servidor");
     }

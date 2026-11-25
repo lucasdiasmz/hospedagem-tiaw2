@@ -105,8 +105,9 @@ export default function App() {
       )}
 
       {erroApi && (
-        <Estado tipo="erro" titulo="Não foi possível falar com a API">
-          <p>{erroApi} No computador, a API do cadastro roda na porta 3003.</p>
+        <Estado tipo="erro" titulo="Não foi possível carregar"
+          acao={<button type="button" className="btn" onClick={() => window.location.reload()}>Tentar de novo</button>}>
+          <p>{erroApi}</p>
         </Estado>
       )}
 

@@ -12,10 +12,10 @@ async function chamar(caminho, opcoes) {
       ...opcoes,
     });
   } catch (e) {
-    throw new Error('Não foi possível falar com a API. Ela está ligada?');
+    throw new Error('Sem conexão com o servidor. Confira a internet e tente de novo.');
   }
   const corpo = await resposta.json().catch(() => ({}));
-  if (!resposta.ok) throw new Error(corpo.erro || 'Erro ao falar com a API.');
+  if (!resposta.ok) throw new Error(corpo.erro || 'O servidor não respondeu como esperado.');
   return corpo;
 }
 

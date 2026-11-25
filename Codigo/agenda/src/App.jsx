@@ -86,7 +86,7 @@ export default function App() {
     conteudo = (
       <Estado tipo="erro" titulo="Não foi possível carregar a agenda"
         acao={<button type="button" className="btn" onClick={() => window.location.reload()}>Tentar de novo</button>}>
-        <p>{agenda.erro}. Confira a conexão; no computador, veja se a API da agenda (porta 3002) está ligada.</p>
+        <p>{agenda.erro}. Confira a internet e tente de novo.</p>
       </Estado>
     );
   } else if (!agenda.carregando && !agenda.idosoId) {
