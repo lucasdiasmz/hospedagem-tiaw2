@@ -17,7 +17,7 @@ const PERFIS = [
 ];
 
 const MOBILIDADE = [
-  { id: 'nenhuma', rotulo: 'Nenhuma limitação' },
+  { id: 'nenhuma', rotulo: 'Nenhum apoio' },
   { id: 'andador', rotulo: 'Andador' },
   { id: 'muletas', rotulo: 'Muletas' },
   { id: 'cadeira-manual', rotulo: 'Cadeira de rodas manual' },
@@ -40,13 +40,13 @@ const SERVICOS = [
 ];
 
 const DIAS = [
-  { id: 'seg', rotulo: 'S', nome: 'Segunda' },
-  { id: 'ter', rotulo: 'T', nome: 'Terça' },
-  { id: 'qua', rotulo: 'Q', nome: 'Quarta' },
-  { id: 'qui', rotulo: 'Q', nome: 'Quinta' },
-  { id: 'sex', rotulo: 'S', nome: 'Sexta' },
-  { id: 'sab', rotulo: 'S', nome: 'Sábado' },
-  { id: 'dom', rotulo: 'D', nome: 'Domingo' },
+  { id: 'seg', rotulo: 'Seg', nome: 'Segunda' },
+  { id: 'ter', rotulo: 'Ter', nome: 'Terça' },
+  { id: 'qua', rotulo: 'Qua', nome: 'Quarta' },
+  { id: 'qui', rotulo: 'Qui', nome: 'Quinta' },
+  { id: 'sex', rotulo: 'Sex', nome: 'Sexta' },
+  { id: 'sab', rotulo: 'Sáb', nome: 'Sábado' },
+  { id: 'dom', rotulo: 'Dom', nome: 'Domingo' },
 ];
 
 /* máscara simples de telefone brasileiro: (31) 99999-9999 */
@@ -94,6 +94,17 @@ function Interruptor({ Icone, rotulo, descricao, ligado, aoMudar }) {
   );
 }
 
+function Acessibilidade({ prefs, salvarPrefs }) {
+  return (
+    <div className="acessibilidade">
+      <Interruptor Icone={IconeLetra} rotulo="Letra maior" descricao="Aumenta todos os textos"
+        ligado={prefs.fonteMaior} aoMudar={(v) => salvarPrefs({ fonteMaior: v })} />
+      <Interruptor Icone={IconeContraste} rotulo="Alto contraste" descricao="Cores mais fortes, bordas mais visíveis"
+        ligado={prefs.altoContraste} aoMudar={(v) => salvarPrefs({ altoContraste: v })} />
+    </div>
+  );
+}
+
 export default function App() {
   const salvo = lerPreferencias();
   const [passo, setPasso] = useState(1);
@@ -135,9 +146,19 @@ export default function App() {
 
   function concluir(e) {
     e.preventDefault();
-    if (perfil === 'cuidador' && (!cuidador.experiencia || !cuidador.servicos.length)) {
-      setErros({ cuidador: 'Escolha sua experiência e pelo menos um serviço.' });
-      return;
+    if (perfil === 'cuidador') {
+      const novos = {};
+      if (!cuidador.experiencia) novos.experiencia = 'Escolha o tempo de experiência.';
+      if (!cuidador.servicos.length) novos.servicos = 'Escolha pelo menos um serviço.';
+      if (!cuidador.dias.length) novos.dias = 'Escolha pelo menos um dia.';
+      if (!cuidador.inicio || !cuidador.fim) novos.horas = 'Preencha os dois horários.';
+      else if (cuidador.inicio === cuidador.fim) novos.horas = 'O fim precisa ser diferente do início.';
+      setErros(novos);
+      const primeiro = Object.keys(novos)[0];
+      if (primeiro) {
+        e.currentTarget.querySelector(`[data-campo="${primeiro}"]`)?.focus();
+        return;
+      }
     }
     salvarPrefs({
       perfil,
@@ -234,12 +255,7 @@ export default function App() {
             <h1 id="titulo-passo" ref={tituloRef} tabIndex={-1}>Como fica melhor para você{primeiroNome ? ', ' + primeiroNome : ''}?</h1>
             <p className="bv-sub">As mudanças valem na hora, em todas as telas.</p>
             <form className="formulario" onSubmit={concluir}>
-              <div className="acessibilidade">
-                <Interruptor Icone={IconeLetra} rotulo="Letra maior" descricao="Aumenta todos os textos"
-                  ligado={prefs.fonteMaior} aoMudar={(v) => salvarPrefs({ fonteMaior: v })} />
-                <Interruptor Icone={IconeContraste} rotulo="Alto contraste" descricao="Cores mais fortes, bordas mais visíveis"
-                  ligado={prefs.altoContraste} aoMudar={(v) => salvarPrefs({ altoContraste: v })} />
-              </div>
+              <Acessibilidade prefs={prefs} salvarPrefs={salvarPrefs} />
 
               <fieldset className="campo bv-fieldset">
                 <legend>{perfil === 'idoso' ? 'Você usa algum apoio para se locomover?' : 'A pessoa cuidada usa algum apoio para se locomover?'}</legend>
@@ -262,44 +278,49 @@ export default function App() {
           <section aria-labelledby="titulo-passo">
             <button type="button" className="voltar" onClick={() => setPasso(2)}><IconeVoltar />Voltar</button>
             <h1 id="titulo-passo" ref={tituloRef} tabIndex={-1}>Sua experiência</h1>
-            <p className="bv-sub">Um perfil completo aparece melhor na busca das famílias.</p>
-            <form className="formulario" onSubmit={concluir}>
+            <p className="bv-sub">Conte como você trabalha e quando pode atender.</p>
+            <form className="formulario" onSubmit={concluir} noValidate>
               <label className="campo">
                 Tempo de experiência com cuidado
-                <select value={cuidador.experiencia} onChange={(e) => setCuidador({ ...cuidador, experiencia: e.target.value })}>
+                <select data-campo="experiencia" value={cuidador.experiencia}
+                  aria-invalid={erros.experiencia ? 'true' : undefined} aria-describedby={erros.experiencia ? 'erro-experiencia' : undefined}
+                  onChange={(e) => setCuidador({ ...cuidador, experiencia: e.target.value })}>
                   <option value="">Escolha</option>
                   {EXPERIENCIAS.map((x) => <option key={x.valor} value={x.valor}>{x.rotulo}</option>)}
                 </select>
+                {erros.experiencia && <span className="campo-erro" id="erro-experiencia">{erros.experiencia}</span>}
               </label>
 
-              <fieldset className="campo bv-fieldset">
+              <fieldset className="campo bv-fieldset" aria-describedby={erros.servicos ? 'erro-servicos' : undefined}>
                 <legend>Serviços que você oferece</legend>
                 <div className="pilulas">
-                  {SERVICOS.map((s) => (
+                  {SERVICOS.map((s, i) => (
                     <label key={s.id} className="pilula">
-                      <input type="checkbox" checked={cuidador.servicos.includes(s.id)} onChange={() => alternar('servicos', s.id)} />
+                      <input type="checkbox" data-campo={i === 0 ? 'servicos' : undefined} checked={cuidador.servicos.includes(s.id)} onChange={() => alternar('servicos', s.id)} />
                       {s.rotulo}
                     </label>
                   ))}
                 </div>
+                {erros.servicos && <span className="campo-erro" id="erro-servicos">{erros.servicos}</span>}
               </fieldset>
 
-              <fieldset className="campo bv-fieldset">
+              <fieldset className="campo bv-fieldset" aria-describedby={erros.dias ? 'erro-dias' : undefined}>
                 <legend>Dias em que pode atender</legend>
                 <div className="bv-dias">
-                  {DIAS.map((d) => (
+                  {DIAS.map((d, i) => (
                     <label key={d.id} className="bv-dia" title={d.nome}>
-                      <input type="checkbox" checked={cuidador.dias.includes(d.id)} onChange={() => alternar('dias', d.id)} aria-label={d.nome} />
+                      <input type="checkbox" data-campo={i === 0 ? 'dias' : undefined} checked={cuidador.dias.includes(d.id)} onChange={() => alternar('dias', d.id)} aria-label={d.nome} />
                       <span aria-hidden="true">{d.rotulo}</span>
                     </label>
                   ))}
                 </div>
+                {erros.dias && <span className="campo-erro" id="erro-dias">{erros.dias}</span>}
               </fieldset>
 
               <div className="campos-linha bv-horas">
                 <label className="campo">
                   Das
-                  <input type="time" value={cuidador.inicio} onChange={(e) => setCuidador({ ...cuidador, inicio: e.target.value })} />
+                  <input type="time" data-campo="horas" aria-invalid={erros.horas ? 'true' : undefined} value={cuidador.inicio} onChange={(e) => setCuidador({ ...cuidador, inicio: e.target.value })} />
                 </label>
                 <label className="campo">
                   Até
@@ -307,7 +328,12 @@ export default function App() {
                 </label>
               </div>
 
-              {erros.cuidador && <p className="erro-form" role="alert">{erros.cuidador}</p>}
+              {erros.horas && <p className="erro-form" role="alert">{erros.horas}</p>}
+              {cuidador.fim && cuidador.fim < cuidador.inicio && (
+                <p className="bv-noturno">Plantão noturno: até {cuidador.fim} do dia seguinte.</p>
+              )}
+
+              <Acessibilidade prefs={prefs} salvarPrefs={salvarPrefs} />
 
               <button type="submit" className="btn btn-primario btn-bloco"><IconeCheck />Concluir cadastro</button>
             </form>

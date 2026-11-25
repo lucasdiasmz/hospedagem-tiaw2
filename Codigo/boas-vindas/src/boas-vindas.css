@@ -195,6 +195,7 @@
   border-radius: var(--r-sm);
   border: 1.5px solid var(--linha-forte);
   background: var(--superficie);
+  font-size: var(--t-sm);
   font-weight: 700;
   cursor: pointer;
 }
@@ -217,6 +218,11 @@
 
 .bv-dia:has(input:focus-visible) {
   box-shadow: var(--foco);
+}
+
+.bv-noturno {
+  color: var(--tinta-2);
+  font-size: var(--t-sm);
 }
 
 .bv-horas {
