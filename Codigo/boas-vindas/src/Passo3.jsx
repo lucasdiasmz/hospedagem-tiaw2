@@ -1,4 +1,4 @@
-import { Acessibilidade, Campo, Opcoes } from './componentes.jsx';
+import { Campo, Opcoes } from './componentes.jsx';
 
 const MOBILIDADE = [
   { id: 'nenhuma', rotulo: 'Nenhum apoio' },
@@ -53,7 +53,7 @@ function Codigo({ p, mudar, erros, ...props }) {
 }
 
 /* p: respostas do passo 3; mudar(campo, valor, erro = campo) */
-export default function Passo3({ perfil, primeiroNome, p, mudar, erros, prefs, salvarPrefs, tituloRef }) {
+export default function Passo3({ perfil, primeiroNome, p, mudar, erros, tituloRef }) {
   function alternar(lista, valor) {
     mudar(lista, p[lista].includes(valor) ? p[lista].filter((v) => v !== valor) : [...p[lista], valor]);
   }
@@ -70,7 +70,7 @@ export default function Passo3({ perfil, primeiroNome, p, mudar, erros, prefs, s
         {perfil === 'idoso' && 'Só você e quem você convidar veem os seus dados.'}
       </p>
 
-      <div className="formulario">
+      <div className={'formulario' + (perfil === 'cuidador' ? ' bv-quatro' : '')}>
         {perfil !== 'cuidador' && (
           <Opcoes legenda="Como quer começar?" tipo="radio" nome="ligacao" opcoes={LIGACAO[perfil]}
             marcada={(id) => p.ligacao === id} aoMudar={(id) => mudar('ligacao', id)} />
@@ -93,7 +93,7 @@ export default function Passo3({ perfil, primeiroNome, p, mudar, erros, prefs, s
 
         {perfil === 'cuidador' && (
           <>
-            <Campo rotulo="Tempo de experiência com cuidado" erro={erros.experiencia}>
+            <Campo rotulo="Tempo de experiência" erro={erros.experiencia}>
               {(ligacao) => (
                 <select {...ligacao} value={p.experiencia} onChange={(e) => mudar('experiencia', e.target.value)}>
                   <option value="">Escolha</option>
@@ -101,9 +101,15 @@ export default function Passo3({ perfil, primeiroNome, p, mudar, erros, prefs, s
                 </select>
               )}
             </Campo>
+            <Codigo p={p} mudar={mudar} erros={erros} opcional />
+            <div className="campos-linha bv-horas">
+              <Campo rotulo="Atende das" type="time" value={p.inicio} onChange={(e) => mudar('inicio', e.target.value, 'horas')} erro={erros.horas} />
+              <Campo rotulo="Até" type="time" value={p.fim} onChange={(e) => mudar('fim', e.target.value, 'horas')} />
+            </div>
+            {p.fim && p.fim < p.inicio && <p className="bv-noturno bv-tudo">Plantão noturno: até {p.fim} do dia seguinte.</p>}
             <Opcoes legenda="Serviços que você oferece" tipo="checkbox" nome="servicos" opcoes={SERVICOS}
               marcada={(id) => p.servicos.includes(id)} aoMudar={(id) => alternar('servicos', id)} erro={erros.servicos} />
-            <fieldset className="campo bv-fieldset" aria-describedby={erros.dias ? 'erro-dias' : undefined}>
+            <fieldset className="campo bv-fieldset bv-tudo" aria-describedby={erros.dias ? 'erro-dias' : undefined}>
               <legend>Dias em que pode atender</legend>
               <div className="bv-dias">
                 {DIAS.map((d, i) => (
@@ -116,18 +122,10 @@ export default function Passo3({ perfil, primeiroNome, p, mudar, erros, prefs, s
               </div>
               {erros.dias && <span className="campo-erro" id="erro-dias">{erros.dias}</span>}
             </fieldset>
-            <div className="campos-linha bv-horas">
-              <Campo rotulo="Das" type="time" value={p.inicio} onChange={(e) => mudar('inicio', e.target.value, 'horas')} erro={erros.horas} />
-              <Campo rotulo="Até" type="time" value={p.fim} onChange={(e) => mudar('fim', e.target.value, 'horas')} />
-            </div>
-            {p.fim && p.fim < p.inicio && <p className="bv-noturno">Plantão noturno: até {p.fim} do dia seguinte.</p>}
-            <Codigo p={p} mudar={mudar} erros={erros} opcional dica="Se uma família já convidou você." />
           </>
         )}
 
-        <Acessibilidade prefs={prefs} salvarPrefs={salvarPrefs} />
-
-        <div className="campo">
+        <div className="campo bv-tudo">
           <label className="bv-aceite">
             <input type="checkbox" checked={p.consentimento} aria-invalid={erros.consentimento ? 'true' : undefined}
               aria-describedby={erros.consentimento ? 'erro-aceite' : undefined}

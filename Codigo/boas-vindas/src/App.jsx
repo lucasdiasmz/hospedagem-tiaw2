@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { IconeCheck, IconeCuidadores, IconeEscudo, IconePerfis, IconeVoltar, SetaDireita } from '@ds/Icones.jsx';
 import { TELAS } from '@ds/navegacao.js';
-import { lerPreferencias, usePreferencias } from '@ds/preferencias.js';
+import Acessibilidade from '@ds/Acessibilidade.jsx';
+import { lerPreferencias } from '@ds/preferencias.js';
 import { cadastrar } from '@ds/sessao.js';
 import logo from '@ds/assets/logo-acessamob.png';
 import { Campo, CampoSenha, Passos, focarErro } from './componentes.jsx';
@@ -33,13 +34,13 @@ export default function App() {
   const [p, setP] = useState(PASSO3);
   const [erros, setErros] = useState({});
   const [enviando, setEnviando] = useState(false);
-  const [prefs, salvarPrefs] = usePreferencias();
   const tituloRef = useRef(null);
 
   /* a cada passo o foco vai para o título, para leitores de tela anunciarem a mudança */
   useEffect(() => {
     tituloRef.current?.focus();
     window.scrollTo({ top: 0 });
+    tituloRef.current?.closest('main')?.scrollTo({ top: 0 });
   }, [criando, passo]);
 
   function irPara(n) {
@@ -98,6 +99,8 @@ export default function App() {
           <span className="bv-nome">AcessaMob</span>
           <span className="bv-slogan">Mais cuidado, todos os dias.</span>
         </div>
+        {/* antes a letra maior só aparecia no fim do cadastro */}
+        <div className="bv-acess acess--escuro"><Acessibilidade /></div>
       </header>
 
       <main className="bv-conteudo">
@@ -130,7 +133,7 @@ export default function App() {
         )}
 
         {criando && passo === 2 && (
-          <section aria-labelledby="titulo-passo">
+          <section className="bv-largo" aria-labelledby="titulo-passo">
             <button type="button" className="voltar" onClick={() => irPara(1)}><IconeVoltar />Voltar</button>
             <h1 id="titulo-passo" ref={tituloRef} tabIndex={-1}>Seus dados</h1>
             <p className="bv-sub">Você vai usar o e-mail e a senha para entrar.</p>
@@ -149,11 +152,10 @@ export default function App() {
         )}
 
         {criando && passo === 3 && (
-          <section aria-labelledby="titulo-passo">
+          <section className="bv-largo" aria-labelledby="titulo-passo">
             <button type="button" className="voltar" onClick={() => irPara(2)}><IconeVoltar />Voltar</button>
             <form className="bv-form3" onSubmit={concluir} noValidate>
-              <Passo3 perfil={perfil} primeiroNome={dados.nome.trim().split(/\s+/)[0]} p={p} mudar={mudar} erros={erros}
-                prefs={prefs} salvarPrefs={salvarPrefs} tituloRef={tituloRef} />
+              <Passo3 perfil={perfil} primeiroNome={dados.nome.trim().split(/\s+/)[0]} p={p} mudar={mudar} erros={erros} tituloRef={tituloRef} />
               {erros.geral && <p className="erro-form" role="alert">{erros.geral}</p>}
               <button type="submit" className="btn btn-primario btn-bloco" disabled={enviando}>
                 <IconeCheck />{enviando ? 'Criando a conta…' : 'Criar conta'}

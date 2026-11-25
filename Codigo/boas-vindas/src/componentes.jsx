@@ -1,5 +1,4 @@
 import { useId, useState } from 'react';
-import { IconeContraste, IconeLetra } from '@ds/Icones.jsx';
 
 /* rótulo, campo e erro ligados; o resto das propriedades vai para o <input> */
 export function Campo({ rotulo, opcional, erro, dica, children, ...input }) {
@@ -35,35 +34,11 @@ export function CampoSenha({ rotulo = 'Senha', ...props }) {
   );
 }
 
-function Interruptor({ Icone, rotulo, descricao, ligado, aoMudar }) {
-  return (
-    <label className="interruptor">
-      <span className="interruptor-icone" aria-hidden="true"><Icone /></span>
-      <span className="interruptor-texto">
-        <strong>{rotulo}</strong>
-        <small>{descricao}</small>
-      </span>
-      <input type="checkbox" role="switch" checked={ligado} onChange={(e) => aoMudar(e.target.checked)} />
-    </label>
-  );
-}
-
-export function Acessibilidade({ prefs, salvarPrefs }) {
-  return (
-    <div className="acessibilidade">
-      <Interruptor Icone={IconeLetra} rotulo="Letra maior" descricao="Aumenta todos os textos"
-        ligado={prefs.fonteMaior} aoMudar={(v) => salvarPrefs({ fonteMaior: v })} />
-      <Interruptor Icone={IconeContraste} rotulo="Alto contraste" descricao="Cores mais fortes, bordas mais visíveis"
-        ligado={prefs.altoContraste} aoMudar={(v) => salvarPrefs({ altoContraste: v })} />
-    </div>
-  );
-}
-
 /* opções em pílulas; tipo 'radio' ou 'checkbox' */
 export function Opcoes({ legenda, tipo, nome, opcoes, marcada, aoMudar, erro }) {
   const id = useId();
   return (
-    <fieldset className="campo bv-fieldset" aria-describedby={erro ? id : undefined}>
+    <fieldset className="campo bv-fieldset bv-tudo" aria-describedby={erro ? id : undefined}>
       <legend>{legenda}</legend>
       <div className="pilulas">
         {opcoes.map((o, i) => (
