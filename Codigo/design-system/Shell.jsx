@@ -15,7 +15,7 @@ import logo from './assets/logo-acessamob.png';
 /* Estrutura comum de todas as telas (mobile-first):
    - celular e tablet: barra do topo com a marca, conteúdo e barra de abas embaixo com as
      4 telas mais usadas + "Mais" (folha com as outras telas, atalhos e acessibilidade);
-   - computador (≥ 1024 px): menu lateral azul-escuro com tudo à vista e o conteúdo preso à altura da
+   - computador (≥ 1024 px): menu lateral claro, em grupos, com tudo à vista e o conteúdo preso à altura da
      janela (.palco); cada tela escolhe qual lista rola por dentro (.rolavel).
    Props: tela (id do item ativo), usuario ({ nome, tipo }), atalhos (ações que, no celular, só existem na folha "Mais": [{ rotulo, Icone, aoClicar | href }]),
    permissao (id da tela para conferir o acesso, quando difere de "tela"; ex.: cadastro de medicamentos).
@@ -23,14 +23,16 @@ import logo from './assets/logo-acessamob.png';
    Quem ainda não escolheu um perfil vai para as boas-vindas. */
 
 const ITENS = [
-  { id: 'inicio', rotulo: 'Início', curto: 'Início', Icone: IconeInicio, href: TELAS.inicio, aba: true },
-  { id: 'agenda', rotulo: 'Agenda', curto: 'Agenda', Icone: IconeAgenda, href: TELAS.agenda, aba: true },
-  { id: 'medicamentos', rotulo: 'Medicamentos', curto: 'Remédios', Icone: IconePilula, href: TELAS.medicamentos, aba: true },
-  { id: 'tarefas', rotulo: 'Tarefas', curto: 'Tarefas', Icone: IconeTarefas, href: TELAS.tarefas, aba: true },
-  { id: 'linha-do-tempo', rotulo: 'Linha do tempo', Icone: IconeLinhaDoTempo, href: TELAS.linhaDoTempo },
-  { id: 'cuidadores', rotulo: 'Cuidadores', Icone: IconeCuidadores, href: TELAS.cuidadores },
-  { id: 'perfis', rotulo: 'Perfil do idoso', Icone: IconePerfis, href: TELAS.perfis },
+  { id: 'inicio', rotulo: 'Início', curto: 'Início', Icone: IconeInicio, href: TELAS.inicio, grupo: 'Rotina', aba: true },
+  { id: 'agenda', rotulo: 'Agenda', curto: 'Agenda', Icone: IconeAgenda, href: TELAS.agenda, grupo: 'Rotina', aba: true },
+  { id: 'medicamentos', rotulo: 'Medicamentos', curto: 'Remédios', Icone: IconePilula, href: TELAS.medicamentos, grupo: 'Rotina', aba: true },
+  { id: 'tarefas', rotulo: 'Tarefas', curto: 'Tarefas', Icone: IconeTarefas, href: TELAS.tarefas, grupo: 'Rotina', aba: true },
+  { id: 'linha-do-tempo', rotulo: 'Linha do tempo', Icone: IconeLinhaDoTempo, href: TELAS.linhaDoTempo, grupo: 'Pessoa cuidada' },
+  { id: 'perfis', rotulo: 'Perfil do idoso', Icone: IconePerfis, href: TELAS.perfis, grupo: 'Pessoa cuidada' },
+  { id: 'cuidadores', rotulo: 'Cuidadores', Icone: IconeCuidadores, href: TELAS.cuidadores, grupo: 'Rede' },
 ];
+
+const GRUPOS = ['Rotina', 'Pessoa cuidada', 'Rede'];
 
 function primeiroNome(nome = '') {
   return nome.trim().split(/\s+/)[0] || '';
@@ -39,7 +41,7 @@ function primeiroNome(nome = '') {
 function Marca({ compacta = false }) {
   return (
     <a className={'marca' + (compacta ? ' marca--compacta' : '')} href={TELAS.inicio}>
-      <img src={logo} alt="" width={compacta ? 34 : 44} height={compacta ? 34 : 44} />
+      <span className="marca-logo"><img src={logo} alt="" width="44" height="44" /></span>
       <span>
         <span className="marca-nome">AcessaMob</span>
         {!compacta && <small className="marca-slogan">Mais cuidado, todos os dias.</small>}
@@ -64,10 +66,10 @@ function Atalho({ atalho, aoUsar }) {
   );
 }
 
-function CartaoUsuario({ usuario, perfil, escuro = false, aoSair }) {
+function CartaoUsuario({ usuario, perfil, aoSair }) {
   if (!usuario?.nome) return null;
   return (
-    <div className={'usuario' + (escuro ? ' usuario--escuro' : '')}>
+    <div className="usuario">
       <span className="avatar" aria-hidden="true">{usuario.nome[0]}</span>
       <span className="usuario-texto">
         <strong>{usuario.nome}</strong>
@@ -116,21 +118,30 @@ export default function Shell({ tela, permissao = tela, usuario: usuarioApi, ata
       <aside className="lateral" aria-label="Menu">
         <Marca />
         <nav className="lateral-menu" aria-label="Navegação principal">
-          <ul>
-            {itens.map(({ id, rotulo, Icone, href }) => (
-              <li key={id}>
-                <a href={href} className="lateral-item" aria-current={id === tela ? 'page' : undefined}>
-                  <Icone />
-                  <span>{rotulo}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
+          {GRUPOS.map((grupo) => {
+            const doGrupo = itens.filter((i) => i.grupo === grupo);
+            if (!doGrupo.length) return null;
+            return (
+              <div key={grupo} className="lateral-grupo" role="group" aria-label={grupo}>
+                <p className="lateral-rotulo" aria-hidden="true">{grupo}</p>
+                <ul>
+                  {doGrupo.map(({ id, rotulo, Icone, href }) => (
+                    <li key={id}>
+                      <a href={href} className="lateral-item" aria-current={id === tela ? 'page' : undefined}>
+                        <Icone />
+                        <span>{rotulo}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
         </nav>
 
         <Acessibilidade />
 
-        <CartaoUsuario usuario={usuario} perfil={perfil} escuro aoSair={encerrar} />
+        <CartaoUsuario usuario={usuario} perfil={perfil} aoSair={encerrar} />
       </aside>
 
       {/* celular: barra do topo */}

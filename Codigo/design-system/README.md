@@ -9,8 +9,8 @@ o que é comum mora aqui, e cada tela guarda só o que é dela.
 | Arquivo | Para quê |
 |---|---|
 | `acessamob.css` | Tokens (cores, tipografia, espaços, cantos), base, estrutura da tela e componentes: `.btn`, `.card`, `.campo`, `.pilula`, `.segmentado`, `.tag`, `.estado`, `.dialogo`, `.toast`, `.fab`, régua do dia. Mobile-first. |
-| `Shell.jsx` | Estrutura de toda tela: barra do topo + abas de baixo no celular, menu lateral azul-escuro no computador (≥ 1024 px), folha "Mais" com as outras telas, atalhos e acessibilidade. |
-| `Acessibilidade.jsx` | Botões "Letra maior" e "Alto contraste", no menu e nas boas-vindas. |
+| `Shell.jsx` | Estrutura de toda tela: barra do topo + abas de baixo no celular, menu lateral claro, em grupos, no computador (≥ 1024 px), folha "Mais" com as outras telas, atalhos e acessibilidade. |
+| `Acessibilidade.jsx` | "Letra maior" e "Alto contraste": linhas com chave no menu, botões nas boas-vindas (`compacta`). |
 | `Componentes.jsx` | `PaginaTopo` (título da tela), `Estado` (carregando / vazio / erro) e `ReguaDoDia`. |
 | `Dialogo.jsx` | `<dialog>` nativo: folha que sobe no celular, centralizado no computador; Esc, foco preso, botão fechar. |
 | `Toast.jsx` | Aviso rápido de confirmação ou erro. |

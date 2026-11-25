@@ -100,7 +100,7 @@ export default function App() {
           <span className="bv-slogan">Mais cuidado, todos os dias.</span>
         </div>
         {/* antes a letra maior só aparecia no fim do cadastro */}
-        <div className="bv-acess acess--escuro"><Acessibilidade /></div>
+        <div className="bv-acess acess--escuro"><Acessibilidade compacta /></div>
       </header>
 
       <main className="bv-conteudo">

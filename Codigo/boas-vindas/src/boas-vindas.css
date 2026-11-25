@@ -136,7 +136,6 @@
   border-radius: var(--r-lg);
   border: 1.5px solid var(--linha);
   background: var(--superficie);
-  box-shadow: var(--sombra-1);
   text-align: left;
   transition: border-color 0.15s, transform 0.2s var(--ease);
 }
