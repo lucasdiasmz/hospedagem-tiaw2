@@ -43,4 +43,31 @@ writeFileSync(
     '<title>AcessaMob</title><a href="/boas-vindas/">AcessaMob</a>\n'
 );
 
+/* endereço que não existe (a Vercel usa este arquivo sozinha) */
+writeFileSync(
+  join(saida, '404.html'),
+  `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AcessaMob | Página não encontrada</title>
+  <style>
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #f1f4fb; color: #0c1b3f; font: 18px/1.5 Inter, system-ui, sans-serif; }
+    main { padding: 24px; text-align: center; }
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    a { display: inline-block; margin-top: 16px; padding: 14px 24px; border-radius: 14px; background: #1d63dc; color: #fff; font-weight: 600; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Página não encontrada</h1>
+    <p>Confira o endereço ou volte para o começo.</p>
+    <a href="/boas-vindas/">Ir para o AcessaMob</a>
+  </main>
+</body>
+</html>
+`
+);
+
 console.log('\nSite único pronto em dist/');
