@@ -140,7 +140,14 @@ export default function App() {
     setPasso(3);
   }
 
+  /* muda um campo do cuidador e apaga o erro dele */
+  function mudarCuidador(campo, valor, erro = campo) {
+    setCuidador((c) => ({ ...c, [campo]: valor }));
+    setErros((e) => ({ ...e, [erro]: undefined }));
+  }
+
   function alternar(lista, valor) {
+    setErros((e) => ({ ...e, [lista]: undefined }));
     setCuidador((c) => ({ ...c, [lista]: c[lista].includes(valor) ? c[lista].filter((v) => v !== valor) : [...c[lista], valor] }));
   }
 
@@ -284,7 +291,7 @@ export default function App() {
                 Tempo de experiência com cuidado
                 <select data-campo="experiencia" value={cuidador.experiencia}
                   aria-invalid={erros.experiencia ? 'true' : undefined} aria-describedby={erros.experiencia ? 'erro-experiencia' : undefined}
-                  onChange={(e) => setCuidador({ ...cuidador, experiencia: e.target.value })}>
+                  onChange={(e) => mudarCuidador('experiencia', e.target.value)}>
                   <option value="">Escolha</option>
                   {EXPERIENCIAS.map((x) => <option key={x.valor} value={x.valor}>{x.rotulo}</option>)}
                 </select>
@@ -320,11 +327,11 @@ export default function App() {
               <div className="campos-linha bv-horas">
                 <label className="campo">
                   Das
-                  <input type="time" data-campo="horas" aria-invalid={erros.horas ? 'true' : undefined} value={cuidador.inicio} onChange={(e) => setCuidador({ ...cuidador, inicio: e.target.value })} />
+                  <input type="time" data-campo="horas" aria-invalid={erros.horas ? 'true' : undefined} value={cuidador.inicio} onChange={(e) => mudarCuidador('inicio', e.target.value, 'horas')} />
                 </label>
                 <label className="campo">
                   Até
-                  <input type="time" value={cuidador.fim} onChange={(e) => setCuidador({ ...cuidador, fim: e.target.value })} />
+                  <input type="time" value={cuidador.fim} onChange={(e) => mudarCuidador('fim', e.target.value, 'horas')} />
                 </label>
               </div>
 
