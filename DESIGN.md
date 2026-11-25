@@ -29,7 +29,8 @@ Alto contraste troca os tokens em `:root.alto-contraste`.
 ## Tipografia
 
 Inter. Escala em rem: 13 · 15 · **17 (base)** · 19 · 22 · 28 · 34 px. Pesos 400/500/600/700.
-Horários e números com `font-variant-numeric: tabular-nums`. Letra maior: raiz a 118,75%.
+Horários e números com `font-variant-numeric: tabular-nums`. Letra maior: raiz a 118,75%;
+textos e ícones crescem, espaços não, e os títulos crescem menos.
 
 ## Forma e espaço
 
@@ -39,8 +40,11 @@ Sombras curtas com deslocamento (`--sombra-1/2/3`). Alvo de toque mínimo 48 px.
 ## Estrutura
 
 Mobile-first. Celular: barra do topo azul-escura, conteúdo, abas embaixo (Início, Agenda,
-Remédios, Tarefas, Mais). A partir de 64rem: menu lateral fixo de 17rem. Diálogos viram folhas
-que sobem no celular. Pontos de quebra: 40rem, 48rem, 64rem, 72rem.
+Remédios, Tarefas, Mais). A partir de 64rem: menu lateral sem rolagem e tela presa à
+janela: título e ações parados, só as listas rolam por dentro. Conteúdo de um mesmo assunto vira abas
+em vez de página comprida (perfis, tarefas, cadastro). Diálogos viram folhas
+que sobem no celular. Pontos de quebra: 40rem, 48rem, 64rem; no
+computador, `@container palco` (46, 58, 64, 75 e 84rem).
 
 ## Componentes
 
