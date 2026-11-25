@@ -3,7 +3,7 @@ import Shell from '@ds/Shell.jsx';
 import Dialogo from '@ds/Dialogo.jsx';
 import Toast from '@ds/Toast.jsx';
 import { AvisoEspera, Estado } from '@ds/Componentes.jsx';
-import { IconeAgenda, IconeLapis, IconeMais, IconeTelefone } from '@ds/Icones.jsx';
+import { IconeAgenda, IconeCheck, IconeLapis, IconeMais, IconePerfis, IconeTelefone } from '@ds/Icones.jsx';
 import { TELAS } from '@ds/navegacao.js';
 import { useUsuario } from '@ds/preferencias.js';
 import { NOMES_PERFIL, usePermissoes } from '@ds/permissoes.js';
@@ -11,6 +11,7 @@ import AcoesRapidas from './components/AcoesRapidas.jsx';
 import AindaHoje from './components/AindaHoje.jsx';
 import CardCompromisso from './components/CardCompromisso.jsx';
 import DialogoNota from './components/DialogoNota.jsx';
+import { DialogoCodigo, DialogoConvite, SemIdoso } from './components/Rede.jsx';
 import Saudacao from './components/Saudacao.jsx';
 import { useCuidadosDoDia } from './hooks/useCuidadosDoDia.js';
 import { duracaoPorExtenso, horaAgora, minutosAte, somarMinutos } from './utils/hora.js';
@@ -35,6 +36,8 @@ export default function App() {
 
   const [notaAberta, setNotaAberta] = useState(false);
   const [sosAberto, setSosAberto] = useState(false);
+  const [conviteAberto, setConviteAberto] = useState(false);
+  const [codigoAberto, setCodigoAberto] = useState(false);
   const [novaNotaId, setNovaNotaId] = useState(null);
   const [aviso, setAviso] = useState(null);
   const aindaHojeRef = useRef(null);
@@ -110,7 +113,6 @@ export default function App() {
 
   function chamarAjuda() {
     setSosAberto(false);
-    /* sem login o servidor não sabe quem tocou no botão: o nome vai na mensagem */
     const quem = usuario?.nome ? `Pedido feito por ${usuario.nome} (${NOMES_PERFIL[perfil]})` : undefined;
     gravar(() => cuidados.chamarAjuda(quem?.slice(0, 200)), 'Pedido de ajuda enviado à equipe');
   }
@@ -125,7 +127,18 @@ export default function App() {
     pode('inicio.anotar') && { rotulo: 'Nova anotação', Icone: IconeLapis, aoClicar: () => setNotaAberta(true) },
     { rotulo: 'Ver o resto do dia', Icone: IconeAgenda, aoClicar: verHorarios },
     pode('medicamentos.cadastrar') && { rotulo: 'Cadastrar medicamento', Icone: IconeMais, href: TELAS.cadastroMedicamentos },
+    pode('rede.convidar') && { rotulo: 'Convidar para a rede', Icone: IconePerfis, aoClicar: () => setConviteAberto(true) },
+    { rotulo: 'Usar código de convite', Icone: IconeCheck, aoClicar: () => setCodigoAberto(true) },
   ].filter(Boolean);
+
+  if (!cuidados.carregando && !cuidados.erro && !cuidados.idoso) {
+    return (
+      <Shell tela="inicio" usuario={cuidados.usuario}>
+        <Saudacao nome={usuario?.nome} subtitulo="Falta só vincular a pessoa cuidada." />
+        <SemIdoso perfil={perfil} />
+      </Shell>
+    );
+  }
 
   return (
     <Shell tela="inicio" usuario={cuidados.usuario} atalhos={atalhos}>
@@ -176,6 +189,9 @@ export default function App() {
       )}
 
       <Toast aviso={aviso} />
+
+      <DialogoConvite aberto={conviteAberto} aoFechar={() => setConviteAberto(false)} idoso={cuidados.idoso} />
+      <DialogoCodigo aberto={codigoAberto} aoFechar={() => setCodigoAberto(false)} />
 
       <DialogoNota aberto={notaAberta} aoFechar={() => setNotaAberta(false)} aoSalvar={salvarNota} />
 

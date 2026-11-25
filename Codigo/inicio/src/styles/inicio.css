@@ -505,3 +505,32 @@
   gap: var(--e-2);
   margin-bottom: var(--e-2);
 }
+
+/* rede de apoio */
+.convite-codigo {
+  padding: var(--e-4);
+  border-radius: var(--r-md);
+  background: var(--azul-suave);
+  color: var(--azul-escuro);
+  font-size: var(--t-xl);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+.convite-papeis {
+  border: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.sem-idoso {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: var(--e-4);
+}
+
+.sem-idoso h2 {
+  margin-bottom: var(--e-4);
+  font-size: var(--t-lg);
+}
