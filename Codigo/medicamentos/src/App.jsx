@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Shell from '@ds/Shell.jsx';
+import Dialogo from '@ds/Dialogo.jsx';
 import Toast from '@ds/Toast.jsx';
 import { Estado, PaginaTopo, ReguaDoDia } from '@ds/Componentes.jsx';
 import { IconeBusca, IconeCheck, IconeMais, IconeRelogio } from '@ds/Icones.jsx';
@@ -57,6 +58,11 @@ const TAG_STATUS = {
 /* o idoso escolhido fica guardado para a próxima visita */
 const CHAVE_IDOSO = 'acessamob_idoso_medicamentos';
 
+function minutosDoDia(hora) {
+    const [h, m] = hora.split(':').map(Number);
+    return h * 60 + m;
+}
+
 export default function App() {
     const [medicamentos, setMedicamentos] = useState([]);
     const [idosos, setIdosos] = useState([]);
@@ -68,6 +74,7 @@ export default function App() {
     const [salvandoId, setSalvandoId] = useState(null);
     const [selecionado, setSelecionado] = useState(null);
     const [tentativa, setTentativa] = useState(0);
+    const [adiantada, setAdiantada] = useState(null);
     const agora = horaAgora();
     /* só o familiar cadastra remédio novo; todos registram as doses */
     const { perfil, pode } = usePermissoes();
@@ -115,6 +122,12 @@ export default function App() {
 
     function avisar(msg, tipo) {
         setAviso({ msg, tipo, id: Date.now() });
+    }
+
+    /* dose de mais de 1 hora à frente pede confirmação: pode ser toque no remédio errado */
+    function registrarTomado(medicamento) {
+        if (minutosDoDia(medicamento.horario) - minutosDoDia(horaAgora()) > 60) setAdiantada(medicamento);
+        else alterarStatus(medicamento, 'Tomado');
     }
 
     async function alterarStatus(medicamento, novoStatus) {
@@ -228,7 +241,7 @@ export default function App() {
                                     </div>
                                 </div>
                                 <div className="dose-destaque-acoes">
-                                    <button type="button" className="btn btn-claro" disabled={salvandoId !== null} onClick={() => alterarStatus(proximo, 'Tomado')}>
+                                    <button type="button" className="btn btn-claro" disabled={salvandoId !== null} onClick={() => registrarTomado(proximo)}>
                                         <IconeCheck />
                                         {rotuloTomou}
                                     </button>
@@ -304,7 +317,7 @@ export default function App() {
                                                         ) : (
                                                             <>
                                                                 <button type="button" className="btn btn-primario" disabled={salvandoId !== null}
-                                                                    aria-label={rotuloTomou + ' ' + m.nome} onClick={() => alterarStatus(m, 'Tomado')}>
+                                                                    aria-label={rotuloTomou + ' ' + m.nome} onClick={() => registrarTomado(m)}>
                                                                     <IconeCheck />
                                                                     <span>{salvando ? 'Salvando…' : rotuloTomou}</span>
                                                                 </button>
@@ -327,6 +340,15 @@ export default function App() {
             )}
 
             <Toast aviso={aviso} />
+            <Dialogo aberto={adiantada !== null} aoFechar={() => setAdiantada(null)} titulo="Registrar antes da hora?"
+                descricao={adiantada ? adiantada.nome + ' ' + adiantada.dosagem + ' está marcado para as ' + adiantada.horario + '.' : ''}>
+                <div className="dialogo-botoes">
+                    <button type="button" className="btn" onClick={() => setAdiantada(null)}>Cancelar</button>
+                    <button type="button" className="btn btn-primario" onClick={() => { setAdiantada(null); alterarStatus(adiantada, 'Tomado'); }}>
+                        Sim, já foi tomado
+                    </button>
+                </div>
+            </Dialogo>
             <Detalhes medicamento={selecionado} aoFechar={() => setSelecionado(null)} />
         </Shell>
     );
