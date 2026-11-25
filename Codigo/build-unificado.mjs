@@ -1,5 +1,5 @@
-/* Junta as 8 telas num site só (usado pelo deploy único na Vercel; veja Codigo/HOSPEDAGEM.md).
-   Cada tela é construída com o Vite numa subpasta de dist/ (ex.: dist/inicio/), e o vercel.json
+/* Junta a página inicial e as 8 telas num site só (usado pelo deploy único na Vercel; veja Codigo/HOSPEDAGEM.md).
+   A página inicial fica na raiz de dist/; cada tela, numa subpasta (ex.: dist/inicio/). O vercel.json
    da raiz repassa /srv/<api>/... para as APIs no Render.
    Rodar da raiz do repositório:  node Codigo/build-unificado.mjs */
 import { execSync } from 'node:child_process';
@@ -11,6 +11,7 @@ const saida = join(raiz, 'dist');
 
 /* pasta do módulo → caminho no site (os mesmos de src/navegacao.js) */
 const TELAS = [
+  ['Codigo/pagina-inicial', ''],
   ['Codigo/boas-vindas', 'boas-vindas'],
   ['Codigo/inicio', 'inicio'],
   ['Codigo/agenda', 'agenda'],
@@ -26,22 +27,16 @@ mkdirSync(saida, { recursive: true });
 
 for (const [pasta, caminho] of TELAS) {
   const dir = join(raiz, pasta);
-  console.log(`\n== ${pasta} → /${caminho}/`);
+  const base = caminho ? `/${caminho}/` : '/';
+  console.log(`\n== ${pasta} → ${base}`);
   /* na Vercel as dependências ainda não existem; no computador, reaproveita as já instaladas */
   if (!existsSync(join(dir, 'node_modules'))) execSync('npm ci --no-audit --no-fund', { cwd: dir, stdio: 'inherit' });
-  execSync(`npx vite build --base=/${caminho}/ --outDir "${join(saida, caminho)}" --emptyOutDir`, {
+  execSync(`npx vite build --base=${base} --outDir "${join(saida, caminho)}" --emptyOutDir`, {
     cwd: dir,
     stdio: 'inherit',
     env: { ...process.env, VITE_SITE_UNICO: '1' },
   });
 }
-
-/* a raiz do site abre a tela de boas-vindas */
-writeFileSync(
-  join(saida, 'index.html'),
-  '<!DOCTYPE html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=/boas-vindas/">' +
-    '<title>AcessaMob</title><a href="/boas-vindas/">AcessaMob</a>\n'
-);
 
 /* endereço que não existe (a Vercel usa este arquivo sozinha) */
 writeFileSync(
@@ -53,17 +48,17 @@ writeFileSync(
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AcessaMob | Página não encontrada</title>
   <style>
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #f1f4fb; color: #0c1b3f; font: 18px/1.5 Inter, system-ui, sans-serif; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #f8f9f8; color: #142420; font: 18px/1.5 Inter, system-ui, sans-serif; }
     main { padding: 24px; text-align: center; }
     h1 { margin: 0 0 8px; font-size: 28px; }
-    a { display: inline-block; margin-top: 16px; padding: 14px 24px; border-radius: 14px; background: #1d63dc; color: #fff; font-weight: 600; text-decoration: none; }
+    a { display: inline-block; margin-top: 16px; padding: 14px 24px; border-radius: 999px; background: #16463d; color: #fff; font-weight: 600; text-decoration: none; }
   </style>
 </head>
 <body>
   <main>
     <h1>Página não encontrada</h1>
     <p>Confira o endereço ou volte para o começo.</p>
-    <a href="/boas-vindas/">Ir para o AcessaMob</a>
+    <a href="/">Ir para o AcessaMob</a>
   </main>
 </body>
 </html>

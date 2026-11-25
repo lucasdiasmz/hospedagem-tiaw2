@@ -4,9 +4,6 @@
   "installCommand": "echo sem dependencias na raiz",
   "outputDirectory": "dist",
   "framework": null,
-  "redirects": [
-    { "source": "/", "destination": "/boas-vindas/", "permanent": false }
-  ],
   "rewrites": [
     { "source": "/srv/inicio/:caminho*", "destination": "https://acessamob-inicio-api.onrender.com/:caminho*" },
     { "source": "/srv/agenda/:caminho*", "destination": "https://acessamob-agenda-api.onrender.com/:caminho*" },
