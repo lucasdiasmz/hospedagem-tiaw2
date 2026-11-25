@@ -73,7 +73,7 @@ const idosoSchema = new Schema(
       required: [true, "Data de nascimento é obrigatória"],
       validate: { validator: dataNaoFutura, message: "A data de nascimento não pode ser no futuro" }
     },
-    sexo: { type: String, enum: ["Masculino", "Feminino", "Outro"], default: "Outro" },
+    sexo: { type: String, enum: ["", "Masculino", "Feminino", "Outro"], default: "" },
     tipoSanguineo: {
       type: String,
       enum: { values: ["", "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"], message: "Tipo sanguíneo inválido" },
