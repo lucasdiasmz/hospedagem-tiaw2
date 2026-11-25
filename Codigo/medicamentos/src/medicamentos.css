@@ -17,8 +17,8 @@
 .dose-destaque {
   display: flex;
   flex-direction: column;
-  gap: var(--e-5);
-  padding: var(--e-5);
+  gap: var(--e-4);
+  padding: var(--e-4);
   border-radius: var(--r-xl);
   background: var(--marinho-800);
   color: #fff;
@@ -35,8 +35,9 @@
 .dose-destaque-ok {
   display: grid;
   place-items: center;
-  min-width: 5.5rem;
-  height: 5rem;
+  flex: none;
+  min-width: 5rem;
+  height: 4.5rem;
   padding: 0 var(--e-3);
   border-radius: var(--r-lg);
   background: #fff;
@@ -84,6 +85,10 @@
   gap: var(--e-2);
 }
 
+.dose-destaque-acoes .btn {
+  padding-inline: var(--e-3);
+}
+
 .dose-destaque-acoes .btn-claro {
   grid-column: 1 / -1;
 }
@@ -96,11 +101,11 @@
 .doses {
   display: flex;
   flex-direction: column;
-  gap: var(--e-4);
+  gap: var(--e-3);
 }
 
-.doses .secao-cabeca {
-  margin-bottom: 0;
+.doses > h2 {
+  font-size: var(--t-lg);
 }
 
 .doses-vazio {
@@ -111,8 +116,12 @@
   text-align: center;
 }
 
+.periodo + .periodo {
+  margin-top: var(--e-3);
+}
+
 .periodo h3 {
-  margin: var(--e-2) 0 var(--e-2);
+  margin-bottom: var(--e-1);
   font-size: var(--t-sm);
   font-weight: 600;
   color: var(--tinta-3);
@@ -133,9 +142,9 @@
   grid-template-columns: 3.5rem minmax(0, 1fr);
   grid-template-areas:
     'hora info'
-    'hora acoes';
+    'acoes acoes';
   gap: var(--e-2) var(--e-3);
-  padding: var(--e-4);
+  padding: var(--e-3) var(--e-4);
 }
 
 .dose + .dose {
@@ -183,6 +192,7 @@
 .dose-acoes {
   grid-area: acoes;
   display: flex;
+  flex-wrap: wrap;
   gap: var(--e-2);
 }
 
@@ -260,12 +270,18 @@
   }
 }
 
-@media (min-width: 72rem) {
+/* computador: próxima dose à esquerda, lista do dia à direita */
+@container palco (min-width: 46rem) {
   .conteudo {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+    grid-template-rows: auto minmax(0, 1fr);
     align-items: start;
-    gap: var(--e-6) var(--e-8);
+    gap: var(--e-5) var(--e-6);
+  }
+
+  .conteudo:has(> .seletor-idoso) {
+    grid-template-rows: auto auto minmax(0, 1fr);
   }
 
   .conteudo > .pagina-topo,
@@ -274,16 +290,50 @@
     grid-column: 1 / -1;
   }
 
-  .dose-destaque {
-    position: sticky;
-    top: var(--e-8);
-  }
-
   .dose-destaque-acoes {
     grid-template-columns: 1fr 1fr;
   }
 
   .dose-destaque-acoes .btn-claro {
     grid-column: 1 / -1;
+  }
+
+  .doses {
+    display: grid;
+    grid-template-columns: auto minmax(0, 18rem);
+    grid-template-rows: auto minmax(0, 1fr);
+    align-items: center;
+    justify-content: space-between;
+    align-content: start;
+  }
+
+  .doses-rolagem {
+    grid-column: 1 / -1;
+    align-self: start;
+    max-height: 100%;
+  }
+}
+
+@container palco (max-width: 64rem) {
+  .dose {
+    padding-block: var(--e-2);
+  }
+
+  .dose-acoes {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .dose-acoes .btn {
+    min-height: 44px;
+  }
+}
+
+@media (min-width: 64rem) and (min-height: 35rem) {
+  @container palco (min-width: 46rem) {
+    .doses {
+      align-self: stretch;
+      min-height: 0;
+    }
   }
 }

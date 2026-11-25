@@ -173,10 +173,8 @@ export default function App() {
         status: { Tomado: 'feito', Recusado: 'recusou', Atrasado: 'atrasado' }[m.statusTela] || null,
     }));
 
-    const atalhos = podeCadastrar ? [{ rotulo: 'Cadastrar medicamento', Icone: IconeMais, href: TELAS.cadastroMedicamentos }] : [];
-
     return (
-        <Shell tela="medicamentos" atalhos={atalhos}>
+        <Shell tela="medicamentos">
             <PaginaTopo titulo="Medicamentos" subtitulo={subtitulo}>
                 {podeCadastrar && (
                     <a className="btn btn-suave" href={TELAS.cadastroMedicamentos}>
@@ -267,9 +265,7 @@ export default function App() {
                     </section>
 
                     <section className="doses" aria-labelledby="titulo-lista">
-                        <div className="secao-cabeca">
-                            <h2 id="titulo-lista">Doses de hoje</h2>
-                        </div>
+                        <h2 id="titulo-lista">Doses de hoje</h2>
 
                         <div className="busca">
                             <IconeBusca />
@@ -284,58 +280,60 @@ export default function App() {
                             />
                         </div>
 
-                        {filtrados.length === 0 && (
-                            <p className="doses-vazio">Nenhum medicamento com “{busca}”.</p>
-                        )}
+                        <div className="doses-rolagem rolavel">
+                            {filtrados.length === 0 && (
+                                <p className="doses-vazio">Nenhum medicamento com “{busca}”.</p>
+                            )}
 
-                        {PERIODOS.map((periodo, i) => {
-                            const de = i === 0 ? '00:00' : PERIODOS[i - 1].ate;
-                            const doPeriodo = filtrados.filter((m) => m.horario >= de && m.horario < periodo.ate);
-                            if (!doPeriodo.length) return null;
-                            return (
-                                <div key={periodo.id} className="periodo">
-                                    <h3>{periodo.rotulo}</h3>
-                                    <ul className="dose-lista">
-                                        {doPeriodo.map((m) => {
-                                            const salvando = salvandoId === m.id;
-                                            const registrado = m.status !== 'Pendente';
-                                            return (
-                                                <li key={m.id} className={'dose dose--' + m.statusTela.toLowerCase()}>
-                                                    <time className="dose-hora">{m.horario}</time>
-                                                    <button type="button" className="dose-info" onClick={() => setSelecionado(m)} aria-label={'Detalhes de ' + m.nome + ' ' + m.dosagem}>
-                                                        <strong>{m.nome}</strong>
-                                                        <span>{m.dosagem} · {m.frequencia}</span>
-                                                        <span className={TAG_STATUS[m.statusTela]}>
-                                                            {m.statusTela === 'Atrasado' && <IconeRelogio />}
-                                                            {m.statusTela}
-                                                        </span>
-                                                    </button>
-                                                    <div className="dose-acoes" aria-busy={salvando}>
-                                                        {registrado ? (
-                                                            <button type="button" className="btn btn-texto" disabled={salvandoId !== null} onClick={() => alterarStatus(m, 'Pendente')}>
-                                                                {salvando ? 'Salvando…' : 'Desfazer'}
-                                                            </button>
-                                                        ) : (
-                                                            <>
-                                                                <button type="button" className="btn btn-primario" disabled={salvandoId !== null}
-                                                                    aria-label={rotuloTomou + ' ' + m.nome} onClick={() => registrarTomado(m)}>
-                                                                    <IconeCheck />
-                                                                    <span>{salvando ? 'Salvando…' : rotuloTomou}</span>
+                            {PERIODOS.map((periodo, i) => {
+                                const de = i === 0 ? '00:00' : PERIODOS[i - 1].ate;
+                                const doPeriodo = filtrados.filter((m) => m.horario >= de && m.horario < periodo.ate);
+                                if (!doPeriodo.length) return null;
+                                return (
+                                    <div key={periodo.id} className="periodo">
+                                        <h3>{periodo.rotulo}</h3>
+                                        <ul className="dose-lista">
+                                            {doPeriodo.map((m) => {
+                                                const salvando = salvandoId === m.id;
+                                                const registrado = m.status !== 'Pendente';
+                                                return (
+                                                    <li key={m.id} className={'dose dose--' + m.statusTela.toLowerCase()}>
+                                                        <time className="dose-hora">{m.horario}</time>
+                                                        <button type="button" className="dose-info" onClick={() => setSelecionado(m)} aria-label={'Detalhes de ' + m.nome + ' ' + m.dosagem}>
+                                                            <strong>{m.nome}</strong>
+                                                            <span>{m.dosagem} · {m.frequencia}</span>
+                                                            <span className={TAG_STATUS[m.statusTela]}>
+                                                                {m.statusTela === 'Atrasado' && <IconeRelogio />}
+                                                                {m.statusTela}
+                                                            </span>
+                                                        </button>
+                                                        <div className="dose-acoes" aria-busy={salvando}>
+                                                            {registrado ? (
+                                                                <button type="button" className="btn btn-texto" disabled={salvandoId !== null} onClick={() => alterarStatus(m, 'Pendente')}>
+                                                                    {salvando ? 'Salvando…' : 'Desfazer'}
                                                                 </button>
-                                                                <button type="button" className="btn" disabled={salvandoId !== null}
-                                                                    aria-label={rotuloRecusou + ' ' + m.nome} onClick={() => alterarStatus(m, 'Recusado')}>
-                                                                    {rotuloRecusou}
-                                                                </button>
-                                                            </>
-                                                        )}
-                                                    </div>
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
-                                </div>
-                            );
-                        })}
+                                                            ) : (
+                                                                <>
+                                                                    <button type="button" className="btn btn-primario" disabled={salvandoId !== null}
+                                                                        aria-label={rotuloTomou + ' ' + m.nome} onClick={() => registrarTomado(m)}>
+                                                                        <IconeCheck />
+                                                                        <span>{salvando ? 'Salvando…' : rotuloTomou}</span>
+                                                                    </button>
+                                                                    <button type="button" className="btn" disabled={salvandoId !== null}
+                                                                        aria-label={rotuloRecusou + ' ' + m.nome} onClick={() => alterarStatus(m, 'Recusado')}>
+                                                                        {rotuloRecusou}
+                                                                    </button>
+                                                                </>
+                                                            )}
+                                                        </div>
+                                                    </li>
+                                                );
+                                            })}
+                                        </ul>
+                                    </div>
+                                );
+                            })}
+                        </div>
                     </section>
                 </>
             )}
