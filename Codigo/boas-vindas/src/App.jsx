@@ -25,21 +25,25 @@ const PASSO3 = {
   experiencia: '', servicos: [], dias: [], inicio: '08:00', fim: '18:00', consentimento: false,
 };
 
-/* a página inicial abre direto no cadastro: ?criar=1 ou ?perfil=cuidador */
+/* a página inicial abre direto no cadastro: ?criar=1 ou ?perfil=cuidador.
+   O link de convite traz ?convite=ABCD-EFGH&perfil=cliente: o código já vem preenchido. */
 function lerEndereco() {
   const q = new URLSearchParams(window.location.search);
   const perfilPedido = PERFIS.find((x) => x.id === q.get('perfil'))?.id || null;
-  return { sessaoAcabou: q.get('sessao') === 'fim', criar: q.has('criar') || Boolean(perfilPedido), perfilPedido };
+  const convite = (q.get('convite') || '').slice(0, 12);
+  return { sessaoAcabou: q.get('sessao') === 'fim', criar: q.has('criar') || Boolean(perfilPedido), perfilPedido, convite };
 }
+
+const comConvite = (convite) => (convite ? { ...PASSO3, ligacao: 'codigo', codigo: convite } : PASSO3);
 
 export default function App() {
   const [salvo] = useState(lerPreferencias);
-  const [{ sessaoAcabou, criar, perfilPedido }] = useState(lerEndereco);
+  const [{ sessaoAcabou, criar, perfilPedido, convite }] = useState(lerEndereco);
   const [criando, setCriando] = useState(criar);
   const [passo, setPasso] = useState(perfilPedido ? 2 : 1);
   const [perfil, setPerfil] = useState(perfilPedido);
   const [dados, setDados] = useState({ nome: '', telefone: '', email: '', senha: '' });
-  const [p, setP] = useState(PASSO3);
+  const [p, setP] = useState(() => comConvite(convite));
   const [erros, setErros] = useState({});
   const [enviando, setEnviando] = useState(false);
   const tituloRef = useRef(null);
@@ -58,7 +62,7 @@ export default function App() {
 
   function escolherPerfil(id) {
     setPerfil(id);
-    setP({ ...PASSO3, consentimento: false });
+    setP({ ...comConvite(convite), consentimento: false });
     irPara(2);
   }
 
@@ -113,8 +117,18 @@ export default function App() {
       </header>
 
       <main className="bv-conteudo">
+        {convite && (
+          <div className="bv-convite" role="status">
+            <p><strong>Você recebeu um convite para uma rede de apoio.</strong>{' '}
+              {criando ? 'Crie sua conta: o código já está preenchido.' : 'Entre para aceitar o convite.'}</p>
+            <button type="button" className="btn btn-texto" onClick={() => setCriando(!criando)}>
+              {criando ? 'Já tenho conta' : 'Criar conta'}
+            </button>
+          </div>
+        )}
         {!criando && (
-          <Entrar tituloRef={tituloRef} salvo={sessaoAcabou ? {} : salvo} sessaoAcabou={sessaoAcabou} aoCriar={() => setCriando(true)} />
+          <Entrar tituloRef={tituloRef} salvo={sessaoAcabou ? {} : salvo} sessaoAcabou={sessaoAcabou} aoCriar={() => setCriando(true)}
+            destino={convite ? TELAS.inicio + '?convite=' + encodeURIComponent(convite) : TELAS.inicio} />
         )}
 
         {criando && <Passos atual={passo} />}

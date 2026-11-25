@@ -5,7 +5,7 @@ import { Campo, CampoSenha, focarErro } from './componentes.jsx';
 import { emailValido } from './validacao.js';
 
 /* login; tituloRef recebe o foco quando a tela abre */
-export default function Entrar({ tituloRef, salvo, sessaoAcabou, aoCriar }) {
+export default function Entrar({ tituloRef, salvo, sessaoAcabou, aoCriar, destino = TELAS.inicio }) {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [erros, setErros] = useState({});
@@ -25,7 +25,7 @@ export default function Entrar({ tituloRef, salvo, sessaoAcabou, aoCriar }) {
     setEnviando(true);
     try {
       await entrar(email, senha);
-      window.location.assign(TELAS.inicio);
+      window.location.assign(destino);
     } catch (falha) {
       setErros({ geral: falha.message });
       setEnviando(false);
@@ -50,7 +50,7 @@ export default function Entrar({ tituloRef, salvo, sessaoAcabou, aoCriar }) {
         <p>Ainda não tem conta?</p>
         <button type="button" className="btn btn-bloco" onClick={aoCriar}>Criar conta</button>
         {salvo.perfil && (
-          <a className="btn btn-texto" href={TELAS.inicio}>Continuar como {salvo.nome ? salvo.nome.split(' ')[0] : 'antes'}</a>
+          <a className="btn btn-texto" href={destino}>Continuar como {salvo.nome ? salvo.nome.split(' ')[0] : 'antes'}</a>
         )}
       </div>
     </section>

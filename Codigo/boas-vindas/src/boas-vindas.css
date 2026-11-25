@@ -454,3 +454,26 @@
   border-top: 1px solid var(--linha);
   color: var(--tinta-2);
 }
+
+/* aviso de convite recebido por link */
+.bv-convite {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-1) var(--e-3);
+  margin-bottom: var(--e-5);
+  padding: var(--e-3) var(--e-3) var(--e-3) var(--e-4);
+  border-radius: var(--r-lg);
+  background: var(--tom-menta);
+  color: var(--tinta);
+}
+
+.bv-convite p {
+  flex: 1 1 16rem;
+  font-size: var(--t-sm);
+}
+
+.alto-contraste .bv-convite {
+  border: 1.5px solid currentColor;
+}
