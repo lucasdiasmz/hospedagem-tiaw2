@@ -17,7 +17,7 @@
   height: 8px;
   flex-shrink: 0;
   border-radius: 50%;
-  background: var(--tipo, var(--azul));
+  background: var(--tipo, var(--acao));
 }
 
 /* ===== Cabeçalho ===== */
@@ -163,8 +163,8 @@
 }
 
 .semana-dia.hoje .semana-dia-num {
-  color: var(--azul);
-  box-shadow: inset 0 0 0 2px var(--azul);
+  color: var(--acao);
+  box-shadow: inset 0 0 0 2px var(--acao);
 }
 
 .semana-dia.selecionado .semana-cabeca {
@@ -245,8 +245,8 @@
 }
 
 .mes-dia.hoje .mes-num {
-  color: var(--azul);
-  box-shadow: inset 0 0 0 2px var(--azul);
+  color: var(--acao);
+  box-shadow: inset 0 0 0 2px var(--acao);
 }
 
 .mes-dia.selecionado .mes-num {
@@ -386,8 +386,8 @@
 }
 
 .tag-relativo.hoje {
-  background: var(--azul-suave);
-  color: var(--azul-escuro);
+  background: var(--acao-suave);
+  color: var(--acao-escura);
 }
 
 .painel-vazio {

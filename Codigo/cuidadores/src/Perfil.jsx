@@ -298,7 +298,7 @@ export default function Perfil({ id }) {
                                     <div className="bloco">
                                         <h2>Especialidades</h2>
                                         <div className="pilulas">
-                                            {perfil.especialidades.map(e => <span key={e} className="tag tag--azul">{e}</span>)}
+                                            {perfil.especialidades.map(e => <span key={e} className="tag tag--destaque">{e}</span>)}
                                         </div>
                                     </div>
                                 )}
@@ -335,7 +335,7 @@ export default function Perfil({ id }) {
                                 <div className="bloco">
                                     <h2>Serviços oferecidos</h2>
                                     <div className="pilulas">
-                                        {perfil.servicos.length ? perfil.servicos.map(s => <span key={s} className="tag tag--azul">{SERVICOS[s] || s}</span>)
+                                        {perfil.servicos.length ? perfil.servicos.map(s => <span key={s} className="tag tag--destaque">{SERVICOS[s] || s}</span>)
                                             : <p>Nenhum serviço informado.</p>}
                                     </div>
                                 </div>

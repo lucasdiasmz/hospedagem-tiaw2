@@ -14,7 +14,7 @@
   gap: var(--e-5);
   padding: var(--e-5);
   border-radius: var(--r-lg);
-  background: var(--marinho-800);
+  background: var(--mata-800);
   color: #fff;
 }
 
@@ -84,7 +84,7 @@
 }
 
 .dose-destaque .btn:focus-visible {
-  box-shadow: 0 0 0 3px var(--marinho-800), 0 0 0 6px #fff;
+  box-shadow: 0 0 0 3px var(--mata-800), 0 0 0 6px #fff;
 }
 
 /* ===== Lista de doses por período ===== */

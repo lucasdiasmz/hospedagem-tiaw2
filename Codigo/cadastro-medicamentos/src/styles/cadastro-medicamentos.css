@@ -51,8 +51,8 @@
 }
 
 .form--editando {
-  border-color: var(--azul);
-  box-shadow: 0 0 0 3px var(--azul-claro);
+  border-color: var(--acao);
+  box-shadow: 0 0 0 3px var(--acao-clara);
 }
 
 .form-topo {
@@ -148,7 +148,7 @@ fieldset.campo {
 }
 
 .item-med.editando {
-  background: var(--azul-suave);
+  background: var(--acao-suave);
 }
 
 .item-horarios {

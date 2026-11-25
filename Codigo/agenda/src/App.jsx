@@ -31,7 +31,7 @@ export default function App() {
   /* rótulos, cores e nomes vêm dos catálogos do banco */
   const tipos = catalogos?.tiposEvento || [];
   const rotuloTipo = (id) => tipos.find((t) => t.id === id)?.rotulo || id;
-  const statusInfo = (id) => catalogos?.statusEvento.find((s) => s.id === id) || { id, rotulo: id, cor: '#8b97ad' };
+  const statusInfo = (id) => catalogos?.statusEvento.find((s) => s.id === id) || { id, rotulo: id, cor: '#8a9a94' };
   const [ano, mesNum] = agenda.mes.split('-').map(Number);
   const nomeMes = (catalogos?.meses || MESES_PADRAO)[mesNum - 1] + ' ' + ano;
 

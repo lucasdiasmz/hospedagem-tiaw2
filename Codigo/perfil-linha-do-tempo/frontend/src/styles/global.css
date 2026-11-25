@@ -77,7 +77,7 @@
 
 .switch-chip[aria-pressed='true'] .avatar {
   background: #fff;
-  color: var(--marinho-800);
+  color: var(--mata-800);
 }
 
 /* ===== Herói do perfil ===== */
@@ -87,7 +87,7 @@
   gap: var(--e-3) var(--e-4);
   padding: var(--e-4);
   border-radius: var(--r-lg);
-  background: var(--marinho-800);
+  background: var(--mata-800);
   color: #fff;
 }
 
@@ -95,7 +95,7 @@
   width: 4rem;
   height: 4rem;
   font-size: var(--t-lg);
-  background: var(--azul-logo-claro);
+  background: var(--folha-clara);
 }
 
 .hero-info h2 {
@@ -162,7 +162,7 @@
 
 .stat-icon {
   flex: none;
-  color: var(--azul);
+  color: var(--acao);
 }
 
 .stat-icon .icon {
@@ -250,7 +250,7 @@
 .card-icon {
   display: grid;
   flex-shrink: 0;
-  color: var(--azul);
+  color: var(--acao);
 }
 
 .card-icon .icon {
@@ -330,14 +330,14 @@
   height: 8px;
   flex-shrink: 0;
   border-radius: 50%;
-  background: var(--azul);
+  background: var(--acao);
 }
 
 .badge-principal {
   padding: 1px 8px;
   border-radius: var(--r-pilula);
-  background: var(--azul-suave);
-  color: var(--azul-escuro);
+  background: var(--acao-suave);
+  color: var(--acao-escura);
   font-size: var(--t-xs);
   font-weight: 600;
 }
@@ -384,7 +384,7 @@
 
 .info-row > .icon {
   margin-top: 2px;
-  color: var(--azul);
+  color: var(--acao);
 }
 
 .info-row small {
@@ -471,8 +471,8 @@
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
-  border: 3px solid var(--azul-claro);
-  border-top-color: var(--azul);
+  border: 3px solid var(--acao-clara);
+  border-top-color: var(--acao);
   animation: girar 0.8s linear infinite;
 }
 
@@ -518,8 +518,8 @@
 .input-data:focus,
 .filtro-membro select:focus {
   outline: none;
-  border-color: var(--azul);
-  box-shadow: 0 0 0 3px var(--azul-claro);
+  border-color: var(--acao);
+  box-shadow: 0 0 0 3px var(--acao-clara);
 }
 
 .form-erro {
@@ -830,9 +830,9 @@
 
 .cat-dor { --cat: #c2410c; --cat-claro: #ffedd5; }
 .cat-humor { --cat: #ad1f5b; --cat-claro: #fbe6ee; }
-.cat-alimentacao { --cat: #12825a; --cat-claro: #dff4ea; }
-.cat-medicacao { --cat: #1d63dc; --cat-claro: #e3edfd; }
-.cat-sono { --cat: #35507a; --cat-claro: #e4ebf5; }
+.cat-alimentacao { --cat: #3d7a1e; --cat-claro: #eaf3df; }
+.cat-medicacao { --cat: #2c5aa8; --cat-claro: #e6edf8; }
+.cat-sono { --cat: #3f5570; --cat-claro: #e4ebf5; }
 .cat-mobilidade { --cat: #935600; --cat-claro: #fff0d4; }
 .cat-higiene { --cat: #0e7490; --cat-claro: #dff3f8; }
 .cat-outro { --cat: #4f5d78; --cat-claro: #e9edf4; }
@@ -909,7 +909,7 @@
 .selo-normal { padding-inline: 0; color: var(--verde); }
 .selo-atencao { padding-inline: 0; color: var(--ambar); }
 .selo-urgente { background: var(--vermelho); color: #fff; }
-.selo-novo { background: var(--azul-suave); color: var(--azul-escuro); }
+.selo-novo { background: var(--acao-suave); color: var(--acao-escura); }
 
 .relato-texto {
   margin-top: var(--e-1);
@@ -942,7 +942,7 @@
   gap: 6px;
   min-height: 2.75rem;
   margin-block: -4px;
-  color: var(--azul);
+  color: var(--acao);
   font-weight: 600;
   font-size: var(--t-sm);
 }

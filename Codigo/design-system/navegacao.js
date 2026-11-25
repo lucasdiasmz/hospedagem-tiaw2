@@ -18,6 +18,7 @@ function tela(porta, nome, pasta, caminho = '/') {
 }
 
 export const TELAS = {
+  site: env.VITE_URL_SITE || (SITE_UNICO ? '/' : tela(5181, 'site', 'site')),
   boasVindas: env.VITE_URL_BOAS_VINDAS || tela(5180, 'boas-vindas', 'boas-vindas'),
   inicio: env.VITE_URL_HOMEPAGE || tela(5173, 'inicio', 'inicio'),
   agenda: env.VITE_URL_AGENDA || tela(5174, 'agenda', 'agenda'),

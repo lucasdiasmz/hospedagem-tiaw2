@@ -106,7 +106,7 @@
 .tarefa-icone {
   flex-shrink: 0;
   padding-top: 1px;
-  color: var(--azul);
+  color: var(--acao);
 }
 
 .tarefa-icone svg {
@@ -193,7 +193,7 @@
 
 .compras h2 svg,
 .divisao h2 svg {
-  color: var(--azul);
+  color: var(--acao);
 }
 
 .compras .vazio {
@@ -222,7 +222,7 @@
   width: 1.5rem;
   height: 1.5rem;
   flex-shrink: 0;
-  accent-color: var(--azul);
+  accent-color: var(--acao);
 }
 
 .item-nome {
@@ -310,7 +310,7 @@
   display: block;
   height: 100%;
   border-radius: var(--r-pilula);
-  background: var(--azul);
+  background: var(--acao);
   transition: width 0.6s var(--ease);
 }
 
