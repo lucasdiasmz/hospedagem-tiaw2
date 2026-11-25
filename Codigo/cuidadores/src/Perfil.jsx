@@ -192,7 +192,7 @@ export default function Perfil({ id }) {
         setCarregando(true);
         setErro('');
         buscarPerfil(id, controle.signal)
-            .then(dados => { setPerfil(dados); document.title = dados.nome + ' | AcessaMob'; })
+            .then(dados => { setPerfil(dados); document.title = 'AcessaMob | ' + dados.nome; })
             .catch(falha => {
                 if (falha.name === 'AbortError') return;
                 if (falha.status === 404) setNaoEncontrado(true);
