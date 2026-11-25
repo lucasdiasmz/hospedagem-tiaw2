@@ -68,7 +68,12 @@ idosos que cadastraram.
 | POST | `/api/idosos/:idosoId/dias/:data/anotacoes` | `{ hora, texto }` (até 120 caracteres) |
 | DELETE | `/api/idosos/:idosoId/dias/:data/anotacoes/:id` | só o autor pode apagar |
 | GET/POST | `/api/idosos/:idosoId/chamados` | lista / abre chamado de ajuda `{ mensagem? }` |
-| PATCH | `/api/idosos/:idosoId/chamados/:id` | `{ status: "aberto" \| "atendido" }` |
+| PATCH | `/api/idosos/:idosoId/chamados/:id` | `{ acao: "indo" \| "resolvido" \| "reabrir" }` (aceita ainda `{ status }`) |
+| GET | `/api/idosos/:idosoId/rede` | quem está na rede: nome, telefone, função e quem cadastrou |
+| DELETE | `/api/idosos/:idosoId/rede/:usuarioId` | tira alguém da rede (quem cadastrou ou o idoso) ou sai dela (o próprio id) |
+| POST | `/api/idosos/:idosoId/convites` | `{ papel }` → código de convite, válido uma vez por 7 dias |
+| GET | `/api/avisos` | pedidos de ajuda abertos dos idosos que acompanha e solicitações de atendimento |
+| POST | `/api/solicitacoes/:id/resposta` | o cuidador responde `{ aceitar: true \| false }`; aceitar coloca o cuidador na rede |
 | GET/POST | `/api/idosos/:idosoId/medicamentos` | lista / cadastra remédio |
 | GET/PATCH/DELETE | `/api/idosos/:idosoId/medicamentos/:id` | |
 | … | `/api/idosos/:idosoId/tarefas[/:id]` | mesmo padrão |
@@ -104,11 +109,13 @@ src/
 ├── app.js                # usuário logado, rotas gerais e tratamento de erros
 ├── validacao.js          # validação dos dados recebidos
 ├── rotas/
-│   ├── idosos.js         # idosos, dia, registros, anotações e chamados
+│   ├── idosos.js         # idosos, dia, registros, anotações, chamados e rede
+│   ├── avisos.js         # avisos de quem está logado e resposta às solicitações
 │   └── cadastros.js      # CRUD de medicamentos, tarefas e consultas
 ├── servicos/
 │   ├── dia.js            # monta a linha do tempo do dia
 │   ├── acesso.js         # quem pode ver qual idoso
+│   ├── rede.js           # rede de apoio com telefones; tirar alguém da rede
 │   └── tempo.js          # data/hora local
 ├── repositorios/
 │   ├── index.js          # escolhe memória ou MongoDB pela MONGODB_URI
