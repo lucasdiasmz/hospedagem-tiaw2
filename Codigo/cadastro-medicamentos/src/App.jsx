@@ -6,26 +6,31 @@ import { IconeMais, IconePilula, IconeVoltar } from '@ds/Icones.jsx';
 import { TELAS } from '@ds/navegacao.js';
 import FormMedicamento from './components/FormMedicamento.jsx';
 import ListaMedicamentos from './components/ListaMedicamentos.jsx';
-import { IDOSOS, USUARIO } from './data/db.js';
-import { criarMedicamento, definirAtivo, editarMedicamento, listarMedicamentos } from './services/api.js';
+import { criarMedicamento, definirAtivo, editarMedicamento, listarIdosos, listarMedicamentos } from './services/api.js';
 
 export default function App() {
   const [medicamentos, setMedicamentos] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erroApi, setErroApi] = useState('');
-  const [idosoId, setIdosoId] = useState(IDOSOS[0].id);
+  const [idosos, setIdosos] = useState([]);
+  const [idosoId, setIdosoId] = useState(null);
   const [editando, setEditando] = useState(null);
   const [aviso, setAviso] = useState(null);
   const formRef = useRef(null);
   const listaRef = useRef(null);
 
-  const idoso = IDOSOS.find((i) => i.id === idosoId);
+  const idoso = idosos.find((i) => i.id === idosoId);
   const doIdoso = medicamentos.filter((m) => m.idosoId === idosoId);
   const categorias = [...new Set(medicamentos.map((m) => m.categoria).filter(Boolean))];
 
   useEffect(() => {
-    listarMedicamentos()
-      .then((lista) => { setMedicamentos(lista); setErroApi(''); })
+    Promise.all([listarIdosos(), listarMedicamentos()])
+      .then(([meus, lista]) => {
+        setIdosos(meus);
+        setIdosoId(meus[0]?.id || null);
+        setMedicamentos(lista);
+        setErroApi('');
+      })
       .catch((e) => setErroApi(e.message))
       .finally(() => setCarregando(false));
   }, []);
@@ -86,16 +91,16 @@ export default function App() {
   ];
 
   return (
-    <Shell tela="medicamentos" permissao="cadastro-medicamentos" usuario={{ nome: USUARIO.nomeCompleto, tipo: 'cuidador' }} atalhos={atalhos}>
+    <Shell tela="medicamentos" permissao="cadastro-medicamentos" atalhos={idoso ? atalhos : []}>
       <PaginaTopo
         titulo="Cadastro de medicamentos"
         subtitulo="Registre remédio, dosagem e horários. As doses aparecem na tela de Medicamentos e no Início."
         voltar={<a className="voltar" href={TELAS.medicamentos}><IconeVoltar />Doses de hoje</a>}
       />
 
-      {IDOSOS.length > 1 && (
+      {idosos.length > 1 && (
         <div className="pilulas seletor-idoso" role="radiogroup" aria-label="Para quem é o medicamento">
-          {IDOSOS.map((i) => (
+          {idosos.map((i) => (
             <button key={i.id} type="button" role="radio" className="pilula" aria-checked={i.id === idosoId}
               onClick={() => { setIdosoId(i.id); setEditando(null); }}>
               {i.nome}
@@ -112,7 +117,14 @@ export default function App() {
         </Estado>
       )}
 
-      <div className="grade">
+      {!carregando && !erroApi && !idoso && (
+        <Estado titulo="Nenhuma pessoa vinculada ainda"
+          acao={<a className="btn btn-primario" href={TELAS.inicio}>Ir para o Início</a>}>
+          <p>Cadastre a pessoa ou use um código de convite no Início.</p>
+        </Estado>
+      )}
+
+      {idoso && <div className="grade">
         <FormMedicamento
           formRef={formRef}
           idoso={idoso}
@@ -130,7 +142,7 @@ export default function App() {
           aoAlternar={alternar}
           aoEditar={editar}
         />
-      </div>
+      </div>}
 
       <Toast aviso={aviso} />
     </Shell>

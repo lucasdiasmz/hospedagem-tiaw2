@@ -1,13 +1,14 @@
 /* Chamadas à API de tarefas da rede de apoio (Codigo/tarefas/server) */
 import { urlApi } from '@ds/navegacao.js';
+import { pedir } from '@ds/sessao.js';
 
-/* local: http://localhost:3004; publicado: a API no Render (src/navegacao.js) */
-const URL_API = urlApi('tarefas', 'http://localhost:3004');
+/* local: o Vite repassa para http://localhost:3004; publicado: a API no Render (navegacao.js) */
+const URL_API = urlApi('tarefas');
 
 async function chamar(caminho, opcoes) {
   let resposta;
   try {
-    resposta = await fetch(URL_API + caminho, {
+    resposta = await pedir(URL_API + caminho, {
       headers: { 'Content-Type': 'application/json' },
       ...opcoes,
     });
@@ -33,4 +34,9 @@ export function mudarStatus(id, status) {
 
 export function marcarComprados(id, itensComprados) {
   return chamar('/tarefas-rede/' + id, { method: 'PATCH', body: JSON.stringify({ itensComprados }) });
+}
+
+/* { eu, idosos: [{ id, nome, apelido, membros }] } */
+export function listarIdosos() {
+  return chamar('/idosos');
 }

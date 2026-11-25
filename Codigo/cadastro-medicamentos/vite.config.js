@@ -5,5 +5,5 @@ import { comDesignSystem } from '../design-system/vite.js';
 export default defineConfig(comDesignSystem({
   plugins: [react()],
   /* porta fixa: as outras telas apontam para http://localhost:5175/ (ver design-system/navegacao.js) */
-  server: { port: 5175, strictPort: true },
+  server: { port: 5175, strictPort: true, proxy: { '/medicamentos': 'http://localhost:3003', '/idosos': 'http://localhost:3003' } },
 }));

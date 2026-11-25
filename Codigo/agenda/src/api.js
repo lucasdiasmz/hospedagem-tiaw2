@@ -1,11 +1,12 @@
 /* chamadas ao backend da agenda (server/); em desenvolvimento o Vite repassa /api para http://localhost:3002 */
 import { urlApi } from '@ds/navegacao.js';
+import { pedir } from '@ds/sessao.js';
 
 /* local: o Vite repassa /api para server/; publicado: a API no Render (src/navegacao.js) */
 const URL_API = urlApi('agenda') + '/api';
 
 export async function api(caminho, { metodo = 'GET', corpo } = {}) {
-  const res = await fetch(URL_API + caminho, {
+  const res = await pedir(URL_API + caminho, {
     method: metodo,
     headers: corpo === undefined ? undefined : { 'Content-Type': 'application/json' },
     body: corpo === undefined ? undefined : JSON.stringify(corpo),

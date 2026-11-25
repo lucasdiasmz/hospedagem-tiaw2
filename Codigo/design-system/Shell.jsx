@@ -7,6 +7,7 @@ import {
 import { LOCAL, SITE_UNICO, TELAS } from './navegacao.js';
 import { usePreferencias, useUsuario } from './preferencias.js';
 import { NOMES_PERFIL, usePermissoes } from './permissoes.js';
+import { irParaEntrada, sair } from './sessao.js';
 import { Estado } from './Componentes.jsx';
 import logo from './assets/logo-acessamob.png';
 
@@ -96,17 +97,20 @@ function Atalho({ atalho, aoUsar }) {
   );
 }
 
-function CartaoUsuario({ usuario, perfil, escuro = false }) {
+function CartaoUsuario({ usuario, perfil, escuro = false, aoSair }) {
   if (!usuario?.nome) return null;
   return (
-    <a className={'usuario' + (escuro ? ' usuario--escuro' : '')} href={TELAS.boasVindas} title="Trocar de perfil">
+    <div className={'usuario' + (escuro ? ' usuario--escuro' : '')}>
       <span className="avatar" aria-hidden="true">{usuario.nome[0]}</span>
       <span className="usuario-texto">
         <strong>{usuario.nome}</strong>
-        <small>{NOMES_PERFIL[perfil]} · trocar</small>
+        <small>{NOMES_PERFIL[perfil]}</small>
       </span>
-      <IconeSair />
-    </a>
+      <button type="button" className="usuario-sair" aria-label="Sair da conta" onClick={aoSair}>
+        <IconeSair />
+        Sair
+      </button>
+    </div>
   );
 }
 
@@ -121,7 +125,7 @@ export default function Shell({ tela, permissao = tela, usuario: usuarioApi, ata
   const semPerfil = EXIGE_PERFIL && !prefs.perfil;
 
   useEffect(() => {
-    if (semPerfil) window.location.replace(TELAS.boasVindas);
+    if (semPerfil) irParaEntrada();
   }, [semPerfil]);
 
   const itens = ITENS.filter((i) => podeVer(i.id));
@@ -129,6 +133,11 @@ export default function Shell({ tela, permissao = tela, usuario: usuarioApi, ata
   const atualNoMais = itens.some((i) => !i.aba && i.id === tela);
   const liberada = podeVer(permissao);
   const visiveis = liberada ? atalhos : [];
+
+  /* sair pede rede: só o servidor apaga o cookie da sessão */
+  function encerrar() {
+    sair().catch((e) => window.alert('Não foi possível sair. ' + e.message));
+  }
 
   if (semPerfil) return <Estado tipo="carregando" titulo="Abrindo as boas-vindas…" />;
 
@@ -166,7 +175,7 @@ export default function Shell({ tela, permissao = tela, usuario: usuarioApi, ata
           <Acessibilidade />
         </div>
 
-        <CartaoUsuario usuario={usuario} perfil={perfil} escuro />
+        <CartaoUsuario usuario={usuario} perfil={perfil} escuro aoSair={encerrar} />
       </aside>
 
       {/* celular: barra do topo */}
@@ -186,7 +195,6 @@ export default function Shell({ tela, permissao = tela, usuario: usuarioApi, ata
           >
             <p>
               Você está usando o AcessaMob como <strong>{NOMES_PERFIL[perfil].toLowerCase()}</strong>.
-              Se o perfil estiver errado, <a href={TELAS.boasVindas}>troque nas boas-vindas</a>.
             </p>
           </Estado>
         )}
@@ -241,7 +249,7 @@ export default function Shell({ tela, permissao = tela, usuario: usuarioApi, ata
           <Acessibilidade />
         </section>
 
-        <CartaoUsuario usuario={usuario} perfil={perfil} />
+        <CartaoUsuario usuario={usuario} perfil={perfil} aoSair={encerrar} />
       </Dialogo>
     </div>
   );

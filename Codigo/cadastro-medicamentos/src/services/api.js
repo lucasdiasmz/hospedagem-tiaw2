@@ -1,13 +1,14 @@
 /* Chamadas à API de medicamentos (Codigo/cadastro-medicamentos/server) */
 import { urlApi } from '@ds/navegacao.js';
+import { pedir } from '@ds/sessao.js';
 
-/* local: http://localhost:3003; publicado: a API no Render (src/navegacao.js) */
-const URL_API = urlApi('cadastro', 'http://localhost:3003');
+/* local: o Vite repassa para http://localhost:3003; publicado: a API no Render (navegacao.js) */
+const URL_API = urlApi('cadastro');
 
 async function chamar(caminho, opcoes) {
   let resposta;
   try {
-    resposta = await fetch(URL_API + caminho, {
+    resposta = await pedir(URL_API + caminho, {
       headers: { 'Content-Type': 'application/json' },
       ...opcoes,
     });
@@ -33,4 +34,8 @@ export function definirAtivo(id, ativo) {
 
 export function editarMedicamento(id, med) {
   return chamar('/medicamentos/' + id, { method: 'PUT', body: JSON.stringify(med) });
+}
+
+export function listarIdosos() {
+  return chamar('/idosos');
 }

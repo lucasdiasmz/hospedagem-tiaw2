@@ -1,12 +1,13 @@
 /* Chamadas à API dos cuidadores (servidor.js). Local: o Vite repassa /api; publicado: Render. */
 import { urlApi } from '@ds/navegacao.js';
+import { pedir } from '@ds/sessao.js';
 
 const URL_API = urlApi('cuidadores') + '/api';
 
 async function chamar(caminho, { metodo = 'GET', corpo, signal } = {}) {
     let resposta;
     try {
-        resposta = await fetch(URL_API + caminho, {
+        resposta = await pedir(URL_API + caminho, {
             method: metodo,
             signal,
             headers: corpo ? { 'Content-Type': 'application/json' } : undefined,

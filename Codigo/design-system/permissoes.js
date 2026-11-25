@@ -1,10 +1,9 @@
 /* O que cada perfil vê e pode fazer.
    Perfis: 'idoso', 'cliente' (familiar responsável) e 'cuidador' (profissional).
-   O perfil vem das boas-vindas (preferencias.js). Quem ainda não escolheu é levado para lá pelo
-   Shell; se isso não for possível, vale o perfil com menos permissões.
+   O perfil vem do login (sessao.js). Quem não entrou é levado para as boas-vindas pelo Shell.
 
    Atenção: esconder telas e botões no front NÃO é segurança, só organiza a interface.
-   Quando o login existir, cada API precisa conferir o papel do usuário antes de gravar. */
+   Cada API confere a sessão, o vínculo e o papel (Codigo/auth). Mude os dois lados juntos. */
 import { usePreferencias } from './preferencias.js';
 
 export const PERFIL_PADRAO = 'idoso';
@@ -20,10 +19,11 @@ const TELAS = {
 const ACOES = {
   idoso: [
     'medicamentos.registrar',
-    'inicio.concluir', 'inicio.ajuda',
+    'inicio.concluir', 'inicio.ajuda', 'rede.convidar',
     'cuidadores.solicitar', 'cuidadores.avaliar',
   ],
   cliente: [
+    'rede.convidar',
     'agenda.criar', 'agenda.editar', 'agenda.concluir',
     'medicamentos.registrar', 'medicamentos.cadastrar',
     'tarefas.criar', 'tarefas.todas', 'tarefas.mudarStatus', 'tarefas.compras',

@@ -6,13 +6,14 @@ import { Estado, PaginaTopo, ReguaDoDia } from '@ds/Componentes.jsx';
 import { IconeBusca, IconeCheck, IconeMais, IconeRelogio } from '@ds/Icones.jsx';
 import { TELAS, urlApi } from '@ds/navegacao.js';
 import { usePermissoes } from '@ds/permissoes.js';
+import { pedir } from '@ds/sessao.js';
 import Detalhes from './Detalhes.jsx';
 
 /* local: o Vite repassa /api para servidor.js; publicado: a API no Render */
 const URL_API = urlApi('medicamentos') + '/api';
 
 async function listarMedicamentos(idosoId, signal) {
-    const resposta = await fetch(URL_API + '/medicamentos?idosoId=' + encodeURIComponent(idosoId), { signal });
+    const resposta = await pedir(URL_API + '/medicamentos?idosoId=' + encodeURIComponent(idosoId), { signal });
     if (!resposta.ok) {
         throw new Error('Não foi possível carregar os medicamentos.');
     }
@@ -20,7 +21,7 @@ async function listarMedicamentos(idosoId, signal) {
 }
 
 async function salvarStatus(id, status, data) {
-    const resposta = await fetch(URL_API + '/medicamentos/' + encodeURIComponent(id), {
+    const resposta = await pedir(URL_API + '/medicamentos/' + encodeURIComponent(id), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status, data })
@@ -90,7 +91,7 @@ export default function App() {
             setCarregando(true);
             setErro('');
             try {
-                const resposta = await fetch(URL_API + '/idosos', { signal: controle.signal });
+                const resposta = await pedir(URL_API + '/idosos', { signal: controle.signal });
                 if (!resposta.ok) throw new Error('Falha ao carregar idosos.');
                 const lista = await resposta.json();
                 setIdosos(lista);

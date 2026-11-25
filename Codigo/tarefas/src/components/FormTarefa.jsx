@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { CATALOGOS, USUARIO } from '../data/db.js';
-import { agoraIso, hojeIso, nomeCurto, sugerirResponsavel, validar } from '../utils/tarefas.js';
+import { hojeIso, nomeCurto, sugerirResponsavel, validar } from '../utils/tarefas.js';
 import Dialogo from '@ds/Dialogo.jsx';
 import { IconeLixeira, IconeMais } from './Icones.jsx';
 
-const { categoriasTarefaRede } = CATALOGOS;
+const categoriasTarefaRede = ['Consulta', 'Compra', 'Medicamento', 'Outro'];
 
 function vazio(sugerido) {
   return {
@@ -75,8 +74,6 @@ export default function FormTarefa({ idoso, membros, tarefas, aoSalvar, aoFechar
       itensCompra: t.categoria === 'Compra'
         ? t.itens.map((i) => ({ nome: i.nome.trim(), preco: Number(i.preco), comprado: false }))
         : [],
-      criadoPor: USUARIO.id,
-      criadoEm: agoraIso(),
     });
     setSalvando(false);
     if (salvou) aoFechar();

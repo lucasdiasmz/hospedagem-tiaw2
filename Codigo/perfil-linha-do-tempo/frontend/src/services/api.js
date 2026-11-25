@@ -1,4 +1,5 @@
 import { urlApi } from "@ds/navegacao.js";
+import { pedir } from "@ds/sessao.js";
 
 /* local: o Vite repassa /api para o backend; publicado: a API no Render (src/navegacao.js) */
 const API_URL = urlApi("perfil") + "/api";
@@ -7,7 +8,7 @@ async function requisicao(caminho, opcoes) {
   let resposta = null;
 
   try {
-    resposta = await fetch(API_URL + caminho, {
+    resposta = await pedir(API_URL + caminho, {
       headers: { "Content-Type": "application/json" },
       ...opcoes
     });

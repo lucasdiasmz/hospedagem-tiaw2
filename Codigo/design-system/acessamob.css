@@ -647,8 +647,25 @@ input[role='switch']:focus-visible {
   font-size: var(--t-xs);
 }
 
-.usuario > svg {
-  color: var(--tinta-3);
+.usuario-sair {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 2.75rem;
+  padding: 0 var(--e-2);
+  border-radius: var(--r-sm);
+  color: inherit;
+  font-size: var(--t-sm);
+  font-weight: 600;
+}
+
+.usuario-sair:hover {
+  text-decoration: underline;
+}
+
+.usuario-sair svg {
+  width: 1.125rem;
+  height: 1.125rem;
 }
 
 /* ---------- Tablet ---------- */

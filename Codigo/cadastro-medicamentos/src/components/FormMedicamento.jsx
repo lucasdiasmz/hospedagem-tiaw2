@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { CATALOGOS, USUARIO } from '../data/db.js';
-import { FREQUENCIAS, agoraIso, horariosPadrao, validar } from '../utils/medicamentos.js';
+import { FREQUENCIAS, horariosPadrao, validar } from '../utils/medicamentos.js';
 
-const { formasMedicamento, viasMedicamento } = CATALOGOS;
+const formasMedicamento = ['Comprimido', 'Cápsula', 'Gotas', 'Xarope', 'Injeção', 'Pomada', 'Outro'];
+const viasMedicamento = ['Oral', 'Sublingual', 'Tópica', 'Injetável', 'Inalatória'];
 
 const VAZIO = {
   nome: '',
@@ -68,8 +68,6 @@ export default function FormMedicamento({ idoso, categorias, editando, aoSalvar,
       ...dados,
       idosoId: idoso.id,
       ativo: true,
-      cadastradoPor: USUARIO.id,
-      criadoEm: agoraIso(),
     });
     setSalvando(false);
     if (salvou && !editando) setMed({ ...VAZIO, horarios: horariosPadrao(1) });

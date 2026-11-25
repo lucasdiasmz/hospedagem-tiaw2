@@ -3,13 +3,13 @@ import Shell from '@ds/Shell.jsx';
 import Toast from '@ds/Toast.jsx';
 import { AvisoEspera, Estado, PaginaTopo } from '@ds/Componentes.jsx';
 import { IconeMais } from '@ds/Icones.jsx';
+import { TELAS } from '@ds/navegacao.js';
 import DivisaoCuidado from './components/DivisaoCuidado.jsx';
 import FormTarefa from './components/FormTarefa.jsx';
 import ListaCompras from './components/ListaCompras.jsx';
 import ListaTarefas from './components/ListaTarefas.jsx';
 import { IconeCarrinho } from './components/Icones.jsx';
-import { IDOSOS, USUARIO, membrosDaRede } from './data/db.js';
-import { criarTarefa, listarTarefas, marcarComprados, mudarStatus } from './services/api.js';
+import { criarTarefa, listarIdosos, listarTarefas, marcarComprados, mudarStatus } from './services/api.js';
 import { ABAS } from './utils/tarefas.js';
 import { usePermissoes } from '@ds/permissoes.js';
 
@@ -17,23 +17,31 @@ export default function App() {
   const [tarefas, setTarefas] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erroApi, setErroApi] = useState('');
-  const [idosoId, setIdosoId] = useState(IDOSOS[0].id);
+  const [idosos, setIdosos] = useState([]);
+  const [eu, setEu] = useState(null);
+  const [idosoId, setIdosoId] = useState(null);
   const [aba, setAba] = useState('a_fazer');
   const [criando, setCriando] = useState(false);
   const [aviso, setAviso] = useState(null);
   const comprasRef = useRef(null);
 
-  const idoso = IDOSOS.find((i) => i.id === idosoId);
-  const membros = membrosDaRede(idosoId);
+  const idoso = idosos.find((i) => i.id === idosoId);
+  const membros = idoso?.membros || [];
   /* familiar vê e cria todas; cuidador vê só as tarefas em que é o responsável */
   const { pode } = usePermissoes();
-  const podeCriar = pode('tarefas.criar');
-  const doIdoso = tarefas.filter((t) => t.idosoId === idosoId && (pode('tarefas.todas') || t.responsavelId === USUARIO.id));
+  const podeCriar = pode('tarefas.criar') && Boolean(idoso);
+  const doIdoso = tarefas.filter((t) => t.idosoId === idosoId && (pode('tarefas.todas') || t.responsavelId === eu));
   const pendentes = doIdoso.filter((t) => t.status !== 'concluido').length;
 
   useEffect(() => {
-    listarTarefas()
-      .then((lista) => { setTarefas(lista); setErroApi(''); })
+    Promise.all([listarIdosos(), listarTarefas()])
+      .then(([rede, lista]) => {
+        setEu(rede.eu);
+        setIdosos(rede.idosos);
+        setIdosoId(rede.idosos[0]?.id || null);
+        setTarefas(lista);
+        setErroApi('');
+      })
       .catch((e) => setErroApi(e.message))
       .finally(() => setCarregando(false));
   }, []);
@@ -98,10 +106,10 @@ export default function App() {
   ].filter(Boolean);
 
   return (
-    <Shell tela="tarefas" usuario={{ nome: USUARIO.nomeCompleto, tipo: 'cuidador' }} atalhos={atalhos}>
+    <Shell tela="tarefas" atalhos={idoso ? atalhos : []}>
       <PaginaTopo
         titulo="Tarefas da rede"
-        subtitulo={carregando
+        subtitulo={!idoso
           ? 'Divida os cuidados entre a família e os cuidadores, sem sobrecarregar ninguém.'
           : (pendentes === 1 ? '1 tarefa em aberto' : pendentes + ' tarefas em aberto') + ' para ' + idoso.apelido + '.'}
       >
@@ -113,9 +121,9 @@ export default function App() {
         )}
       </PaginaTopo>
 
-      {IDOSOS.length > 1 && (
+      {idosos.length > 1 && (
         <div className="pilulas seletor-idoso" role="radiogroup" aria-label="Tarefas de">
-          {IDOSOS.map((i) => (
+          {idosos.map((i) => (
             <button key={i.id} type="button" role="radio" className="pilula" aria-checked={i.id === idosoId}
               onClick={() => setIdosoId(i.id)}>
               {i.nome}
@@ -132,7 +140,14 @@ export default function App() {
         </Estado>
       )}
 
-      <div className="grade">
+      {!carregando && !erroApi && !idoso && (
+        <Estado titulo="Nenhuma pessoa vinculada ainda"
+          acao={<a className="btn btn-primario" href={TELAS.inicio}>Ir para o Início</a>}>
+          <p>Cadastre a pessoa ou use um código de convite no Início.</p>
+        </Estado>
+      )}
+
+      {(carregando || idoso) && <div className="grade">
         <ListaTarefas
           tarefas={doIdoso}
           membros={membros}
@@ -146,7 +161,7 @@ export default function App() {
           {/* a divisão conta a rede inteira, senão cada perfil vê uma porcentagem */}
           <DivisaoCuidado membros={membros} tarefas={tarefas.filter((t) => t.idosoId === idosoId)} />
         </div>
-      </div>
+      </div>}
 
       {podeCriar && (
         <button type="button" className="fab" onClick={() => setCriando(true)}>

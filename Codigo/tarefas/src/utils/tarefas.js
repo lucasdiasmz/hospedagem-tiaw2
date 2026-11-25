@@ -36,8 +36,7 @@ export function atrasada(tarefa) {
 
 export function nomeCurto(membro) {
   if (!membro) return 'Sem responsável';
-  /* "Você" só quando o nome das boas-vindas é o do membro; antes valia sempre para a cuidadora padrão */
-  if (membro.nome === lerPreferencias().nome) return 'Você';
+  if (membro.id === lerPreferencias().usuarioId) return 'Você';
   return membro.nome.split(' ')[0];
 }
 

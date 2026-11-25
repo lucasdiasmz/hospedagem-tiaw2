@@ -58,8 +58,8 @@ function PerfilIdoso() {
       <div className="pagina">
         <EstadoVazio
           icone="users"
-          titulo="Nenhum idoso cadastrado ainda"
-          texto='Rode o comando "npm run seed" no back-end para inserir os dados de exemplo.'
+          titulo="Nenhuma pessoa vinculada ainda"
+          texto="Cadastre a pessoa ou use um código de convite no Início."
         />
       </div>
     );

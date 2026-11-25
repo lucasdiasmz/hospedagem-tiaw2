@@ -17,12 +17,6 @@ export function horariosPadrao(frequencia) {
   return HORARIOS_PADRAO[frequencia].slice();
 }
 
-/* data e hora locais no formato do JSON: 2026-09-15T09:00:00 */
-export function agoraIso() {
-  const local = new Date(Date.now() - new Date().getTimezoneOffset() * 60000);
-  return local.toISOString().slice(0, 19);
-}
-
 /* devolve um objeto { campo: mensagem } com os erros; vazio quando está tudo certo */
 export function validar(med) {
   const erros = {};
