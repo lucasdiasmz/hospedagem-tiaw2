@@ -5,42 +5,54 @@ Fonte da verdade do código: `Codigo/design-system/acessamob.css` (tokens) e
 
 ## Mundo visual
 
-Aplicativo de trabalho, claro, para uso em casa e de dia. A interface é quase toda neutra: fundo
-cinza-claro, cartões brancos com uma linha fina e sem sombra. A cor aparece em quatro lugares: o **azul
-de ação** (`#1d63dc`), um botão cheio por tela; o **marinho** (`#0c2152`), que marca o item escolhido
-(abas, filtros, dia) e veste a única faixa da marca de cada tela; a **Inter** com números tabulares; e
-a **régua do dia**, a assinatura visual. Regras que valem em todas as telas:
+Claro, arejado e de confiança, para uso em casa e de dia. Fundo quase branco, verde-mata profundo na
+ação e na marca, menta como apoio, cartões de cantos amplos sem sombra em repouso. Duas aplicações:
 
-- no máximo duas caixas, uma dentro da outra; ícone solto, sem quadrado colorido em volta;
-- nada se mexe sozinho: só resposta ao toque, ao ponteiro e ao foco (140 ms para entrar, 200 para sair);
-- cartão que leva a outra tela sobe 2 px; botão sobe 1 px e afunda ao apertar;
-- texto nunca menor que 13 px, sem caixa-alta; sem violeta.
+- **Página inicial** (raiz do site): apresenta o sistema. Títulos grandes, foto recortada sobre forma
+  orgânica, objetos 3D, selos flutuantes e fundos suaves por bloco. Sete seções: topo, hero, recursos,
+  sobre, números, por que usar e chamada final.
+- **Telas de dentro**: as mesmas cores, fontes e formas, com mais densidade e menos enfeite. A
+  assinatura é a **régua do dia**.
+
+Regras que valem em todas as telas:
+
+- um botão cheio por tela; botões em pílula; item escolhido em `--selecao` (verde-mata cheio);
+- no máximo duas caixas, uma dentro da outra;
+- resposta ao toque, ao ponteiro e ao foco em 140 a 260 ms; na página inicial há um movimento de
+  chegada, e a demonstração passa sozinha só quando a pessoa aperta o play;
+- cartão que leva a outro lugar sobe 2 ou 3 px; a seta do botão anda 4 px; botão afunda ao apertar;
+- texto nunca menor que 13 px, sem caixa-alta; sem violeta;
+- nenhum número de clientes, depoimento ou parceiro: só fatos do sistema.
 
 ## Cores
 
 | Papel | Token | Valor |
 |---|---|---|
-| Escolhido e faixa da marca | `--selecao` (`--marinho-800`) | `#0c2152` |
-| Ação | `--azul` / `--azul-forte` | `#1d63dc` / `#1650b8` |
-| Fundo / superfície | `--fundo` / `--superficie` | `#f4f5f7` / `#ffffff` |
-| Texto | `--tinta` / `--tinta-2` / `--tinta-3` | `#0e1729` / `#3b4560` / `#566078` |
+| Escolhido e faixa da marca | `--selecao` (`--mata-800`) | `#113c34` |
+| Ação | `--acao` / `--acao-forte` | `#16463d` / `#0e332c` |
+| Apoio | `--acao-suave` / `--folha-clara` / `--folha` | `#e5ece9` / `#cfe3d8` / `#6fae93` |
+| Destaque em título | `.realce` (página inicial) | `#1c7a58` |
+| Blocos suaves | `--tom-menta` `--tom-nevoa` `--tom-salvia` `--tom-areia` | `#e1eee7` `#e8eff1` `#edf2e6` `#f6f0e4` |
+| Fundo / fundo do hero / superfície | `--fundo` / `--fundo-2` / `--superficie` | `#f8f9f8` / `#f3f5f4` / `#ffffff` |
+| Texto | `--tinta` / `--tinta-2` / `--tinta-3` | `#142420` / `#40504b` / `#5a6965` |
 | Feito | `--verde` | `#12784a` |
-| Atenção, recusa | `--ambar` / `--ambar-vivo` | `#8a5300` / `#f0a020` |
-| Atraso, erro, ajuda | `--vermelho` | `#c42b23` |
-| Tipos de cuidado | `--tipo-medicamento` `--tipo-consulta` `--tipo-exame` `--tipo-visita` `--tipo-tarefa` | petróleo, azul, âmbar, verde, cinza-azulado |
+| Atenção, recusa | `--ambar` / `--ambar-vivo` | `#8a5300` / `#eaa33a` |
+| Atraso, erro, ajuda | `--vermelho` | `#bf2f27` |
+| Tipos de cuidado | `--tipo-medicamento` `--tipo-consulta` `--tipo-exame` `--tipo-visita` `--tipo-tarefa` | petróleo, azul, âmbar, verde-oliva, cinza-verde |
 
 Alto contraste troca os tokens em `:root.alto-contraste`.
 
 ## Tipografia
 
-Inter. Escala em rem: 13 · 15 · **17 (base)** · 19 · 22 · 28 · 34 px. Pesos 400/500/600.
+Plus Jakarta Sans nos títulos (600 a 800), Inter no resto; Caveat só na frase manuscrita da página
+inicial. As fontes entram por `design-system/vite.js`. Escala em rem: 13 · 15 · **17 (base)** · 19 · 22 · 28 · 34 px. Pesos 400/500/600.
 Horários e números com `font-variant-numeric: tabular-nums`. Letra maior: raiz a 118,75%;
 textos e ícones crescem, espaços não, e os títulos crescem menos.
 
 ## Forma e espaço
 
-Espaço em múltiplos de 4 px. Cantos: 8 (controles) · 12 (botões e painéis) · 20 px
-(cartões e folhas). Sombra só em quem flutua ou sob o ponteiro (`--sombra-2/3`). Alvo de toque mínimo 48 px.
+Espaço em múltiplos de 4 px. Cantos: 10 (campos) · 14 (painéis) · 22 a 24 px
+(cartões, fotos e folhas) · pílula (botões, menu, abas). Sombra só em quem flutua ou sob o ponteiro (`--sombra-2/3`). Alvo de toque mínimo 48 px.
 
 ## Estrutura
 
@@ -55,5 +67,5 @@ computador, `@container palco` (46, 58, 64, 75 e 84rem).
 
 `Shell`, `PaginaTopo`, `Estado`, `ReguaDoDia`, `Dialogo`, `Toast`; classes `.btn` (+ `-primario`,
 `-suave`, `-perigo`, `-texto`, `-claro`, `-contorno`), `.btn-icone`, `.fab`, `.card`, `.campo`,
-`.entrada`, `.busca`, `.pilula`, `.segmentado`, `.tag` (+ `--azul/verde/ambar/vermelho`),
+`.entrada`, `.busca`, `.pilula`, `.segmentado`, `.tag` (+ `--destaque/verde/ambar/vermelho`),
 `.interruptor`, `.estado`, `.esqueleto`.

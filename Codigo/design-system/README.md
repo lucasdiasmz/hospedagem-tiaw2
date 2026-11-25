@@ -17,7 +17,8 @@ o que é comum mora aqui, e cada tela guarda só o que é dela.
 | `Icones.jsx` | Todos os ícones (grade 24, traço 1.8). |
 | `navegacao.js` | Endereços das telas e das APIs (antes havia 8 cópias iguais). |
 | `preferencias.js` | Letra maior, alto contraste e o perfil escolhido nas boas-vindas; valem em todas as telas. |
-| `vite.js` | Liga uma tela a esta pasta (`@ds/...`). |
+| `vite.js` | Liga uma tela a esta pasta (`@ds/...`) e põe as fontes, o ícone da aba e a descrição em todas. |
+| `assets/` | Logo para fundo claro (`logo-acessamob.png`) e escuro (`-claro.png`), e a foto da entrada. |
 
 ## Como uma tela usa
 
@@ -43,14 +44,14 @@ Ids de `tela`: `inicio`, `agenda`, `medicamentos`, `tarefas`, `linha-do-tempo`, 
 
 ## Regras do visual
 
-- **Identidade:** logo, nome, slogan "Mais cuidado, todos os dias.", azul `#1d63dc`, azul-escuro
-  `#0c2152` no menu e nos cartões de destaque, fonte Inter. Não mude sem combinar com o grupo.
+- **Identidade:** logo, nome, slogan "Mais cuidado, todos os dias.", verde-mata `#16463d` na ação e
+  `#113c34` no item escolhido e nos cartões de destaque, menta `#e5ece9`, fontes Plus Jakarta Sans (títulos) e Inter. Não mude sem combinar com o grupo.
 - **Mobile-first:** escreva o CSS para o celular e use `@media (min-width: ...)` para telas maiores
   (40rem tablet, 64rem computador). No computador, a largura se mede com `@container palco (...)`,
   que conta a letra maior; o layout fica preso à janela e só o que tem `.rolavel` rola por dentro.
 - **Toque:** nada clicável menor que 48 px (`var(--toque)`). O público inclui pessoas idosas.
 - **Texto e ícones:** em `rem`, para a opção "Letra maior" funcionar. Base de 17 px. Espaços (`--e-*`) em px: não crescem junto.
-- **Cor só com função:** azul = ação, verde = feito, âmbar = atenção/recusa, vermelho = atraso,
+- **Cor só com função:** verde-mata = ação, verde vivo com o sinal de certo = feito, âmbar = atenção/recusa, vermelho = atraso,
   erro e pedido de ajuda. Cores por tipo de cuidado: `--tipo-medicamento`, `--tipo-consulta`...
 - **Assinatura:** a régua do dia (`ReguaDoDia`) mostra o dia de 6h às 22h com cada cuidado no seu
   horário e a agulha do "agora". Usada no Início e em Medicamentos.

@@ -9,6 +9,7 @@ menu lateral: cada um roda numa porta fixa e aponta para as portas dos outros.
 
 | Pasta | Tela | Web (dev) | API | Dados |
 |---|---|---|---|---|
+| `pagina-inicial/` | Página inicial pública (raiz do site) | 5181 | — | — |
 | `boas-vindas/` | Boas-vindas: escolha de perfil e cadastro inicial | 5180 | — | — |
 | `inicio/` | Início (cuidados do dia) | 5173 | 3001 — `inicio/server/` | MongoDB ou `db/db.json` em memória |
 | `agenda/` | Agenda | 5174 | 3002 — `agenda/server/` | MongoDB ou `db/db.json` em memória |
@@ -34,8 +35,8 @@ entra na navegação: a tela de agenda do sistema é a de `agenda/`.
 O visual é um só, em [`design-system/`](design-system/README.md): tokens, componentes, menu
 (`Shell.jsx`), ícones, diálogo, aviso e navegação. Cada tela importa de lá (`@ds/...`) e guarda no
 próprio CSS só o que é dela. É **mobile-first**: no celular, barra no topo e abas embaixo; no
-computador, o menu lateral azul-escuro com o logo. Identidade: logo e nome AcessaMob, slogan
-"Mais cuidado, todos os dias.", azul `#1d63dc`, azul-escuro `#0c2152` e fonte Inter.
+computador, o menu lateral claro com o logo. Identidade: logo e nome AcessaMob, slogan
+"Mais cuidado, todos os dias.", verde-mata `#16463d`, menta `#e5ece9`, fontes Plus Jakarta Sans e Inter.
 Ao criar uma tela nova, use `<Shell>` e os componentes do design system.
 
 ## Hospedagem

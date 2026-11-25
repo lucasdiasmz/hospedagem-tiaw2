@@ -34,7 +34,7 @@ Todas as telas num endereço só, num único projeto da Vercel:
 
 - Vercel → *Add New → Project* → repositório, **Root Directory `./`** (a raiz), preset *Other*.
   O `vercel.json` da raiz já define o build (`node Codigo/build-unificado.mjs`) e a saída (`dist`).
-- As telas ficam em `/boas-vindas/`, `/inicio/`, `/agenda/`, `/medicamentos/`,
+- A página inicial fica em `/`; as telas, em `/boas-vindas/`, `/inicio/`, `/agenda/`, `/medicamentos/`,
   `/cadastro-medicamentos/`, `/tarefas/`, `/cuidadores/` e `/idoso/perfil` + `/idoso/linha-do-tempo`;
   a raiz `/` abre as boas-vindas.
 - As chamadas de API vão para `/srv/<api>/...` no mesmo endereço, e a Vercel repassa ao Render

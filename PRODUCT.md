@@ -29,8 +29,8 @@ conseguir usar.
 
 ## Operating Context
 
-Projeto do Trabalho Interdisciplinar de Engenharia de Software, PUC Minas, 2026/2. Oito telas
-React + Vite independentes, sete APIs Node (MongoDB Atlas ou JSON), hospedadas na Vercel (site
+Projeto do Trabalho Interdisciplinar de Engenharia de Software, PUC Minas, 2026/2. Página
+inicial pública e oito telas React + Vite independentes, sete APIs Node (MongoDB Atlas ou JSON), hospedadas na Vercel (site
 único) e no Render. Ainda sem login: as APIs usam um usuário padrão.
 
 ## Capabilities and Constraints
@@ -44,7 +44,8 @@ equipamentos (RF010).
 ## Brand Commitments
 
 Nome AcessaMob, logo `logo-acessamob.png` (o abraço), slogan "Mais cuidado, todos os dias.",
-azul `#1d63dc`, azul-escuro `#0c2152`, fonte Inter. Confirmados pela equipe como identidade.
+verde-mata `#16463d` / `#113c34`, menta `#e5ece9`, fontes Plus Jakarta Sans (títulos) e Inter. O verde
+substituiu o azul `#1d63dc` em novembro de 2026; a logo manteve o desenho e mudou só de cor.
 
 ## Evidence on Hand
 
