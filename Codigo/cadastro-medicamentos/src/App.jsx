@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Shell from '@ds/Shell.jsx';
 import Toast from '@ds/Toast.jsx';
 import { AvisoEspera, Estado, PaginaTopo } from '@ds/Componentes.jsx';
-import { IconeMais, IconePilula, IconeVoltar } from '@ds/Icones.jsx';
+import { IconeVoltar } from '@ds/Icones.jsx';
 import { TELAS } from '@ds/navegacao.js';
 import FormMedicamento from './components/FormMedicamento.jsx';
 import ListaMedicamentos from './components/ListaMedicamentos.jsx';
@@ -17,7 +17,8 @@ export default function App() {
   const [editando, setEditando] = useState(null);
   const [aviso, setAviso] = useState(null);
   const formRef = useRef(null);
-  const listaRef = useRef(null);
+  /* no celular, o formulário e a lista se alternam em abas */
+  const [aba, setAba] = useState('novo');
 
   const idoso = idosos.find((i) => i.id === idosoId);
   const doIdoso = medicamentos.filter((m) => m.idosoId === idosoId);
@@ -47,6 +48,7 @@ export default function App() {
         setMedicamentos((lista) => lista.map((m) => (m.id === atualizado.id ? atualizado : m)));
         avisar('Alterações salvas: ' + atualizado.nome);
         setEditando(null);
+        setAba('lista');
       } else {
         const criado = await criarMedicamento(med);
         setMedicamentos((lista) => [...lista, criado]);
@@ -72,31 +74,18 @@ export default function App() {
 
   function editar(med) {
     setEditando(med);
-    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setAba('novo');
+    requestAnimationFrame(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }));
   }
-
-  function novoMedicamento() {
-    setEditando(null);
-    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    formRef.current?.querySelector('input')?.focus({ preventScroll: true });
-  }
-
-  function verCadastrados() {
-    listaRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  const atalhos = [
-    { rotulo: 'Novo medicamento', Icone: IconeMais, aoClicar: novoMedicamento },
-    { rotulo: 'Ver cadastrados', Icone: IconePilula, aoClicar: verCadastrados },
-  ];
 
   return (
-    <Shell tela="medicamentos" permissao="cadastro-medicamentos" atalhos={idoso ? atalhos : []}>
+    <Shell tela="medicamentos" permissao="cadastro-medicamentos">
       <PaginaTopo
         titulo="Cadastro de medicamentos"
-        subtitulo="Registre remédio, dosagem e horários. As doses aparecem na tela de Medicamentos e no Início."
-        voltar={<a className="voltar" href={TELAS.medicamentos}><IconeVoltar />Doses de hoje</a>}
-      />
+        subtitulo="As doses aparecem na tela de Medicamentos e no Início."
+      >
+        <a className="btn btn-suave" href={TELAS.medicamentos}><IconeVoltar />Doses de hoje</a>
+      </PaginaTopo>
 
       {idosos.length > 1 && (
         <div className="pilulas seletor-idoso" role="radiogroup" aria-label="Para quem é o medicamento">
@@ -124,7 +113,11 @@ export default function App() {
         </Estado>
       )}
 
-      {idoso && <div className="grade">
+      {idoso && <div className={'grade grade--' + aba}>
+        <div className="segmentado abas-cadastro" role="group" aria-label="Mostrar">
+          <button type="button" aria-pressed={aba === 'novo'} onClick={() => setAba('novo')}>{editando ? 'Editar' : 'Novo'}</button>
+          <button type="button" aria-pressed={aba === 'lista'} onClick={() => setAba('lista')}>Cadastrados</button>
+        </div>
         <FormMedicamento
           formRef={formRef}
           idoso={idoso}
@@ -134,7 +127,6 @@ export default function App() {
           aoSalvar={salvar}
         />
         <ListaMedicamentos
-          secaoRef={listaRef}
           idoso={idoso}
           medicamentos={doIdoso}
           carregando={carregando}

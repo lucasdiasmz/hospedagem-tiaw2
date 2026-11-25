@@ -24,13 +24,13 @@ function Item({ m, editandoId, aoEditar, aoAlternar }) {
   );
 }
 
-export default function ListaMedicamentos({ idoso, medicamentos, carregando, editandoId, aoAlternar, aoEditar, secaoRef }) {
+export default function ListaMedicamentos({ idoso, medicamentos, carregando, editandoId, aoAlternar, aoEditar }) {
   const nome = idoso.apelido || idoso.nome;
   const ativos = medicamentos.filter((m) => m.ativo);
   const pausados = medicamentos.filter((m) => !m.ativo);
 
   return (
-    <section className="lista" ref={secaoRef} aria-labelledby="lista-titulo">
+    <section className="lista" aria-labelledby="lista-titulo">
       <div className="secao-cabeca">
         <h2 id="lista-titulo">Remédios de {nome}</h2>
         {!carregando && <p>{ativos.length} em uso</p>}
@@ -41,7 +41,7 @@ export default function ListaMedicamentos({ idoso, medicamentos, carregando, edi
       ) : medicamentos.length === 0 ? (
         <p className="lista-vazia">Nenhum medicamento cadastrado para {nome}. Use o formulário para cadastrar o primeiro.</p>
       ) : (
-        <>
+        <div className="lista-rolagem rolavel">
           {ativos.length > 0 && <ul className="itens">{ativos.map((m) => <Item key={m.id} m={m} editandoId={editandoId} aoEditar={aoEditar} aoAlternar={aoAlternar} />)}</ul>}
           {pausados.length > 0 && (
             <>
@@ -49,7 +49,7 @@ export default function ListaMedicamentos({ idoso, medicamentos, carregando, edi
               <ul className="itens">{pausados.map((m) => <Item key={m.id} m={m} editandoId={editandoId} aoEditar={aoEditar} aoAlternar={aoAlternar} />)}</ul>
             </>
           )}
-        </>
+        </div>
       )}
     </section>
   );

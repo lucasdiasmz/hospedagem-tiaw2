@@ -16,15 +16,44 @@
 .grade {
   display: flex;
   flex-direction: column;
-  gap: var(--e-8);
+  gap: var(--e-4);
+}
+
+@media (max-width: 63.99rem) {
+  .grade--novo .lista,
+  .grade--lista .form {
+    display: none;
+  }
 }
 
 /* ===== Formulário ===== */
 .form {
   display: flex;
   flex-direction: column;
-  gap: var(--e-5);
+  gap: var(--e-4);
   scroll-margin-top: calc(var(--topo-altura) + var(--e-4));
+}
+
+.form-campos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: var(--e-3);
+}
+
+.form-campos > .campo {
+  grid-column: 1 / -1;
+}
+
+.form-campos > .campo-forma,
+.form-campos > .campo-via,
+.form-campos > .campo-dose,
+.form-campos > .campo-categoria {
+  grid-column: auto;
+}
+
+.form-campos .campo textarea {
+  min-height: var(--toque);
 }
 
 .form--editando {
@@ -32,12 +61,19 @@
   box-shadow: 0 0 0 3px var(--azul-claro);
 }
 
+.form-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0 var(--e-3);
+}
+
 .form-topo h2 {
   font-size: var(--t-lg);
 }
 
 .form-topo p {
-  margin-top: 2px;
   color: var(--tinta-3);
   font-size: var(--t-sm);
 }
@@ -55,7 +91,7 @@ fieldset.campo {
 
 .horarios {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(7.25rem, 1fr));
   gap: var(--e-2);
 }
 
@@ -93,7 +129,7 @@ fieldset.campo {
 }
 
 .lista-sub {
-  margin: var(--e-5) 0 var(--e-2);
+  margin: var(--e-4) 0 var(--e-1);
   font-size: var(--t-sm);
   font-weight: 600;
   color: var(--tinta-3);
@@ -111,7 +147,7 @@ fieldset.campo {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--e-2);
-  padding: var(--e-4);
+  padding: var(--e-3) var(--e-4);
 }
 
 .item-med + .item-med {
@@ -145,6 +181,7 @@ fieldset.campo {
 
 .item-texto strong {
   font-size: var(--t-md);
+  line-height: 1.25;
 }
 
 .item-texto .dose {
@@ -155,6 +192,8 @@ fieldset.campo {
 .item-texto small {
   color: var(--tinta-3);
   font-size: var(--t-sm);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 .item-texto .obs {
@@ -172,12 +211,14 @@ fieldset.campo {
   opacity: 0.6;
 }
 
+@media (max-width: 39.99rem) {
+  .pagina-topo p {
+    display: none;
+  }
+}
+
 /* ===== Telas maiores ===== */
 @media (min-width: 40rem) {
-  .horarios {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
   .form-botoes {
     flex-direction: row;
     justify-content: flex-end;
@@ -188,8 +229,9 @@ fieldset.campo {
   }
 
   .item-med {
-    grid-template-columns: 7rem minmax(0, 1fr) auto;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
+    gap: var(--e-3);
   }
 
   .item-horarios {
@@ -202,16 +244,105 @@ fieldset.campo {
   }
 }
 
-@media (min-width: 72rem) {
+/* computador: formulário e lista lado a lado; cada um rola por dentro se precisar */
+@media (min-width: 64rem) {
+  .abas-cadastro {
+    display: none;
+  }
+
   .grade {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-    align-items: start;
-    gap: var(--e-8);
+    flex: 1 1 auto;
+    min-height: 0;
   }
 
   .form {
-    position: sticky;
-    top: var(--e-8);
+    gap: var(--e-3);
+  }
+}
+
+@container palco (min-width: 46rem) {
+  .grade {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    align-items: start;
+    gap: var(--e-5);
+  }
+
+  .item-acoes {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .item-acoes .btn {
+    min-height: 40px;
+  }
+}
+
+@container palco (min-width: 56rem) {
+  .form-campos {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .form-campos > .campo-nome {
+    grid-column: span 4;
+  }
+
+  .form-campos > .campo-dose,
+  .form-campos > .campo-categoria,
+  .form-campos > .campo-forma,
+  .form-campos > .campo-via {
+    grid-column: span 2;
+  }
+
+  .form-campos > .campo-vezes,
+  .form-campos > .campo-horarios {
+    grid-column: span 3;
+  }
+}
+
+/* pouca largura (ou letra maior): o horário sobe, para o nome do remédio caber */
+@container palco (max-width: 63.99rem) {
+  .grade {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  }
+
+  .form {
+    padding: var(--e-4);
+  }
+
+  .form-campos {
+    gap: var(--e-2) 10px;
+  }
+
+  .item-med {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2px var(--e-2);
+  }
+
+  .item-horarios {
+    grid-column: 1 / -1;
+    flex-direction: row;
+  }
+}
+
+@container palco (min-width: 84rem) {
+  .item-acoes {
+    flex-direction: row;
+  }
+}
+
+@media (min-width: 64rem) and (min-height: 35rem) {
+  .form,
+  .lista {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    max-height: 100%;
+  }
+
+  .form-campos,
+  .lista-rolagem {
+    flex: 0 1 auto;
   }
 }

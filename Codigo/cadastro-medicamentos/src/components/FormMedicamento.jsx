@@ -80,23 +80,23 @@ export default function FormMedicamento({ idoso, categorias, editando, aoSalvar,
         <p>Para {idoso.apelido || idoso.nome}</p>
       </div>
 
-      <label className="campo">
-        Nome do medicamento
-        <input
-          type="text"
-          value={med.nome}
-          onChange={(e) => alterar('nome', e.target.value)}
-          placeholder="Ex.: Losartana"
-          maxLength="60"
-          autoComplete="off"
-          aria-invalid={erros.nome ? 'true' : undefined}
-          aria-describedby={erros.nome ? 'erro-nome' : undefined}
-        />
-        {erros.nome && <span className="campo-erro" id="erro-nome">{erros.nome}</span>}
-      </label>
+      <div className="form-campos rolavel">
+        <label className="campo campo-nome">
+          Nome do medicamento
+          <input
+            type="text"
+            value={med.nome}
+            onChange={(e) => alterar('nome', e.target.value)}
+            placeholder="Ex.: Losartana"
+            maxLength="60"
+            autoComplete="off"
+            aria-invalid={erros.nome ? 'true' : undefined}
+            aria-describedby={erros.nome ? 'erro-nome' : undefined}
+          />
+          {erros.nome && <span className="campo-erro" id="erro-nome">{erros.nome}</span>}
+        </label>
 
-      <div className="campos-linha">
-        <label className="campo">
+        <label className="campo campo-dose">
           Dosagem
           <input
             type="text"
@@ -110,76 +110,74 @@ export default function FormMedicamento({ idoso, categorias, editando, aoSalvar,
           {erros.dosagem && <span className="campo-erro" id="erro-dosagem">{erros.dosagem}</span>}
         </label>
 
-        <label className="campo">
-          <span>Categoria <small>(opcional)</small></span>
+        <label className="campo campo-categoria">
+          Categoria
           <input
             type="text"
             list="categorias"
             value={med.categoria}
             onChange={(e) => alterar('categoria', e.target.value)}
-            placeholder="Ex.: Pressão arterial"
+            placeholder="Opcional"
             maxLength="40"
           />
           <datalist id="categorias">
             {categorias.map((c) => <option key={c} value={c} />)}
           </datalist>
         </label>
-      </div>
 
-      <div className="campos-linha">
-        <label className="campo">
+        <label className="campo campo-forma">
           Forma
           <select value={med.forma} onChange={(e) => alterar('forma', e.target.value)}>
             {formasMedicamento.map((f) => <option key={f}>{f}</option>)}
           </select>
         </label>
 
-        <label className="campo">
+        <label className="campo campo-via">
           Via de uso
           <select value={med.via} onChange={(e) => alterar('via', e.target.value)}>
             {viasMedicamento.map((v) => <option key={v}>{v}</option>)}
           </select>
         </label>
+
+        <fieldset className="campo campo-vezes">
+          <legend>Quantas vezes por dia?</legend>
+          <div className="segmentado">
+            {FREQUENCIAS.map((f) => (
+              <button key={f.valor} type="button" aria-pressed={med.frequencia === f.valor} onClick={() => alterarFrequencia(f.valor)}>
+                {f.valor}×
+              </button>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset className="campo campo-horarios">
+          <legend>Horários</legend>
+          <div className="horarios">
+            {med.horarios.map((h, i) => (
+              <input
+                key={i}
+                type="time"
+                value={h}
+                onChange={(e) => alterarHorario(i, e.target.value)}
+                aria-label={'Horário ' + (i + 1)}
+                aria-invalid={erros.horarios ? 'true' : undefined}
+              />
+            ))}
+          </div>
+          {erros.horarios && <span className="campo-erro">{erros.horarios}</span>}
+        </fieldset>
+
+        <label className="campo campo-obs">
+          <span>Observações <small>(opcional)</small></span>
+          <textarea
+            rows="1"
+            maxLength="120"
+            value={med.observacoes}
+            onChange={(e) => alterar('observacoes', e.target.value)}
+            placeholder="Ex.: Tomar após o café da manhã"
+          ></textarea>
+        </label>
       </div>
-
-      <fieldset className="campo">
-        <legend>Quantas vezes por dia?</legend>
-        <div className="segmentado">
-          {FREQUENCIAS.map((f) => (
-            <button key={f.valor} type="button" aria-pressed={med.frequencia === f.valor} onClick={() => alterarFrequencia(f.valor)}>
-              {f.valor}×
-            </button>
-          ))}
-        </div>
-      </fieldset>
-
-      <fieldset className="campo">
-        <legend>Horários</legend>
-        <div className="horarios">
-          {med.horarios.map((h, i) => (
-            <input
-              key={i}
-              type="time"
-              value={h}
-              onChange={(e) => alterarHorario(i, e.target.value)}
-              aria-label={'Horário ' + (i + 1)}
-              aria-invalid={erros.horarios ? 'true' : undefined}
-            />
-          ))}
-        </div>
-        {erros.horarios && <span className="campo-erro">{erros.horarios}</span>}
-      </fieldset>
-
-      <label className="campo">
-        <span>Observações <small>(opcional)</small></span>
-        <textarea
-          rows="3"
-          maxLength="120"
-          value={med.observacoes}
-          onChange={(e) => alterar('observacoes', e.target.value)}
-          placeholder="Ex.: Tomar após o café da manhã"
-        ></textarea>
-      </label>
 
       <div className="form-botoes">
         {editando && <button type="button" className="btn" onClick={aoCancelar}>Cancelar edição</button>}
