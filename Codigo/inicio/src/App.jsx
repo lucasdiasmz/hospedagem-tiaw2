@@ -6,14 +6,16 @@ import { AvisoEspera, Estado } from '@ds/Componentes.jsx';
 import { IconeCheck, IconePerfis, IconeTelefone } from '@ds/Icones.jsx';
 import { useUsuario } from '@ds/preferencias.js';
 import { NOMES_PERFIL, usePermissoes } from '@ds/permissoes.js';
-import AcoesRapidas from './components/AcoesRapidas.jsx';
-import AindaHoje from './components/AindaHoje.jsx';
-import CardCompromisso from './components/CardCompromisso.jsx';
+import Agora from './components/Agora.jsx';
+import Apoio from './components/Apoio.jsx';
+import DiaDeHoje from './components/DiaDeHoje.jsx';
 import DialogoNota from './components/DialogoNota.jsx';
 import { DialogoCodigo, DialogoConvite, SemIdoso } from './components/Rede.jsx';
 import Saudacao from './components/Saudacao.jsx';
 import { useCuidadosDoDia } from './hooks/useCuidadosDoDia.js';
-import { duracaoPorExtenso, horaAgora, minutosAte, somarMinutos } from './utils/hora.js';
+import { horaAgora, minutosAte, somarMinutos } from './utils/hora.js';
+
+const primeiro = (nome = '') => nome.trim().split(/\s+/)[0].toLowerCase();
 
 /* força um novo render a cada 30 s, para a contagem regressiva e a régua andarem */
 function useMinutoAtual() {
@@ -27,9 +29,9 @@ function useMinutoAtual() {
 export default function App() {
   useMinutoAtual();
   const cuidados = useCuidadosDoDia();
-  const { medAtual, proximo } = cuidados;
+  const { proximo } = cuidados;
   const usuario = useUsuario(cuidados.usuario);
-  const { perfil, pode } = usePermissoes();
+  const { perfil, pode, podeVer } = usePermissoes();
   /* o idoso vê um início mais simples: o próximo cuidado, pedir ajuda e o resto do dia */
   const simples = perfil === 'idoso';
 
@@ -41,21 +43,23 @@ export default function App() {
   const [aviso, setAviso] = useState(null);
 
   const minutos = proximo ? minutosAte(proximo.hora) : 0;
-  let subtitulo = 'Tudo em dia por hoje. Que seu dia seja tranquilo!';
+  const agora = horaAgora();
+  const cuidadosHoje = cuidados.linhaDoTempo.filter((e) => e.tipo !== 'nota');
+  const feitos = cuidadosHoje.filter((e) => e.status).length;
+  const atrasados = cuidadosHoje.filter((e) => !e.status && e.hora < agora).length;
+
+  /* o resumo do dia em uma frase; o detalhe fica no cartão e na lista */
+  let subtitulo = 'Nenhum cuidado marcado para hoje.';
   if (cuidados.carregando) {
     subtitulo = 'Carregando os cuidados de hoje…';
   } else if (cuidados.erro) {
     subtitulo = 'Não conseguimos carregar os cuidados de hoje.';
-  } else if (proximo) {
-    subtitulo = minutos > 0
-      ? 'Seu próximo cuidado é daqui a ' + duracaoPorExtenso(minutos) + '.'
-      : minutos < -15
-        ? 'Há um cuidado atrasado: ' + proximo.titulo + '.'
-        : 'Está na hora: ' + proximo.titulo + '.';
+  } else if (cuidadosHoje.length) {
+    const faltam = cuidadosHoje.length - feitos;
+    subtitulo = !faltam
+      ? 'Todos os cuidados de hoje foram feitos.'
+      : `${feitos} de ${cuidadosHoje.length} cuidados feitos` + (atrasados ? `, ${atrasados} ${atrasados === 1 ? 'atrasado' : 'atrasados'}.` : '.');
   }
-
-  /* o item em destaque não se repete na lista de baixo; o que já foi feito sai dela */
-  const restantes = cuidados.linhaDoTempo.filter((e) => e.tipo === 'nota' || (!e.status && e.id !== proximo?.id));
 
   function avisar(msg, tipo, acao) {
     setAviso({ msg, tipo, acao, id: Date.now() });
@@ -115,7 +119,10 @@ export default function App() {
     gravar(() => cuidados.chamarAjuda(quem?.slice(0, 200)), 'Pedido de ajuda enviado à equipe');
   }
 
-  const contato = cuidados.idoso?.contatos?.find((c) => c.principal) || cuidados.idoso?.contatos?.[0];
+  /* quem é o contato principal não precisa de um botão para ligar para si mesmo */
+  const contato = [...(cuidados.idoso?.contatos || [])]
+    .sort((a, b) => Number(!!b.principal) - Number(!!a.principal))
+    .find((c) => c.telefone && primeiro(c.nome) !== primeiro(usuario?.nome));
 
   const atalhos = [
     pode('rede.convidar') && { rotulo: 'Convidar para a rede', Icone: IconePerfis, aoClicar: () => setConviteAberto(true) },
@@ -131,9 +138,12 @@ export default function App() {
     );
   }
 
+  const podeAgenda = podeVer('agenda');
+  const pronto = !cuidados.carregando && !cuidados.erro;
+
   return (
     <Shell tela="inicio" usuario={cuidados.usuario} atalhos={atalhos}>
-      <Saudacao nome={usuario?.nome} idoso={simples ? null : cuidados.idoso?.nome} subtitulo={subtitulo} acoes={atalhos} />
+      <Saudacao nome={usuario?.nome} idoso={simples ? null : cuidados.idoso?.nome} subtitulo={subtitulo} />
 
       <AvisoEspera ativo={cuidados.carregando} />
       {cuidados.carregando && <div className="esqueleto inicio-esqueleto" aria-hidden="true" />}
@@ -148,33 +158,41 @@ export default function App() {
         </Estado>
       )}
 
-      {!cuidados.carregando && !cuidados.erro && (
-        <CardCompromisso
+      {pronto && (
+        <Agora
           item={proximo}
           minutos={minutos}
-          linhaDoTempo={cuidados.linhaDoTempo}
+          total={cuidadosHoje.length}
           simples={simples}
+          podeAgenda={podeAgenda}
           aoConcluir={() => concluir(proximo)}
           aoRecusar={recusar}
           aoAdiar={adiar}
         />
       )}
 
-      <AcoesRapidas
-        med={medAtual}
-        aoRegistrarRemedio={() => concluir(medAtual)}
-        aoAbrirNota={pode('inicio.anotar') ? () => setNotaAberta(true) : null}
-        aoAbrirAjuda={() => setSosAberto(true)}
-      />
-
       {!cuidados.erro && (
-        <AindaHoje
-          entradas={restantes}
+        <Apoio
+          idoso={cuidados.idoso}
+          contato={contato}
+          simples={simples}
+          aoAbrirAjuda={() => setSosAberto(true)}
+          aoAbrirNota={pode('inicio.anotar') ? () => setNotaAberta(true) : null}
+          aoConvidar={pode('rede.convidar') ? () => setConviteAberto(true) : null}
+          aoUsarCodigo={() => setCodigoAberto(true)}
+        />
+      )}
+
+      {!cuidados.erro && (cuidados.carregando || cuidados.linhaDoTempo.length > 0) && (
+        <DiaDeHoje
+          entradas={cuidados.linhaDoTempo}
+          agora={agora}
+          proximoId={proximo?.id}
           carregando={cuidados.carregando}
           novaNotaId={novaNotaId}
-          aoConcluir={(id) => concluir(restantes.find((e) => e.id === id))}
+          podeAgenda={podeAgenda}
+          aoConcluir={(id) => concluir(cuidados.linhaDoTempo.find((e) => e.id === id))}
           aoRemoverNota={pode('inicio.anotar') ? removerNota : null}
-          aoNovaNota={pode('inicio.anotar') ? () => setNotaAberta(true) : null}
         />
       )}
 

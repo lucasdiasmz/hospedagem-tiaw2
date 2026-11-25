@@ -22,29 +22,19 @@ function primeiroNome(nome = '') {
 const DATA = new Intl.DateTimeFormat('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
 
 /* saudação e ícone pelo horário; o App re-renderiza a cada 30 s, então a troca acontece sozinha */
-export default function Saudacao({ nome, idoso, subtitulo, acoes = [] }) {
+export default function Saudacao({ nome, idoso, subtitulo }) {
   const { saudacao, Icone } = PERIODOS[periodoAtual()];
   const hoje = DATA.format(new Date());
 
   return (
     <header className="saudacao">
-      <div>
-        <p className="saudacao-data">
-          <Icone />
-          <span>{hoje.charAt(0).toUpperCase() + hoje.slice(1)}</span>
-          {idoso && <span className="saudacao-idoso">Cuidando de {primeiroNome(idoso)}</span>}
-        </p>
-        <h1>{nome ? saudacao + ', ' + primeiroNome(nome) : saudacao}</h1>
-        <p className="saudacao-sub" aria-live="polite">{subtitulo}</p>
-      </div>
-      {/* no celular estas ações ficam na folha "Mais" */}
-      {acoes.length > 0 && (
-        <div className="saudacao-acoes">
-          {acoes.map(({ rotulo, Icone, aoClicar }) => (
-            <button key={rotulo} type="button" className="btn btn-suave" onClick={aoClicar}><Icone />{rotulo}</button>
-          ))}
-        </div>
-      )}
+      <p className="saudacao-data">
+        <Icone />
+        <span>{hoje.charAt(0).toUpperCase() + hoje.slice(1)}</span>
+        {idoso && <span className="saudacao-idoso">Cuidando de {primeiroNome(idoso)}</span>}
+      </p>
+      <h1>{nome ? saudacao + ', ' + primeiroNome(nome) : saudacao}</h1>
+      <p className="saudacao-sub" aria-live="polite">{subtitulo}</p>
     </header>
   );
 }
