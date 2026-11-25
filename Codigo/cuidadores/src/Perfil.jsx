@@ -205,7 +205,7 @@ export default function Perfil({ id }) {
     async function enviarSolicitacao(pedido) {
         await solicitar(pedido);
         setDialogo(null);
-        setAviso({ id: Date.now(), msg: 'Solicitação enviada. ' + perfil.nome.split(' ')[0] + ' vai responder em breve.' });
+        setAviso({ id: Date.now(), msg: 'Solicitação enviada. A resposta de ' + perfil.nome.split(' ')[0] + ' aparece no seu Início.' });
     }
 
     async function enviarAvaliacao(avaliacao) {
