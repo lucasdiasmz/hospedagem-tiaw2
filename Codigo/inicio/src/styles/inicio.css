@@ -632,13 +632,6 @@
   }
 }
 
-/* celular e tablet: a rede de apoio fica na folha "Mais", com os outros atalhos */
-@media (max-width: 63.99rem) {
-  .apoio-rede {
-    display: none;
-  }
-}
-
 @container palco (max-width: 58rem) {
   .dia-item {
     grid-template-columns: 3.1rem minmax(0, 1fr) var(--toque);
@@ -695,4 +688,278 @@
 .sem-idoso h2 {
   margin-bottom: var(--e-4);
   font-size: var(--t-lg);
+}
+
+/* ===== Avisos da rede (pedidos de ajuda e solicitações) ===== */
+.avisos-lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2);
+}
+
+.aviso {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--e-2) var(--e-3);
+  padding: var(--e-3) var(--e-3) var(--e-3) var(--e-4);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--linha);
+  background: var(--superficie);
+}
+
+.aviso-icone {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--acao-suave);
+  color: var(--acao);
+}
+
+.aviso-icone svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.aviso-texto {
+  min-width: 0;
+}
+
+.aviso-texto strong {
+  display: block;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.aviso-texto p {
+  margin-top: 2px;
+  color: var(--tinta-2);
+  font-size: var(--t-sm);
+  overflow-wrap: anywhere;
+}
+
+.aviso-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-2);
+}
+
+.aviso-acoes .btn {
+  padding-inline: var(--e-4);
+}
+
+/* pedido de ajuda: o único aviso em cor de alerta */
+.aviso--ajuda {
+  border-color: transparent;
+  background: var(--vermelho-claro);
+}
+
+.aviso--ajuda .aviso-icone {
+  background: var(--superficie);
+  color: var(--vermelho);
+}
+
+.aviso--ajuda .aviso-texto strong {
+  color: var(--vermelho);
+}
+
+.aviso--ok .aviso-icone {
+  background: var(--verde-claro);
+  color: var(--verde);
+}
+
+.alto-contraste .aviso {
+  border-color: currentColor;
+}
+
+/* com botões, eles descem para a linha de baixo quando falta largura */
+@container palco (max-width: 40rem) {
+  .aviso:has(.aviso-acoes) {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .aviso-acoes {
+    grid-column: 1 / -1;
+  }
+
+  .aviso-acoes .btn {
+    flex: 1 1 8rem;
+  }
+
+  .aviso:has(.aviso-acoes) .aviso-fechar {
+    grid-row: 1;
+    grid-column: 3;
+  }
+}
+
+@media (max-width: 63.99rem) {
+  .aviso:has(.aviso-acoes) {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .aviso-acoes {
+    grid-column: 1 / -1;
+  }
+
+  .aviso-acoes .btn {
+    flex: 1 1 8rem;
+  }
+  .aviso:has(.aviso-acoes) .aviso-fechar {
+    grid-row: 1;
+    grid-column: 3;
+  }
+}
+
+/* ===== Seletor de pessoa na saudação ===== */
+.saudacao-idoso--escolha {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 4px 0 12px;
+}
+
+.saudacao-idoso--escolha select {
+  min-height: 2.25rem;
+  padding: 0 var(--e-2);
+  border: 0;
+  border-radius: var(--r-pilula);
+  background: var(--superficie);
+  color: var(--acao);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ===== Rede de apoio ===== */
+.apoio-rostos {
+  display: flex;
+  margin-top: var(--e-3);
+  padding-left: 6px;
+}
+
+.apoio-rostos .rede-avatar {
+  margin-left: -6px;
+  border: 2px solid var(--superficie-2);
+}
+
+.rede-avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--tom-nevoa);
+  color: var(--tinta);
+  font-size: var(--t-sm);
+  font-weight: 700;
+}
+
+.rede-avatar--familia,
+.rede-avatar--idoso {
+  background: var(--tom-areia);
+}
+
+.rede-avatar--cuidador {
+  background: var(--tom-menta);
+  color: var(--acao);
+}
+
+.alto-contraste .rede-avatar {
+  border: 1.5px solid currentColor;
+}
+
+.rede-lista {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--e-4);
+}
+
+.rede-membro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e-2) var(--e-3);
+  padding-block: var(--e-3);
+}
+
+.rede-membro + .rede-membro {
+  border-top: 1px solid var(--linha);
+}
+
+.rede-quem {
+  display: flex;
+  flex: 1 1 10rem;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.rede-quem strong {
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.rede-quem small {
+  color: var(--tinta-3);
+  font-size: var(--t-sm);
+}
+
+.rede-contato {
+  display: flex;
+  gap: var(--e-1);
+}
+
+.rede-contato .btn-icone {
+  width: var(--toque);
+  height: var(--toque);
+  border-radius: 50%;
+  background: var(--acao-suave);
+  color: var(--acao);
+}
+
+.rede-contato .rede-whats {
+  background: #e3f6e8;
+  color: #128c4b;
+}
+
+.alto-contraste .rede-contato .btn-icone {
+  border: 1.5px solid currentColor;
+}
+
+.rede-tirar {
+  color: var(--vermelho);
+}
+
+.rede-confirmar {
+  display: flex;
+  gap: var(--e-2);
+}
+
+/* envio do convite: WhatsApp em destaque, link como alternativa */
+.convite-envio {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  gap: var(--e-2);
+  margin-top: var(--e-4);
+}
+
+/* avisos ocupam a largura toda; o apoio desce uma linha */
+@container palco (min-width: 46rem) {
+  .conteudo > .avisos {
+    grid-column: 1 / -1;
+  }
+
+  .conteudo:has(> .avisos) {
+    grid-template-rows: auto auto auto minmax(0, 1fr);
+  }
+
+  .conteudo:has(> .avisos) > .apoio {
+    grid-row: 3 / span 2;
+  }
+
+  .conteudo:has(> .avisos) > .aviso-espera {
+    grid-row: 5;
+  }
 }

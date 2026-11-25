@@ -1,7 +1,24 @@
 import { useEffect, useState } from 'react';
 import Dialogo from '@ds/Dialogo.jsx';
 import { Estado } from '@ds/Componentes.jsx';
+import { TELAS } from '@ds/navegacao.js';
 import { api } from '../api.js';
+
+const NOME_PAPEL = { cliente: 'familiar', cuidador: 'cuidador(a)', idoso: 'pessoa idosa' };
+
+/* link que abre o cadastro (ou o login) já com o código preenchido */
+export function linkDoConvite(codigo, papel) {
+  const url = new URL(TELAS.boasVindas, window.location.href);
+  url.search = new URLSearchParams({ convite: codigo, perfil: papel }).toString();
+  return url.toString();
+}
+
+/* WhatsApp: com número abre a conversa com a pessoa; sem número, escolhe para quem enviar */
+export function linkWhatsApp(texto, telefone = '') {
+  const digitos = telefone.replace(/\D/g, '');
+  const numero = digitos.length >= 10 && digitos.length <= 11 ? '55' + digitos : digitos.length >= 12 ? digitos : '';
+  return 'https://wa.me/' + numero + (texto ? '?text=' + encodeURIComponent(texto) : '');
+}
 
 const PAPEIS = [
   { id: 'cliente', rotulo: 'Familiar' },
@@ -33,12 +50,16 @@ export function DialogoConvite({ aberto, aoFechar, idoso }) {
     }
   }
 
+  const link = convite && linkDoConvite(convite.codigo, convite.papel);
+  const mensagem = convite && `Oi! Estou te convidando para a rede de apoio de ${idoso?.nome?.split(' ')[0] || ''} no AcessaMob, `
+    + `como ${NOME_PAPEL[convite.papel]}. Abra o link para entrar: ${link} (código ${convite.codigo})`;
+
   async function copiar() {
     try {
-      await navigator.clipboard.writeText(convite.codigo);
+      await navigator.clipboard.writeText(link);
       setCopiado(true);
     } catch {
-      setErro('Não foi possível copiar. Anote o código.');
+      setErro('Não foi possível copiar. Envie o código ' + convite.codigo + '.');
     }
   }
 
@@ -48,11 +69,12 @@ export function DialogoConvite({ aberto, aoFechar, idoso }) {
       {convite ? (
         <>
           <p className="convite-codigo">{convite.codigo}</p>
-          <p>Envie só para a pessoa certa. Vale uma vez, até {new Date(convite.expiraEm).toLocaleDateString('pt-BR')}.</p>
+          <p>Quem abrir o link entra na rede com uma conta nova ou a que já tem. Envie só para a pessoa certa:
+            vale uma vez, até {new Date(convite.expiraEm).toLocaleDateString('pt-BR')}.</p>
           {erro && <p className="erro-form" role="alert">{erro}</p>}
-          <div className="dialogo-botoes">
-            <button type="button" className="btn" onClick={aoFechar}>Fechar</button>
-            <button type="button" className="btn btn-primario" onClick={copiar}>{copiado ? 'Código copiado' : 'Copiar código'}</button>
+          <div className="convite-envio">
+            <a className="btn btn-primario" href={linkWhatsApp(mensagem)} target="_blank" rel="noopener noreferrer">Enviar pelo WhatsApp</a>
+            <button type="button" className="btn" onClick={copiar}>{copiado ? 'Link copiado' : 'Copiar link'}</button>
           </div>
         </>
       ) : (
@@ -80,8 +102,8 @@ export function DialogoConvite({ aberto, aoFechar, idoso }) {
 }
 
 /* entra na rede de um idoso com o código recebido */
-export function FormCodigo() {
-  const [codigo, setCodigo] = useState('');
+export function FormCodigo({ inicial = '' }) {
+  const [codigo, setCodigo] = useState(inicial);
   const [erro, setErro] = useState('');
   const [enviando, setEnviando] = useState(false);
 
@@ -115,10 +137,10 @@ export function FormCodigo() {
   );
 }
 
-export function DialogoCodigo({ aberto, aoFechar }) {
+export function DialogoCodigo({ aberto, aoFechar, inicial }) {
   return (
     <Dialogo aberto={aberto} aoFechar={aoFechar} titulo="Usar código de convite" descricao="Entre na rede de apoio de mais uma pessoa.">
-      <FormCodigo />
+      <FormCodigo inicial={inicial} />
     </Dialogo>
   );
 }
@@ -159,7 +181,7 @@ function FormIdoso() {
 }
 
 /* conta ainda sem ninguém vinculado */
-export function SemIdoso({ perfil }) {
+export function SemIdoso({ perfil, codigo }) {
   return (
     <>
       <Estado titulo="Nenhuma pessoa vinculada ainda">
@@ -178,7 +200,7 @@ export function SemIdoso({ perfil }) {
         )}
         <section className="card" aria-labelledby="com-codigo">
           <h2 id="com-codigo">Tenho um código</h2>
-          <FormCodigo />
+          <FormCodigo inicial={codigo} />
         </section>
       </div>
     </>

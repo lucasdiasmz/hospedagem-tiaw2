@@ -19,9 +19,21 @@ function paraTela(item) {
   };
 }
 
+/* mesma chave da tela de perfil: a pessoa escolhida numa tela vale nas outras */
+const CHAVE_IDOSO = 'acessamob_idoso_selecionado';
+
+function idosoSalvo() {
+  try {
+    return localStorage.getItem(CHAVE_IDOSO);
+  } catch {
+    return null;
+  }
+}
+
 /* Estado da linha do tempo de hoje, vindo do backend (MongoDB): usuário, idoso, itens e anotações */
 export function useCuidadosDoDia() {
   const [usuario, setUsuario] = useState(null);
+  const [idosos, setIdosos] = useState([]);
   const [idoso, setIdoso] = useState(null);
   const [itens, setItens] = useState([]);
   const [notas, setNotas] = useState([]);
@@ -35,23 +47,46 @@ export function useCuidadosDoDia() {
     setNotas(dia.anotacoes);
   }, [data]);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const [eu, idosos] = await Promise.all([api('/usuarios/eu'), api('/idosos')]);
-        setUsuario(eu);
-        /* por enquanto a tela mostra o primeiro idoso que o usuário acompanha */
-        if (idosos[0]) {
-          setIdoso(idosos[0]);
-          await carregarDia(idosos[0].id);
-        }
-      } catch (e) {
-        setErro(e.message);
-      } finally {
-        setCarregando(false);
-      }
-    })();
+  /* carrega o usuário e as pessoas que ele acompanha; mostra a escolhida antes (ou a primeira) */
+  const carregarTudo = useCallback(async () => {
+    try {
+      const [eu, lista] = await Promise.all([api('/usuarios/eu'), api('/idosos')]);
+      setUsuario(eu);
+      setIdosos(lista);
+      const escolhido = lista.find((i) => i.id === idosoSalvo()) || lista[0] || null;
+      setIdoso(escolhido);
+      if (escolhido) await carregarDia(escolhido.id);
+      setErro(null);
+    } catch (e) {
+      setErro(e.message);
+    } finally {
+      setCarregando(false);
+    }
   }, [carregarDia]);
+
+  useEffect(() => {
+    carregarTudo();
+  }, [carregarTudo]);
+
+  /* troca a pessoa acompanhada (quem cuida de mais de uma) */
+  async function escolherIdoso(id) {
+    const novo = idosos.find((i) => i.id === id);
+    if (!novo || novo.id === idoso?.id) return;
+    try {
+      localStorage.setItem(CHAVE_IDOSO, id);
+    } catch {
+      /* sem armazenamento, a escolha vale só agora */
+    }
+    setIdoso(novo);
+    setCarregando(true);
+    try {
+      await carregarDia(id);
+    } catch (e) {
+      setErro(e.message);
+    } finally {
+      setCarregando(false);
+    }
+  }
 
   const ordenados = [...itens].sort(compararHora);
   const pendentes = ordenados.filter((i) => !i.status);
@@ -95,7 +130,8 @@ export function useCuidadosDoDia() {
   }
 
   return {
-    usuario, idoso, carregando, erro,
+    usuario, idoso, idosos, carregando, erro,
+    escolherIdoso, recarregar: carregarTudo,
     linhaDoTempo, proximo, medAtual,
     definir, adicionarNota, removerNota, chamarAjuda,
   };

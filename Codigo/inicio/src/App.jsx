@@ -1,21 +1,55 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Shell from '@ds/Shell.jsx';
 import Dialogo from '@ds/Dialogo.jsx';
 import Toast from '@ds/Toast.jsx';
 import { AvisoEspera, Estado } from '@ds/Componentes.jsx';
 import { IconeCheck, IconePerfis, IconeTelefone } from '@ds/Icones.jsx';
 import { useUsuario } from '@ds/preferencias.js';
-import { NOMES_PERFIL, usePermissoes } from '@ds/permissoes.js';
+import { usePermissoes } from '@ds/permissoes.js';
 import Agora from './components/Agora.jsx';
 import Apoio from './components/Apoio.jsx';
+import Avisos from './components/Avisos.jsx';
+import DialogoRede from './components/DialogoRede.jsx';
 import DiaDeHoje from './components/DiaDeHoje.jsx';
 import DialogoNota from './components/DialogoNota.jsx';
 import { DialogoCodigo, DialogoConvite, SemIdoso } from './components/Rede.jsx';
 import Saudacao from './components/Saudacao.jsx';
+import { api } from './api.js';
+import { useAvisos } from './hooks/useAvisos.js';
 import { useCuidadosDoDia } from './hooks/useCuidadosDoDia.js';
 import { horaAgora, minutosAte, somarMinutos } from './utils/hora.js';
 
 const primeiro = (nome = '') => nome.trim().split(/\s+/)[0].toLowerCase();
+
+/* código de convite que veio pelo link (?convite=ABCD-EFGH); sai do endereço depois de lido */
+function lerConviteDoEndereco() {
+  const q = new URLSearchParams(window.location.search);
+  const codigo = q.get('convite') || '';
+  if (codigo) {
+    q.delete('convite');
+    q.delete('perfil');
+    const resto = q.toString();
+    window.history.replaceState(null, '', window.location.pathname + (resto ? '?' + resto : ''));
+  }
+  return codigo.slice(0, 12);
+}
+
+/* quem está na rede do idoso escolhido */
+function useRede(idosoId) {
+  const [rede, setRede] = useState([]);
+  const carregar = useCallback(async () => {
+    if (!idosoId) return setRede([]);
+    try {
+      setRede(await api(`/idosos/${idosoId}/rede`));
+    } catch {
+      setRede([]);
+    }
+  }, [idosoId]);
+  useEffect(() => {
+    carregar();
+  }, [carregar]);
+  return [rede, carregar];
+}
 
 /* força um novo render a cada 30 s, para a contagem regressiva e a régua andarem */
 function useMinutoAtual() {
@@ -38,7 +72,11 @@ export default function App() {
   const [notaAberta, setNotaAberta] = useState(false);
   const [sosAberto, setSosAberto] = useState(false);
   const [conviteAberto, setConviteAberto] = useState(false);
-  const [codigoAberto, setCodigoAberto] = useState(false);
+  const [codigoConvite] = useState(lerConviteDoEndereco);
+  const [codigoAberto, setCodigoAberto] = useState(Boolean(codigoConvite));
+  const [redeAberta, setRedeAberta] = useState(false);
+  const avisos = useAvisos();
+  const [rede, carregarRede] = useRede(cuidados.idoso?.id);
   const [novaNotaId, setNovaNotaId] = useState(null);
   const [aviso, setAviso] = useState(null);
 
@@ -115,8 +153,42 @@ export default function App() {
 
   function chamarAjuda() {
     setSosAberto(false);
-    const quem = usuario?.nome ? `Pedido feito por ${usuario.nome} (${NOMES_PERFIL[perfil]})` : undefined;
-    gravar(() => cuidados.chamarAjuda(quem?.slice(0, 200)), 'Pedido de ajuda enviado à equipe');
+    gravar(async () => {
+      await cuidados.chamarAjuda();
+      await avisos.carregar();
+    }, 'Pedido de ajuda enviado à rede de apoio');
+  }
+
+  /* aceitar uma solicitação coloca o cuidador na rede de mais uma pessoa */
+  const avisosDaTela = {
+    ...avisos,
+    async responderSolicitacao(s, aceitar) {
+      await avisos.responderSolicitacao(s, aceitar);
+      avisar(aceitar ? `Pronto: você agora acompanha ${s.idosoNome.split(' ')[0]}` : 'Solicitação recusada');
+      if (aceitar) await cuidados.recarregar();
+    },
+  };
+
+  async function removerDaRede(membro) {
+    await api(`/idosos/${cuidados.idoso.id}/rede/${membro.id}`, { metodo: 'DELETE' });
+    if (membro.id === cuidados.usuario?.id) {
+      setRedeAberta(false);
+      avisar('Você saiu da rede de ' + cuidados.idoso.nome.split(' ')[0]);
+      await cuidados.recarregar();
+    } else {
+      avisar(membro.nome.split(' ')[0] + ' saiu da rede');
+      await carregarRede();
+    }
+  }
+
+  function abrirConvite() {
+    setRedeAberta(false);
+    setConviteAberto(true);
+  }
+
+  function abrirCodigo() {
+    setRedeAberta(false);
+    setCodigoAberto(true);
   }
 
   /* quem é o contato principal não precisa de um botão para ligar para si mesmo */
@@ -125,15 +197,17 @@ export default function App() {
     .find((c) => c.telefone && primeiro(c.nome) !== primeiro(usuario?.nome));
 
   const atalhos = [
-    pode('rede.convidar') && { rotulo: 'Convidar para a rede', Icone: IconePerfis, aoClicar: () => setConviteAberto(true) },
+    { rotulo: 'Rede de apoio', Icone: IconePerfis, aoClicar: () => setRedeAberta(true) },
     { rotulo: 'Usar código de convite', Icone: IconeCheck, aoClicar: () => setCodigoAberto(true) },
   ].filter(Boolean);
 
   if (!cuidados.carregando && !cuidados.erro && !cuidados.idoso) {
     return (
       <Shell tela="inicio" usuario={cuidados.usuario}>
-        <Saudacao nome={usuario?.nome} subtitulo="Falta só vincular a pessoa cuidada." />
-        <SemIdoso perfil={perfil} />
+        <Saudacao nome={usuario?.nome} subtitulo={perfil === 'cuidador' ? 'Você ainda não acompanha ninguém.' : 'Falta só vincular a pessoa cuidada.'} />
+        <Avisos avisos={avisosDaTela} simples={simples} aoErro={(m) => avisar(m, 'erro')} />
+        <SemIdoso perfil={perfil} codigo={codigoConvite} />
+        <Toast aviso={aviso} />
       </Shell>
     );
   }
@@ -143,7 +217,10 @@ export default function App() {
 
   return (
     <Shell tela="inicio" usuario={cuidados.usuario} atalhos={atalhos}>
-      <Saudacao nome={usuario?.nome} idoso={simples ? null : cuidados.idoso?.nome} subtitulo={subtitulo} />
+      <Saudacao nome={usuario?.nome} idoso={simples ? null : cuidados.idoso} idosos={cuidados.idosos}
+        aoEscolherIdoso={cuidados.escolherIdoso} subtitulo={subtitulo} />
+
+      <Avisos avisos={avisosDaTela} simples={simples} aoErro={(m) => avisar(m, 'erro')} />
 
       <AvisoEspera ativo={cuidados.carregando} />
       {cuidados.carregando && <div className="esqueleto inicio-esqueleto" aria-hidden="true" />}
@@ -176,10 +253,12 @@ export default function App() {
           idoso={cuidados.idoso}
           contato={contato}
           simples={simples}
+          rede={rede}
+          euId={cuidados.usuario?.id}
           aoAbrirAjuda={() => setSosAberto(true)}
           aoAbrirNota={pode('inicio.anotar') ? () => setNotaAberta(true) : null}
           aoConvidar={pode('rede.convidar') ? () => setConviteAberto(true) : null}
-          aoUsarCodigo={() => setCodigoAberto(true)}
+          aoVerRede={() => setRedeAberta(true)}
         />
       )}
 
@@ -199,7 +278,10 @@ export default function App() {
       <Toast aviso={aviso} />
 
       <DialogoConvite aberto={conviteAberto} aoFechar={() => setConviteAberto(false)} idoso={cuidados.idoso} />
-      <DialogoCodigo aberto={codigoAberto} aoFechar={() => setCodigoAberto(false)} />
+      <DialogoCodigo aberto={codigoAberto} aoFechar={() => setCodigoAberto(false)} inicial={codigoConvite} />
+      <DialogoRede aberto={redeAberta} aoFechar={() => setRedeAberta(false)} idoso={cuidados.idoso} rede={rede}
+        euId={cuidados.usuario?.id} perfil={perfil} aoRemover={removerDaRede}
+        aoConvidar={pode('rede.convidar') ? abrirConvite : null} aoUsarCodigo={abrirCodigo} />
 
       <DialogoNota aberto={notaAberta} aoFechar={() => setNotaAberta(false)} aoSalvar={salvarNota} />
 

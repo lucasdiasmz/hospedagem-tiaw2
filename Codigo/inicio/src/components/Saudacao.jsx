@@ -22,7 +22,8 @@ function primeiroNome(nome = '') {
 const DATA = new Intl.DateTimeFormat('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
 
 /* saudação e ícone pelo horário; o App re-renderiza a cada 30 s, então a troca acontece sozinha */
-export default function Saudacao({ nome, idoso, subtitulo }) {
+/* idosos: lista de quem a pessoa acompanha; com mais de um, vira um seletor */
+export default function Saudacao({ nome, idoso, idosos = [], aoEscolherIdoso, subtitulo }) {
   const { saudacao, Icone } = PERIODOS[periodoAtual()];
   const hoje = DATA.format(new Date());
 
@@ -31,7 +32,14 @@ export default function Saudacao({ nome, idoso, subtitulo }) {
       <p className="saudacao-data">
         <Icone />
         <span>{hoje.charAt(0).toUpperCase() + hoje.slice(1)}</span>
-        {idoso && <span className="saudacao-idoso">Cuidando de {primeiroNome(idoso)}</span>}
+        {idoso && idosos.length > 1 ? (
+          <label className="saudacao-idoso saudacao-idoso--escolha">
+            Cuidando de
+            <select value={idoso.id} onChange={(e) => aoEscolherIdoso(e.target.value)}>
+              {idosos.map((i) => <option key={i.id} value={i.id}>{i.nome}</option>)}
+            </select>
+          </label>
+        ) : idoso && <span className="saudacao-idoso">Cuidando de {primeiroNome(idoso.nome)}</span>}
       </p>
       <h1>{nome ? saudacao + ', ' + primeiroNome(nome) : saudacao}</h1>
       <p className="saudacao-sub" aria-live="polite">{subtitulo}</p>
