@@ -1,2 +1,5 @@
 # saída do site único (Codigo/build-unificado.mjs)
 /dist/
+
+# segredo de sessão usado só no computador (Codigo/auth/sessao.js)
+Codigo/auth/.segredo-local
