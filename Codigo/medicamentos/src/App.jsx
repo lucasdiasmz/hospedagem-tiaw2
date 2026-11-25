@@ -70,7 +70,10 @@ export default function App() {
     const [tentativa, setTentativa] = useState(0);
     const agora = horaAgora();
     /* só o familiar cadastra remédio novo; todos registram as doses */
-    const { pode } = usePermissoes();
+    const { perfil, pode } = usePermissoes();
+    /* o próprio idoso lê os botões em primeira pessoa */
+    const rotuloTomou = perfil === 'idoso' ? 'Já tomei' : 'Tomou';
+    const rotuloRecusou = perfil === 'idoso' ? 'Recusei' : 'Recusou';
     const podeCadastrar = pode('medicamentos.cadastrar');
 
     useEffect(() => {
@@ -227,10 +230,10 @@ export default function App() {
                                 <div className="dose-destaque-acoes">
                                     <button type="button" className="btn btn-claro" disabled={salvandoId !== null} onClick={() => alterarStatus(proximo, 'Tomado')}>
                                         <IconeCheck />
-                                        Tomou
+                                        {rotuloTomou}
                                     </button>
                                     <button type="button" className="btn btn-contorno" disabled={salvandoId !== null} onClick={() => alterarStatus(proximo, 'Recusado')}>
-                                        Recusou
+                                        {rotuloRecusou}
                                     </button>
                                     <button type="button" className="btn btn-contorno" onClick={() => setSelecionado(proximo)}>
                                         Detalhes
@@ -301,13 +304,13 @@ export default function App() {
                                                         ) : (
                                                             <>
                                                                 <button type="button" className="btn btn-primario" disabled={salvandoId !== null}
-                                                                    aria-label={'Tomou ' + m.nome} onClick={() => alterarStatus(m, 'Tomado')}>
+                                                                    aria-label={rotuloTomou + ' ' + m.nome} onClick={() => alterarStatus(m, 'Tomado')}>
                                                                     <IconeCheck />
-                                                                    <span>{salvando ? 'Salvando…' : 'Tomou'}</span>
+                                                                    <span>{salvando ? 'Salvando…' : rotuloTomou}</span>
                                                                 </button>
                                                                 <button type="button" className="btn" disabled={salvandoId !== null}
-                                                                    aria-label={'Recusou ' + m.nome} onClick={() => alterarStatus(m, 'Recusado')}>
-                                                                    Recusou
+                                                                    aria-label={rotuloRecusou + ' ' + m.nome} onClick={() => alterarStatus(m, 'Recusado')}>
+                                                                    {rotuloRecusou}
                                                                 </button>
                                                             </>
                                                         )}

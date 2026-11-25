@@ -118,7 +118,7 @@ export default function App() {
 
   return (
     <Shell tela="inicio" usuario={cuidados.usuario} atalhos={atalhos}>
-      <Saudacao nome={usuario?.nome} idoso={cuidados.idoso?.nome} subtitulo={subtitulo} />
+      <Saudacao nome={usuario?.nome} idoso={simples ? null : cuidados.idoso?.nome} subtitulo={subtitulo} />
 
       {cuidados.carregando && <div className="esqueleto inicio-esqueleto" aria-hidden="true" />}
 

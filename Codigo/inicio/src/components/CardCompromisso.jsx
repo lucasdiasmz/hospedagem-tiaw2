@@ -85,7 +85,7 @@ export default function CardCompromisso({ item, minutos, linhaDoTempo, simples, 
       <div className="destaque-acoes">
         <button type="button" className="btn btn-claro" onClick={aoConcluir}>
           <IconeCheck />
-          {ehMed ? 'Já tomou' : 'Marcar como feito'}
+          {ehMed ? (simples ? 'Já tomei' : 'Já tomou') : 'Marcar como feito'}
         </button>
         {!simples && <div className="destaque-sec">
           {ehMed && <button type="button" className="btn btn-contorno" onClick={aoRecusar}>Recusou</button>}
