@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "node --watch --env-file-if-exists=.env src/index.js",
     "start": "node --env-file-if-exists=.env src/index.js",
+    "senha": "node --env-file-if-exists=.env src/definir-senha.js",
     "seed": "node --env-file-if-exists=.env src/seed.js",
     "test": "node --test"
   },

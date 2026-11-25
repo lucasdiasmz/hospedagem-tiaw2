@@ -1,11 +1,13 @@
 import assert from 'node:assert/strict';
 import { after, beforeEach, test } from 'node:test';
+import { COOKIE, criarToken } from '../../../auth/sessao.js';
 import { criarApp } from '../src/app.js';
 import { criarRepositorioMemoria } from '../src/repositorios/memoria.js';
 import { criarRepositorioMongo } from '../src/repositorios/mongo.js';
 
 /* Cada teste começa com um banco novo, carregado de Codigo/db/db.json.
    Em memória por padrão; com TEST_MONGODB_URI, usa um banco novo no MongoDB a cada teste. */
+process.env.AUTH_SECRET ||= 'segredo-de-teste-com-mais-de-32-caracteres';
 const MONGO = process.env.TEST_MONGODB_URI;
 let repo;
 let servidor;
@@ -28,9 +30,10 @@ beforeEach(async () => {
 
 after(fecharAtual);
 
-async function api(metodo, caminho, corpo, usuario) {
+/* usuario: id de quem está na sessão; null = sem sessão */
+async function api(metodo, caminho, corpo, usuario = 'usr-4') {
   const headers = { 'Content-Type': 'application/json' };
-  if (usuario) headers['X-Usuario-Id'] = usuario;
+  if (usuario) headers.Cookie = COOKIE + '=' + criarToken(usuario);
   const res = await fetch(base + caminho, {
     method: metodo,
     headers,
@@ -48,7 +51,7 @@ const NOVO = {
 };
 
 test('usuário logado, catálogos da agenda e idosos acompanhados', async () => {
-  const eu = (await api('GET', '/usuarios/eu')).corpo;
+  const eu = (await api('GET', '/usuarios/eu', undefined, 'usr-1')).corpo;
   assert.equal(eu.id, 'usr-1');
   assert.equal(eu.senhaHash, undefined);
 

@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { exigirPapel } from '../../../../auth/express.js';
 import { agora } from '../servicos/tempo.js';
 import {
   DIAS_SEMANA, ErroHttp, validarBooleano, validarCorpo, validarData, validarHora,
@@ -63,6 +64,9 @@ export function rotasCadastros(repo, colecao) {
   r.get('/:id', async (req, res) => {
     res.json(await doIdoso(req));
   });
+
+  /* daqui para baixo, só o familiar responsável */
+  r.use(exigirPapel(['cliente']));
 
   r.post('/', async (req, res) => {
     const dados = validarCorpo(req.body, await regras());

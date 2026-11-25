@@ -43,6 +43,8 @@ export function criarRepositorioMongo(uri, nomeBanco) {
         { unique: true },
       );
       await col('anotacoes').createIndex({ idosoId: 1, data: 1 });
+      await col('usuarios').createIndex({ email: 1 }, { unique: true });
+      await col('convites').createIndex({ codigoHash: 1 }, { unique: true });
 
       /* popula as coleções vazias com db.json */
       const dados = lerDadosIniciais();
@@ -79,6 +81,12 @@ export function criarRepositorioMongo(uri, nomeBanco) {
 
     async atualizar(colecao, id, mudanca) {
       const doc = await col(colecao).findOneAndUpdate({ _id: id }, operacoes(mudanca), { returnDocument: 'after' });
+      return semMongoId(doc);
+    },
+
+    /* atualiza só se o documento ainda combinar com o filtro (uma operação só no banco) */
+    async atualizarSe(colecao, filtro, mudanca) {
+      const doc = await col(colecao).findOneAndUpdate(paraMongo(filtro), operacoes(mudanca), { returnDocument: 'after' });
       return semMongoId(doc);
     },
 

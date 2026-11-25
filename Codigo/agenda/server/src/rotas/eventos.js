@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { exigirPapel } from '../../../../auth/express.js';
 import {
   DIAS_SEMANA, ErroHttp, validarBooleano, validarCorpo, validarData, validarHora,
   validarLista, validarOpcao, validarTexto, validarTextoOpcional,
@@ -61,19 +62,23 @@ export function rotasEventos(repo) {
   });
 
   /* compromisso criado pela agenda não tem cadastro de origem (origem: null) */
-  r.post('/', async (req, res) => {
+  r.post('/', exigirPapel(['cliente']), async (req, res) => {
     const dados = validarCorpo(req.body || {}, regras(await repo.buscarCatalogos()));
     const evento = await repo.inserir('eventosAgenda', { idosoId: req.idoso.id, ...dados, origem: null });
     res.status(201).json(evento);
   });
 
-  r.patch('/:id', async (req, res) => {
+  /* o cuidador só muda a situação; o familiar edita tudo */
+  r.patch('/:id', exigirPapel(['cliente', 'cuidador']), async (req, res) => {
     await doIdoso(req);
     const mudanca = validarCorpo(req.body || {}, regras(await repo.buscarCatalogos()), true);
+    if (req.papel === 'cuidador' && Object.keys(mudanca).some((c) => c !== 'status')) {
+      throw new ErroHttp(403, 'Só o familiar pode editar o compromisso');
+    }
     res.json(await repo.atualizar('eventosAgenda', req.params.id, mudanca));
   });
 
-  r.delete('/:id', async (req, res) => {
+  r.delete('/:id', exigirPapel(['cliente']), async (req, res) => {
     await doIdoso(req);
     await repo.remover('eventosAgenda', req.params.id);
     res.status(204).end();

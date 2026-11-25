@@ -46,6 +46,12 @@ export function criarRepositorioMemoria(dados = lerDadosIniciais()) {
       return structuredClone(doc);
     },
 
+    /* atualiza só se o documento ainda combinar com o filtro */
+    async atualizarSe(colecao, filtro, mudanca) {
+      const doc = db[colecao].find((d) => combina(d, filtro));
+      return doc ? this.atualizar(colecao, doc.id, mudanca) : null;
+    },
+
     async remover(colecao, id) {
       const i = db[colecao].findIndex((d) => d.id === id);
       if (i < 0) return false;

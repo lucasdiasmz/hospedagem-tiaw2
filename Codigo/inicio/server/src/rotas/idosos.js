@@ -1,8 +1,12 @@
 import { Router } from 'express';
-import { exigirAcesso, idososDoUsuario, interessados } from '../servicos/acesso.js';
+import { exigirPapel } from '../../../../auth/express.js';
+import { criarLimite } from '../../../../auth/limite.js';
+import { exigirAcesso, idososDoUsuario, interessados, membrosDaRede } from '../servicos/acesso.js';
+import { buscarConvite, criarConvite, usarConvite } from '../servicos/convites.js';
 import { montarDia } from '../servicos/dia.js';
+import { criarIdoso, regrasIdoso } from '../servicos/idoso.js';
 import { agora, horaAgora } from '../servicos/tempo.js';
-import { ErroHttp, validarData, validarHora, validarOpcao, validarTexto, validarTextoOpcional } from '../validacao.js';
+import { ErroHttp, validarCorpo, validarData, validarHora, validarOpcao, validarTexto, validarTextoOpcional } from '../validacao.js';
 import { rotasCadastros } from './cadastros.js';
 
 export function rotasIdosos(repo) {
@@ -11,6 +15,21 @@ export function rotasIdosos(repo) {
   /* idosos que o usuário logado acompanha */
   r.get('/', async (req, res) => {
     res.json(await idososDoUsuario(repo, req.usuario));
+  });
+
+  /* o familiar cadastra mais uma pessoa cuidada */
+  r.post('/', exigirPapel(['cliente']), async (req, res) => {
+    res.status(201).json(await criarIdoso(repo, req.perfil, validarCorpo(req.body || {}, regrasIdoso())));
+  });
+
+  /* entra na rede de um idoso com o código recebido */
+  const tentativas = criarLimite(10);
+  r.post('/entrar-com-convite', async (req, res) => {
+    if (tentativas.estourou(req.usuario.id)) throw new ErroHttp(429, 'Muitas tentativas. Espere alguns minutos');
+    tentativas.contar(req.usuario.id);
+    const convite = await buscarConvite(repo, validarTexto(req.body?.codigo, 'Código', 20), req.papel);
+    await usarConvite(repo, convite, { usuario: req.usuario, perfil: req.perfil, papel: req.papel });
+    res.status(201).json(await repo.buscar('idosos', convite.idosoId));
   });
 
   /* todas as rotas com :idosoId exigem acesso ao idoso; ele fica em req.idoso */
@@ -30,6 +49,16 @@ export function rotasIdosos(repo) {
 
   r.get('/:idosoId', (req, res) => {
     res.json(req.idoso);
+  });
+
+  r.get('/:idosoId/rede', async (req, res) => {
+    res.json(await membrosDaRede(repo, req.idoso));
+  });
+
+  /* código para outra pessoa entrar na rede deste idoso; o idoso também pode convidar */
+  r.post('/:idosoId/convites', exigirPapel(['cliente', 'idoso']), async (req, res) => {
+    const papel = validarOpcao(req.body?.papel, ['cliente', 'cuidador', 'idoso'], 'Perfil');
+    res.status(201).json(await criarConvite(repo, req.idoso, papel, req.usuario));
   });
 
   r.use('/:idosoId/medicamentos', rotasCadastros(repo, 'medicamentos'));
@@ -85,7 +114,7 @@ export function rotasIdosos(repo) {
     res.json(atualizado);
   });
 
-  r.post('/:idosoId/dias/:data/anotacoes', async (req, res) => {
+  r.post('/:idosoId/dias/:data/anotacoes', exigirPapel(['cliente', 'cuidador']), async (req, res) => {
     const corpo = req.body || {};
     const nota = await repo.inserir('anotacoes', {
       idosoId: req.idoso.id,

@@ -1,3 +1,4 @@
+import { carregarSegredo } from '../../../auth/sessao.js';
 import { criarApp } from './app.js';
 import { criarRepositorio } from './repositorios/index.js';
 
@@ -6,7 +7,9 @@ const PORTA = Number(process.env.PORT) || 3001;
 const repo = criarRepositorio();
 await repo.conectar();
 
-const app = criarApp(repo, { usuarioPadrao: process.env.USUARIO_PADRAO || 'usr-1' });
+/* falha já na partida se faltar AUTH_SECRET */
+carregarSegredo();
+const app = criarApp(repo);
 const servidor = app.listen(PORTA, () => {
   console.log(`API do AcessaMob em http://localhost:${PORTA}/api (banco: ${repo.tipo})`);
 });

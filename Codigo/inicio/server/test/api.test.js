@@ -1,11 +1,13 @@
 import assert from 'node:assert/strict';
 import { after, beforeEach, test } from 'node:test';
+import { COOKIE, criarToken } from '../../../auth/sessao.js';
 import { criarApp } from '../src/app.js';
 import { criarRepositorioMemoria } from '../src/repositorios/memoria.js';
 import { criarRepositorioMongo } from '../src/repositorios/mongo.js';
 
 /* Cada teste começa com um banco novo, carregado de Codigo/db/db.json.
    Em memória por padrão; com TEST_MONGODB_URI, usa um banco novo no MongoDB a cada teste. */
+process.env.AUTH_SECRET ||= 'segredo-de-teste-com-mais-de-32-caracteres';
 const MONGO = process.env.TEST_MONGODB_URI;
 let repo;
 let servidor;
@@ -28,9 +30,10 @@ beforeEach(async () => {
 
 after(fecharAtual);
 
-async function api(metodo, caminho, corpo, usuario) {
+/* usuario: id de quem está na sessão; null = sem sessão */
+async function api(metodo, caminho, corpo, usuario = 'usr-4') {
   const headers = { 'Content-Type': 'application/json' };
-  if (usuario) headers['X-Usuario-Id'] = usuario;
+  if (usuario) headers.Cookie = COOKIE + '=' + criarToken(usuario);
   const res = await fetch(base + caminho, {
     method: metodo,
     headers,
@@ -42,7 +45,7 @@ async function api(metodo, caminho, corpo, usuario) {
 const DIA = '/idosos/ido-1/dias/2026-10-27';
 
 test('usuário logado e catálogos', async () => {
-  const eu = (await api('GET', '/usuarios/eu')).corpo;
+  const eu = (await api('GET', '/usuarios/eu', undefined, 'usr-1')).corpo;
   assert.equal(eu.id, 'usr-1');
   assert.equal(eu.perfil.id, 'cui-1');
   assert.equal(eu.senhaHash, undefined);
@@ -86,7 +89,7 @@ test('registrar, desfazer e adiar item', async () => {
   let r = await api('PATCH', DIA + '/itens/med-2', { status: 'feito', horarioRegistro: '12:05' });
   assert.equal(r.status, 200);
   assert.equal(r.corpo.status, 'feito');
-  assert.equal(r.corpo.registradoPor, 'usr-1');
+  assert.equal(r.corpo.registradoPor, 'usr-4');
 
   r = await api('PATCH', DIA + '/itens/con-1', { horarioAdiado: '11:00' });
   assert.equal(r.corpo.horario, '11:00');
@@ -114,7 +117,7 @@ test('anotações: criar e só o autor apaga', async () => {
   const criada = await api('POST', DIA + '/anotacoes', { hora: '09:15', texto: '  Glicemia 110 ' });
   assert.equal(criada.status, 201);
   assert.equal(criada.corpo.texto, 'Glicemia 110');
-  assert.equal(criada.corpo.autorId, 'usr-1');
+  assert.equal(criada.corpo.autorId, 'usr-4');
   assert.match(criada.corpo.id, /^not-/);
 
   assert.equal((await api('DELETE', DIA + '/anotacoes/' + criada.corpo.id, undefined, 'usr-2')).status, 403);
@@ -129,7 +132,7 @@ test('cadastro de medicamento, tarefa e consulta aparece no dia', async () => {
   assert.equal(med.status, 201);
   assert.equal(med.corpo.frequencia, 1);
   assert.equal(med.corpo.ativo, true);
-  assert.equal(med.corpo.cadastradoPor, 'usr-1');
+  assert.equal(med.corpo.cadastradoPor, 'usr-4');
 
   const tar = await api('POST', '/idosos/ido-1/tarefas', { horario: '17:00', titulo: 'Leitura', diasSemana: ['ter'] });
   assert.equal(tar.status, 201);
@@ -155,7 +158,7 @@ test('chamado de ajuda avisa cliente e cuidadores, menos quem abriu', async () =
   const r = await api('POST', '/idosos/ido-1/chamados', { mensagem: 'Caiu no banheiro' });
   assert.equal(r.status, 201);
   assert.equal(r.corpo.status, 'aberto');
-  assert.deepEqual(r.corpo.notificados.sort(), ['usr-2', 'usr-4']);
+  assert.deepEqual(r.corpo.notificados.sort(), ['usr-1', 'usr-2']);
 
   const atendido = await api('PATCH', '/idosos/ido-1/chamados/' + r.corpo.id, { status: 'atendido' });
   assert.equal(atendido.corpo.status, 'atendido');
