@@ -56,15 +56,18 @@ export default function App() {
   /* o item em destaque não se repete na lista de baixo; o que já foi feito sai dela */
   const restantes = cuidados.linhaDoTempo.filter((e) => e.tipo === 'nota' || (!e.status && e.id !== proximo?.id));
 
-  function avisar(msg, tipo) {
-    setAviso({ msg, tipo, id: Date.now() });
+  function avisar(msg, tipo, acao) {
+    setAviso({ msg, tipo, acao, id: Date.now() });
   }
 
-  /* executa uma gravação no servidor e avisa o resultado */
-  async function gravar(acao, msgOk) {
+  /* executa uma gravação no servidor e avisa o resultado; com "desfazer", o aviso oferece voltar atrás */
+  async function gravar(acao, msgOk, desfazer) {
     try {
       await acao();
-      avisar(msgOk);
+      avisar(msgOk, undefined, desfazer && {
+        rotulo: 'Desfazer',
+        aoClicar: () => gravar(desfazer, 'Registro desfeito'),
+      });
     } catch (e) {
       avisar('Não foi possível salvar: ' + e.message, 'erro');
     }
@@ -72,12 +75,14 @@ export default function App() {
 
   function concluir(item) {
     if (!item) return;
-    gravar(() => cuidados.definir(item.id, { status: 'feito' }), 'Registrado: ' + item.titulo);
+    gravar(() => cuidados.definir(item.id, { status: 'feito' }), 'Registrado: ' + item.titulo,
+      () => cuidados.definir(item.id, { status: null }));
   }
 
   function recusar() {
     if (!proximo) return;
-    gravar(() => cuidados.definir(proximo.id, { status: 'recusou' }), 'Recusa registrada: ' + proximo.titulo);
+    gravar(() => cuidados.definir(proximo.id, { status: 'recusou' }), 'Recusa registrada: ' + proximo.titulo,
+      () => cuidados.definir(proximo.id, { status: null }));
   }
 
   /* adia 30 min a partir de agora quando o item já passou (antes, um item das 07:30 adiado
@@ -86,7 +91,9 @@ export default function App() {
     if (!proximo) return;
     const base = minutos > 0 ? proximo.hora : horaAgora();
     const nova = somarMinutos(base, 30);
-    gravar(() => cuidados.definir(proximo.id, { hora: nova }), 'Adiado para ' + nova);
+    const anterior = proximo.hora === proximo.horarioPrevisto ? null : proximo.hora;
+    gravar(() => cuidados.definir(proximo.id, { hora: nova }), 'Adiado para ' + nova,
+      () => cuidados.definir(proximo.id, { hora: anterior }));
   }
 
   function salvarNota(nota) {

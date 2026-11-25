@@ -1564,8 +1564,19 @@ select.entrada {
   color: #fff;
 }
 
+.toast-acao {
+  min-height: 2.75rem;
+  padding: 0 var(--e-3);
+  border-radius: var(--r-sm);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .toast.visivel {
   opacity: 1;
+  pointer-events: auto;
   transform: translate(-50%, 0);
 }
 
