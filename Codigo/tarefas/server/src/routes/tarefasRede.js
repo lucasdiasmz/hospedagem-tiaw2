@@ -1,7 +1,13 @@
 import { Router } from 'express';
+import { idososDoUsuario, membrosDaRede, temAcesso } from '../../../../auth/acesso.js';
+import { MSG_SEM_ACESSO, MSG_SEM_PERMISSAO, exigirPapel } from '../../../../auth/express.js';
+import { repo } from '../repo.js';
 import TarefaRede from '../models/TarefaRede.js';
 
 const rotas = Router();
+
+/* o idoso não usa esta tela */
+rotas.use(exigirPapel(['cliente', 'cuidador']));
 
 /* próximo id no formato do JSON: trd-1, trd-2... */
 async function proximoId() {
@@ -12,8 +18,7 @@ async function proximoId() {
 
 /* data e hora locais no formato do JSON: 2026-11-10T12:00:00 */
 function agoraIso() {
-  const local = new Date(Date.now() - new Date().getTimezoneOffset() * 60000);
-  return local.toISOString().slice(0, 19);
+  return new Date().toLocaleString('sv-SE', { timeZone: 'America/Sao_Paulo' }).replace(' ', 'T');
 }
 
 function erroDeValidacao(e, res, next) {
@@ -27,8 +32,10 @@ function erroDeValidacao(e, res, next) {
 /* GET /tarefas-rede?idosoId=ido-1&status=a_fazer */
 rotas.get('/', async (req, res, next) => {
   try {
-    const filtro = {};
-    if (req.query.idosoId) filtro.idosoId = String(req.query.idosoId);
+    const permitidos = (await idososDoUsuario(repo, req.usuario)).map((i) => i.id);
+    const pedido = req.query.idosoId && String(req.query.idosoId);
+    if (pedido && !permitidos.includes(pedido)) return res.status(403).json({ erro: MSG_SEM_ACESSO });
+    const filtro = { idosoId: { $in: pedido ? [pedido] : permitidos } };
     if (req.query.status) filtro.status = String(req.query.status);
     res.json(await TarefaRede.find(filtro).sort({ prazo: 1 }));
   } catch (e) {
@@ -37,9 +44,14 @@ rotas.get('/', async (req, res, next) => {
 });
 
 /* POST /tarefas-rede  (toda tarefa nova começa em "a_fazer") */
-rotas.post('/', async (req, res, next) => {
+rotas.post('/', exigirPapel(['cliente']), async (req, res, next) => {
   try {
     const { id, _id, status, concluidoEm, ...dados } = req.body;
+    if (!(await temAcesso(repo, req.usuario, dados.idosoId))) return res.status(403).json({ erro: MSG_SEM_ACESSO });
+    const rede = await membrosDaRede(repo, await repo.buscar('idosos', dados.idosoId));
+    if (!rede.some((m) => m.id === dados.responsavelId)) return res.status(400).json({ erro: 'Escolha alguém da rede de apoio.' });
+    dados.criadoPor = req.usuario.id;
+    dados.criadoEm = agoraIso();
     if (dados.categoria !== 'Compra') dados.itensCompra = [];
     const criada = await TarefaRede.create({ ...dados, id: await proximoId(), status: 'a_fazer', concluidoEm: null });
     res.status(201).json(criada);
@@ -61,8 +73,9 @@ rotas.patch('/:id', async (req, res, next) => {
       return res.status(400).json({ erro: 'Informe "status" ou "itensComprados".' });
     }
 
-    const tarefa = await TarefaRede.findOne({ id: req.params.id });
-    if (!tarefa) return res.status(404).json({ erro: 'Tarefa não encontrada.' });
+    const tarefa = await TarefaRede.findOne({ id: String(req.params.id) });
+    if (!tarefa || !(await temAcesso(repo, req.usuario, tarefa.idosoId))) return res.status(404).json({ erro: 'Tarefa não encontrada.' });
+    if (req.papel === 'cuidador' && tarefa.responsavelId !== req.usuario.id) return res.status(403).json({ erro: MSG_SEM_PERMISSAO });
 
     if (itensComprados !== undefined) {
       if (!Array.isArray(itensComprados)) {

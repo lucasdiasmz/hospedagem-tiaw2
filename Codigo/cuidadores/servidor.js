@@ -2,6 +2,10 @@ import { createServer } from 'node:http';
 import { readFile, rename, writeFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
 import { setServers } from 'node:dns';
+import { autenticar, idososDoUsuario } from '../auth/acesso.js';
+import { MSG_ENTRAR, MSG_SEM_ACESSO, MSG_SEM_PERMISSAO } from '../auth/express.js';
+import { repoJson, repoMongo } from '../auth/repos.js';
+import { carregarSegredo } from '../auth/sessao.js';
 
 /* API dos cuidadores (RF002, RF003, RF004 e RF005):
    GET  /api/cuidadores                     lista com resumo para busca e filtros
@@ -13,8 +17,8 @@ import { setServers } from 'node:dns';
 
 const arquivo = new URL('./db.json', import.meta.url);
 const temporario = new URL('./db.json.tmp', import.meta.url);
-/* enquanto não há login, quem avalia e solicita é o familiar responsável padrão */
-const CLIENTE_PADRAO = process.env.CLIENTE_PADRAO || 'cli-1';
+/* quem pode ver o quê: no banco, ou no db.json global quando não há banco */
+const acesso = process.env.MONGODB_URI ? repoMongo(() => banco) : repoJson();
 const SERVICOS = ['acompanhante', 'tecnico-enfermagem', 'companhia', 'outro'];
 const HORA = /^([01]\d|2[0-3]):[0-5]\d$/;
 const DATA = /^\d{4}-\d{2}-\d{2}$/;
@@ -163,28 +167,20 @@ function validarAvaliacao(corpo) {
     return null;
 }
 
-function validarSolicitacao(corpo, dados) {
+function validarSolicitacao(corpo, dados, permitidos) {
     if (!corpo) return 'Requisição inválida.';
     if (!dados.cuidadores.some(c => c.id === corpo.cuidadorId)) return 'Cuidador não encontrado.';
-    if (!(dados.idosos || []).some(i => i.id === corpo.idosoId)) return 'Escolha para quem é o atendimento.';
+    if (!permitidos.includes(corpo.idosoId)) return MSG_SEM_ACESSO;
     if (!SERVICOS.includes(corpo.servico)) return 'Escolha o tipo de serviço.';
     if (!DATA.test(corpo.data || '') || corpo.data < hoje()) return 'Escolha uma data a partir de hoje.';
     if (!HORA.test(corpo.horaInicio || '') || !HORA.test(corpo.horaFim || '')) return 'Informe o horário de início e de fim.';
+    if (corpo.horaFim === corpo.horaInicio) return 'O fim precisa ser diferente do início.';
     if (corpo.mensagem && String(corpo.mensagem).length > 500) return 'A mensagem pode ter até 500 caracteres.';
     return null;
 }
 
-function cabecalhosCors() {
-    return {
-        'Access-Control-Allow-Origin': process.env.CORS_ORIGIN || '*',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
-    };
-}
-
 function responder(resposta, codigo, dados) {
     resposta.writeHead(codigo, {
-        ...cabecalhosCors(),
         'Content-Type': 'application/json; charset=utf-8',
         'Cache-Control': 'no-store'
     });
@@ -201,6 +197,7 @@ async function lerCorpo(requisicao) {
 }
 
 async function iniciar() {
+    carregarSegredo();
     if (process.env.MONGODB_URI) {
         if (process.env.MONGODB_DNS) {
             setServers(process.env.MONGODB_DNS.split(',').map(endereco => endereco.trim()));
@@ -219,12 +216,19 @@ async function iniciar() {
             const url = new URL(requisicao.url, 'http://localhost');
             const metodo = requisicao.method;
 
-            /* pré-verificação do navegador quando o site está em outro endereço */
-            if (metodo === 'OPTIONS') {
-                resposta.writeHead(204, cabecalhosCors());
-                resposta.end();
+            if (metodo === 'GET' && url.pathname === '/api/saude') {
+                responder(resposta, 200, { ok: true });
                 return;
             }
+
+            /* daqui para baixo, só com a sessão (cookie assinado; Codigo/auth) */
+            const quem = await autenticar(acesso, requisicao.headers.cookie);
+            if (!quem) {
+                responder(resposta, 401, { mensagem: MSG_ENTRAR });
+                return;
+            }
+            const familia = quem.papel !== 'cuidador';
+            const meusIdosos = () => idososDoUsuario(acesso, quem.usuario);
 
             if (metodo === 'GET' && url.pathname === '/api/cuidadores') {
                 const dados = await lerDados();
@@ -233,8 +237,7 @@ async function iniciar() {
             }
 
             if (metodo === 'GET' && url.pathname === '/api/idosos') {
-                const dados = await lerDados();
-                responder(resposta, 200, (dados.idosos || []).map(i => ({ id: i.id, nome: i.nome, apelido: i.apelido || '' })));
+                responder(resposta, 200, (await meusIdosos()).map(i => ({ id: i.id, nome: i.nome, apelido: i.apelido || '' })));
                 return;
             }
 
@@ -261,6 +264,13 @@ async function iniciar() {
                     responder(resposta, 404, { mensagem: 'Perfil não encontrado.' });
                     return;
                 }
+                /* só avalia quem foi atendido: o cuidador tem (ou teve) vínculo com um idoso da família */
+                const ids = familia ? (await meusIdosos()).map(i => i.id) : [];
+                const vinculos = await acesso.listar('vinculos', { cuidadorId: rotaAvaliar[1] });
+                if (!vinculos.some(v => ids.includes(v.idosoId))) {
+                    responder(resposta, 403, { mensagem: 'Só famílias atendidas por este cuidador podem avaliar.' });
+                    return;
+                }
                 const problema = validarAvaliacao(corpo);
                 if (problema) {
                     responder(resposta, 400, { mensagem: problema });
@@ -269,7 +279,7 @@ async function iniciar() {
                 const avaliacao = {
                     id: 'ava-' + randomUUID(),
                     agendamentoId: null,
-                    clienteId: CLIENTE_PADRAO,
+                    clienteId: quem.perfil.id,
                     cuidadorId: rotaAvaliar[1],
                     nota: Number(corpo.nota),
                     comentario: String(corpo.comentario || '').trim(),
@@ -284,14 +294,18 @@ async function iniciar() {
             if (metodo === 'POST' && url.pathname === '/api/solicitacoes') {
                 const corpo = await lerCorpo(requisicao).catch(() => null);
                 const dados = await lerDados();
-                const problema = validarSolicitacao(corpo, dados);
+                if (!familia) {
+                    responder(resposta, 403, { mensagem: MSG_SEM_PERMISSAO });
+                    return;
+                }
+                const problema = validarSolicitacao(corpo, dados, (await meusIdosos()).map(i => i.id));
                 if (problema) {
                     responder(resposta, 400, { mensagem: problema });
                     return;
                 }
                 const solicitacao = {
                     id: 'sol-' + randomUUID(),
-                    clienteId: CLIENTE_PADRAO,
+                    clienteId: quem.perfil.id,
                     cuidadorId: corpo.cuidadorId,
                     idosoId: corpo.idosoId,
                     servico: corpo.servico,

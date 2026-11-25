@@ -2,6 +2,10 @@ import { createServer } from 'node:http';
 import { readFile, writeFile, rename } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
 import { setServers } from 'node:dns';
+import { autenticar, idososDoUsuario, temAcesso } from '../auth/acesso.js';
+import { MSG_ENTRAR, MSG_SEM_ACESSO } from '../auth/express.js';
+import { repoJson, repoMongo } from '../auth/repos.js';
+import { carregarSegredo } from '../auth/sessao.js';
 
 const arquivo = new URL('./db.json', import.meta.url);
 const temporario = new URL('./db.json.tmp', import.meta.url);
@@ -9,6 +13,8 @@ const usaMongo = Boolean(process.env.MONGODB_URI);
 let cliente;
 let banco;
 let fila = Promise.resolve();
+/* quem pode ver o quê: no banco, ou no db.json global quando não há banco */
+const acesso = usaMongo ? repoMongo(() => banco) : repoJson();
 
 function hoje() {
     return new Date().toLocaleDateString('sv-SE', {
@@ -90,7 +96,7 @@ function montarDoses(dados, idosoId, data) {
     return doses.sort((primeiro, segundo) => primeiro.horario.localeCompare(segundo.horario));
 }
 
-async function alterarRegistro(idDose, status, dataTela) {
+async function alterarRegistro(idDose, status, dataTela, usuario) {
     const data = hoje();
 
     // Uma tela aberta ontem precisa ser recarregada antes de confirmar doses.
@@ -105,6 +111,10 @@ async function alterarRegistro(idDose, status, dataTela) {
     const medicamento = dados.medicamentos.find(item => item.id === medicamentoId && item.ativo);
 
     if (!medicamento || !medicamento.horarios.includes(horario)) {
+        return { codigo: 404, mensagem: 'Dose não encontrada.' };
+    }
+
+    if (!(await temAcesso(acesso, usuario, medicamento.idosoId))) {
         return { codigo: 404, mensagem: 'Dose não encontrada.' };
     }
 
@@ -123,7 +133,7 @@ async function alterarRegistro(idDose, status, dataTela) {
         ...base,
         status: statusRegistro,
         horarioRegistro: horaAtual(),
-        registradoPor: process.env.USUARIO_PADRAO || 'usr-1'
+        registradoPor: usuario.id
     };
 
     function daDose(registro) {
@@ -153,17 +163,8 @@ async function alterarRegistro(idDose, status, dataTela) {
     return { codigo: 200, dose };
 }
 
-function cabecalhosCors() {
-    return {
-        'Access-Control-Allow-Origin': process.env.CORS_ORIGIN || '*',
-        'Access-Control-Allow-Methods': 'GET, PATCH, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
-    };
-}
-
 function responder(resposta, codigo, dados) {
     resposta.writeHead(codigo, {
-        ...cabecalhosCors(),
         'Content-Type': 'application/json; charset=utf-8',
         'Cache-Control': 'no-store'
     });
@@ -211,6 +212,7 @@ async function importarMongo() {
 }
 
 async function iniciar() {
+    if (!process.argv.includes('--importar')) carregarSegredo();
     if (usaMongo) {
         if (process.env.MONGODB_DNS) {
             setServers(process.env.MONGODB_DNS.split(',').map(endereco => endereco.trim()));
@@ -237,24 +239,32 @@ async function iniciar() {
         try {
             const url = new URL(requisicao.url, 'http://localhost');
 
-            /* pré-verificação do navegador quando o site está em outro endereço */
-            if (requisicao.method === 'OPTIONS') {
-                resposta.writeHead(204, cabecalhosCors());
-                resposta.end();
+            if (requisicao.method === 'GET' && url.pathname === '/api/saude') {
+                responder(resposta, 200, { ok: true });
+                return;
+            }
+
+            /* daqui para baixo, só com a sessão (cookie assinado; Codigo/auth) */
+            const quem = await autenticar(acesso, requisicao.headers.cookie);
+            if (!quem) {
+                responder(resposta, 401, { mensagem: MSG_ENTRAR });
                 return;
             }
 
             if (requisicao.method === 'GET' && url.pathname === '/api/idosos') {
-                await fila;
-                const dados = await lerDados();
-                responder(resposta, 200, dados.idosos.map(idoso => ({ id: idoso.id, nome: idoso.nome })));
+                const lista = await idososDoUsuario(acesso, quem.usuario);
+                responder(resposta, 200, lista.map(idoso => ({ id: idoso.id, nome: idoso.nome })));
                 return;
             }
 
             if (requisicao.method === 'GET' && url.pathname === '/api/medicamentos') {
                 await fila;
                 const dados = await lerDados();
-                const idosoId = url.searchParams.get('idosoId') || 'ido-1';
+                const idosoId = url.searchParams.get('idosoId');
+                if (!(await temAcesso(acesso, quem.usuario, idosoId))) {
+                    responder(resposta, 403, { mensagem: MSG_SEM_ACESSO });
+                    return;
+                }
                 responder(resposta, 200, montarDoses(dados, idosoId, hoje()));
                 return;
             }
@@ -277,7 +287,7 @@ async function iniciar() {
                 }
 
                 // Uma gravação por vez para não perder registros de outras doses.
-                const tarefa = fila.then(() => alterarRegistro(id, corpo.status, corpo.data));
+                const tarefa = fila.then(() => alterarRegistro(id, corpo.status, corpo.data, quem.usuario));
                 fila = tarefa.catch(() => {});
                 const resultado = await tarefa;
                 responder(resposta, resultado.codigo, resultado.dose || { mensagem: resultado.mensagem });
@@ -285,7 +295,8 @@ async function iniciar() {
             }
 
             responder(resposta, 404, { mensagem: 'Rota não encontrada.' });
-        } catch {
+        } catch (erro) {
+            console.error(erro);
             responder(resposta, 500, { mensagem: 'Não foi possível acessar os dados.' });
         }
     });
