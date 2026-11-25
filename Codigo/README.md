@@ -62,6 +62,21 @@ A tela de boas-vindas (`boas-vindas/`) é a entrada do sistema: guarda o perfil,
 preferências de acessibilidade (valem em todas as telas) e leva para o Início. No celular, Linha do
 tempo, Cuidadores e Perfil do idoso ficam na aba "Mais".
 
+## Login e vínculo
+
+A conta fica no servidor (API do início). Quem entra recebe um cookie `HttpOnly` assinado, que as 7 APIs
+conferem com o código comum de [`auth/`](auth/). Cada pessoa só vê os idosos vinculados a ela:
+
+- o familiar cadastra a pessoa cuidada; o idoso cadastra a si mesmo;
+- os outros entram com um **código de convite** (Início → *Convidar para a rede*), que vale uma vez, por 7 dias.
+
+O papel (idoso, familiar ou cuidador) é conferido no servidor em cada gravação, e o autor dos registros vem da sessão.
+`cd auth && npm test` e `npm test` em `inicio/server` e `agenda/server` cobrem essas regras.
+
+No computador, as APIs dividem um segredo gerado em `auth/.segredo-local` (fora do git). Sem MongoDB, a API do
+início aceita `SENHA_DEMO=...` para dar uma senha às contas de exemplo, mas contas novas só existem nela: para
+testar tudo junto, use um MongoDB.
+
 ## O que cada perfil acessa
 
 Definido em `design-system/permissoes.js` (o menu e os botões seguem essa tabela). Quem não passou
@@ -78,7 +93,7 @@ pelas boas-vindas é levado para elas antes de abrir qualquer tela.
 | Perfil do idoso | só ver | edita | só ver |
 | Cuidadores | buscar, pedir e avaliar | tudo | — |
 
-Esconder no front só organiza a tela: quando houver login, as APIs também precisam conferir o papel.
+Esconder no front só organiza a tela: quem barra são as APIs. Ao mudar uma regra, mude os dois lados.
 
 ## Como rodar tudo
 

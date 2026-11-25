@@ -8,6 +8,24 @@
 
 Ordem: **banco → APIs → sites → variáveis dos links do menu**. Cada etapa usa os endereços da anterior.
 
+## Login (obrigatório)
+
+As 7 APIs só respondem a quem entrou. O login é um cookie assinado com `AUTH_SECRET`, que precisa ser
+**o mesmo valor nas 7 APIs**; sem ele, a API não liga no Render. Faça nesta ordem:
+
+1. **Render → Environment Groups**: confira se existe o grupo `acessamob-auth` com `AUTH_SECRET`, ligado às
+   7 APIs (o `render.yaml` cria). Se for à mão, gere um valor com
+   `node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"`.
+2. **Health check** de medicamentos e cuidadores: `/api/saude`. O caminho antigo agora responde 401 e o Render
+   recusaria a nova versão.
+3. Publique as APIs e depois o site. Com uma parte antiga e outra nova, as telas não abrem.
+4. As contas de exemplo do `db.json` não têm senha. Para usar uma, em `inicio/server`, com o `MONGODB_URI` do Atlas
+   no `.env`: `npm run senha -- carla.ribeiro@email.com`. O mesmo comando serve para quem esqueceu a senha.
+
+O usuário do Atlas precisa ler o banco `acessamob` e o do perfil (*Read and write to any database*).
+O cookie vale para um endereço só, então o login funciona no **site único** e no localhost. Um projeto da
+Vercel por tela (seção 3) não serve mais para uso com login.
+
 ## Site único (recomendado)
 
 Todas as telas num endereço só, num único projeto da Vercel:
@@ -48,18 +66,18 @@ Em render.com: *New → Web Service*, escolha o repositório e preencha:
 | Tarefas | `Codigo/tarefas/server` | `npm install` | `npm start` | `MONGODB_URI` (com `/acessamob` no fim) |
 | Medicamentos | `Codigo/medicamentos` | `npm install` | `npm run api` | `MONGODB_URI`, `MONGODB_DB=acessamob` |
 | Cuidadores | `Codigo/cuidadores` | `npm install` | `npm run api` | `MONGODB_URI`, `MONGODB_DB=acessamob` |
-| Perfil e Linha do tempo | `Codigo/perfil-linha-do-tempo/backend` | `npm install` | `npm start` | `MONGODB_URI` (com `/acessamob` no fim), `FRONTEND_URL` |
+| Perfil e Linha do tempo | `Codigo/perfil-linha-do-tempo/backend` | `npm install` | `npm start` | `MONGODB_URI` (com o banco do perfil no fim), `MONGODB_DB_PRINCIPAL=acessamob` |
 
 - Não defina `PORT`: o Render informa a porta sozinho.
-- `FRONTEND_URL` é o endereço do site do perfil na Vercel (sem `/` no fim). Defina depois da etapa 3.
-- Opcional: `CORS_ORIGIN` limita quem pode chamar as APIs de início, agenda, medicamentos e
-  cuidadores (padrão: qualquer site).
+- Todas precisam também de `AUTH_SECRET` (o mesmo valor; veja *Login* acima).
+- As APIs não têm CORS: só o site único, no mesmo endereço, consegue chamá-las pelo navegador.
 - Sem `MONGODB_URI`, início, agenda, medicamentos e cuidadores usam os arquivos JSON, mas no
   Render o que for salvo some quando o serviço reinicia. Use o Atlas.
 - No plano gratuito a API "dorme" após ~15 min sem uso; o primeiro acesso leva cerca de 1 min.
 
 Anote o endereço de cada API (ex.: `https://acessamob-inicio.onrender.com`).
-Teste abrindo `<endereço>/api/saude` (início e agenda) ou `<endereço>/api/idosos` (medicamentos).
+Teste abrindo `<endereço>/api/saude` (início, agenda, medicamentos e cuidadores), `<endereço>/saude`
+(cadastro e tarefas) ou `<endereço>/api/health` (perfil).
 
 ## 3. Sites (Vercel)
 
@@ -91,8 +109,6 @@ da Vercel a variável correspondente e faça *Redeploy* (o Vite grava os valores
   `VITE_URL_CADASTRO_MEDICAMENTOS`, `VITE_URL_TAREFAS`, `VITE_URL_CUIDADORES`,
   `VITE_URL_LINHA_DO_TEMPO`, `VITE_URL_PERFIS`: endereços das telas, usados pelo menu
   (em todos os projetos).
-
-Na API do perfil, `FRONTEND_URL` (no Render) precisa ser o endereço do site do perfil.
 
 ## Observações sobre o banco
 

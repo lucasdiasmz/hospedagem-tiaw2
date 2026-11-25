@@ -2,6 +2,13 @@
 # MONGODB_URI é pedida na criação de cada serviço: cole a mesma string do Atlas,
 # terminando em /acessamob (ex.: mongodb+srv://usuario:senha@cluster0.xxxxx.mongodb.net/acessamob).
 # Passo a passo completo em Codigo/HOSPEDAGEM.md.
+# AUTH_SECRET assina o cookie de login: precisa ser o MESMO nas 7 APIs, por isso fica num grupo.
+envVarGroups:
+  - name: acessamob-auth
+    envVars:
+      - key: AUTH_SECRET
+        generateValue: true
+
 services:
   - type: web
     name: acessamob-inicio-api
@@ -13,6 +20,7 @@ services:
     startCommand: npm start
     healthCheckPath: /api/saude
     envVars:
+      - fromGroup: acessamob-auth
       - key: MONGODB_URI
         sync: false
       - key: MONGODB_DB
@@ -28,6 +36,7 @@ services:
     startCommand: npm start
     healthCheckPath: /api/saude
     envVars:
+      - fromGroup: acessamob-auth
       - key: MONGODB_URI
         sync: false
       - key: MONGODB_DB
@@ -42,6 +51,7 @@ services:
     buildCommand: npm install
     startCommand: npm start
     envVars:
+      - fromGroup: acessamob-auth
       - key: MONGODB_URI
         sync: false
 
@@ -54,6 +64,7 @@ services:
     buildCommand: npm install
     startCommand: npm start
     envVars:
+      - fromGroup: acessamob-auth
       - key: MONGODB_URI
         sync: false
 
@@ -65,8 +76,9 @@ services:
     rootDir: Codigo/medicamentos
     buildCommand: npm install
     startCommand: npm run api
-    healthCheckPath: /api/idosos
+    healthCheckPath: /api/saude
     envVars:
+      - fromGroup: acessamob-auth
       - key: MONGODB_URI
         sync: false
       - key: MONGODB_DB
@@ -80,8 +92,9 @@ services:
     rootDir: Codigo/cuidadores
     buildCommand: npm install
     startCommand: npm run api
-    healthCheckPath: /api/cuidadores
+    healthCheckPath: /api/saude
     envVars:
+      - fromGroup: acessamob-auth
       - key: MONGODB_URI
         sync: false
       - key: MONGODB_DB
@@ -96,10 +109,11 @@ services:
     buildCommand: npm install
     startCommand: npm start
     envVars:
+      - fromGroup: acessamob-auth
       - key: MONGODB_URI
         sync: false
-      # endereço do site do perfil na Vercel; ajuste depois de publicar os sites
-      - key: FRONTEND_URL
-        value: https://acessamob-perfil.vercel.app
+      # banco das outras telas (usuários, vínculos e remédios)
+      - key: MONGODB_DB_PRINCIPAL
+        value: acessamob
       - key: FUSO_HORARIO
         value: "-03:00"

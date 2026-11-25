@@ -24,7 +24,6 @@ A agenda usa o mesmo banco da homepage (cluster `cluster0.xxusils.mongodb.net`, 
 
    ```
    PORT=3002
-   USUARIO_PADRAO=usr-1
    MONGODB_URI=mongodb+srv://USUARIO:SENHA@cluster0.xxusils.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
    MONGODB_DB=acessamob
    ```
@@ -43,8 +42,8 @@ Para rodar os testes contra o MongoDB: `TEST_MONGODB_URI=mongodb://localhost:270
 
 ## Usuário logado
 
-Ainda não há login. O usuário vem do cabeçalho `X-Usuario-Id` (padrão: `usr-1`, Maria, ou
-`USUARIO_PADRAO` no `.env`). Cuidadores só acessam a agenda dos idosos com vínculo ativo; clientes,
+O usuário vem da sessão: um cookie assinado, criado ao entrar e conferido por todas as APIs
+(`Codigo/auth`). Cuidadores só acessam a agenda dos idosos com vínculo ativo; clientes,
 a dos idosos que cadastraram.
 
 ## Rotas

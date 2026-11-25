@@ -39,7 +39,6 @@ O banco oficial do projeto fica no MongoDB Atlas (cluster `cluster0.xxusils.mong
 
    ```
    PORT=3001
-   USUARIO_PADRAO=usr-1
    MONGODB_URI=mongodb+srv://USUARIO:SENHA@cluster0.xxusils.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
    MONGODB_DB=acessamob
    ```
@@ -51,8 +50,8 @@ recarrega o `db.json`.
 
 ## Usuário logado
 
-Ainda não há login. O usuário vem do cabeçalho `X-Usuario-Id` (padrão: `usr-1`, Maria, ou
-`USUARIO_PADRAO` no `.env`). Cuidadores só acessam os idosos com vínculo ativo; clientes, os
+O usuário vem da sessão: um cookie assinado, criado ao entrar e conferido por todas as APIs
+(`Codigo/auth`). Cuidadores só acessam os idosos com vínculo ativo; clientes, os
 idosos que cadastraram. Quando houver autenticação, basta trocar o middleware em `src/app.js`.
 
 ## Rotas
