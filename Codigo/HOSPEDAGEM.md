@@ -16,9 +16,11 @@ As 7 APIs só respondem a quem entrou. O login é um cookie assinado com `AUTH_S
 1. **Render → Environment Groups**: confira se existe o grupo `acessamob-auth` com `AUTH_SECRET`, ligado às
    7 APIs (o `render.yaml` cria). Se for à mão, gere um valor com
    `node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"`.
-2. **Health check** de medicamentos e cuidadores: `/api/saude`. O caminho antigo agora responde 401 e o Render
-   recusaria a nova versão.
-3. Publique as APIs e depois o site. Com uma parte antiga e outra nova, as telas não abrem.
+2. Envie o código (*push*) e, em seguida, em medicamentos e cuidadores, troque o **health check** para
+   `/api/saude`. Antes disso não: a versão sem login não tem esse caminho. Depois também não dá para deixar o
+   antigo: ele responde 401 e o Render recusaria a versão nova.
+3. Publique as 7 APIs (*Manual Deploy → Deploy latest commit*) se o deploy automático não disparar. Enquanto
+   uma parte for antiga e outra nova, as telas não abrem.
 4. As contas de exemplo do `db.json` não têm senha. Para usar uma, em `inicio/server`, com o `MONGODB_URI` do Atlas
    no `.env`: `npm run senha -- carla.ribeiro@email.com`. O mesmo comando serve para quem esqueceu a senha.
 
