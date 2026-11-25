@@ -33,7 +33,7 @@
 
 .page-head h1 {
   font-size: var(--t-xl);
-  letter-spacing: -0.025em;
+  letter-spacing: -0.02em;
 }
 
 .subtitle {
@@ -70,14 +70,14 @@
 }
 
 .switch-chip[aria-pressed='true'] {
-  border-color: var(--azul);
-  background: var(--azul-suave);
-  color: var(--azul-escuro);
+  border-color: var(--selecao);
+  background: var(--selecao);
+  color: var(--sobre-selecao);
 }
 
 .switch-chip[aria-pressed='true'] .avatar {
-  background: var(--azul);
-  color: #fff;
+  background: #fff;
+  color: var(--marinho-800);
 }
 
 /* ===== Herói do perfil ===== */
@@ -86,10 +86,9 @@
   grid-template-columns: auto minmax(0, 1fr);
   gap: var(--e-3) var(--e-4);
   padding: var(--e-4);
-  border-radius: var(--r-xl);
+  border-radius: var(--r-lg);
   background: var(--marinho-800);
   color: #fff;
-  box-shadow: var(--sombra-2);
 }
 
 .avatar-xl {
@@ -101,7 +100,7 @@
 
 .hero-info h2 {
   font-size: var(--t-lg);
-  letter-spacing: -0.025em;
+  letter-spacing: -0.02em;
 }
 
 .hero-meta {
@@ -162,13 +161,13 @@
 }
 
 .stat-icon {
-  display: grid;
-  place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: var(--r-md);
-  background: var(--azul-suave);
+  flex: none;
   color: var(--azul);
+}
+
+.stat-icon .icon {
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .stat small {
@@ -198,9 +197,9 @@
 }
 
 .alert-danger {
-  background: var(--vermelho-claro);
-  color: var(--vermelho-forte);
-  border: 1.5px solid #f3c3be;
+  background: var(--superficie);
+  color: var(--vermelho);
+  border: 1.5px solid var(--vermelho);
 }
 
 .alert-danger p {
@@ -250,18 +249,13 @@
 
 .card-icon {
   display: grid;
-  place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
   flex-shrink: 0;
-  border-radius: var(--r-sm);
-  background: var(--azul-suave);
   color: var(--azul);
 }
 
 .card-icon .icon {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .card-sub {
@@ -275,7 +269,7 @@
   background: var(--superficie-2);
   color: var(--tinta-2);
   font-size: var(--t-xs);
-  font-weight: 700;
+  font-weight: 600;
   white-space: nowrap;
 }
 
@@ -325,14 +319,9 @@
 }
 
 .time {
-  min-width: 3.25rem;
-  padding: 2px 8px;
-  border-radius: var(--r-pilula);
-  background: var(--superficie-2);
-  color: var(--tinta);
-  font-size: var(--t-xs);
-  font-weight: 700;
-  text-align: center;
+  min-width: 3.1rem;
+  font-size: var(--t-sm);
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
@@ -350,7 +339,7 @@
   background: var(--azul-suave);
   color: var(--azul-escuro);
   font-size: var(--t-xs);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .call-btn {
@@ -360,13 +349,16 @@
   height: var(--toque);
   flex-shrink: 0;
   border-radius: 50%;
-  background: var(--verde-claro);
+  border: 1.5px solid var(--linha-forte);
   color: var(--verde);
+  transition: background var(--m-sai), border-color var(--m-sai), color var(--m-sai);
 }
 
 .call-btn:hover {
+  border-color: var(--verde);
   background: var(--verde);
   color: #fff;
+  transition-duration: var(--m-entra);
 }
 
 .team {
@@ -412,7 +404,7 @@
   margin-bottom: var(--e-2);
   padding: 4px 12px;
   border-radius: var(--r-pilula);
-  font-weight: 700;
+  font-weight: 600;
   font-size: var(--t-sm);
 }
 
@@ -454,10 +446,8 @@
 .chip {
   padding: 4px 12px;
   border-radius: var(--r-pilula);
-  background: var(--superficie-2);
-  border: 1px solid var(--linha);
+  border: 1px solid var(--linha-forte);
   font-size: var(--t-sm);
-  font-weight: 500;
 }
 
 .chip-help {
@@ -640,28 +630,29 @@
 .indicadores {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--e-2);
 }
 
 .indicador {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0;
-  padding: var(--e-2) var(--e-1);
-  border-radius: var(--r-md);
-  background: var(--superficie-2);
+  padding: var(--e-1);
   line-height: 1.25;
   text-align: center;
 }
 
-.indicador-icone .icon {
-  width: 1.125rem;
-  height: 1.125rem;
+.indicador + .indicador {
+  border-left: 1px solid var(--linha);
+}
+
+.indicador-icone {
+  display: none;
 }
 
 .indicador strong {
-  font-size: var(--t-lg);
+  font-size: var(--t-xl);
+  font-weight: 600;
+  line-height: 1.15;
   font-variant-numeric: tabular-nums;
 }
 
@@ -671,14 +662,8 @@
   line-height: 1.2;
 }
 
-.indicador-padrao .indicador-icone { color: var(--azul); }
-.indicador-urgente { background: var(--vermelho-claro); }
-.indicador-urgente .indicador-icone,
 .indicador-urgente strong { color: var(--vermelho); }
-.indicador-atencao { background: var(--ambar-claro); }
-.indicador-atencao .indicador-icone,
 .indicador-atencao strong { color: var(--ambar); }
-.indicador-novo .indicador-icone { color: var(--tinta-2); }
 
 .lista-urgentes {
   display: flex;
@@ -690,9 +675,8 @@
 .lista-urgentes li {
   display: flex;
   gap: var(--e-2);
-  padding: var(--e-3);
-  border-radius: var(--r-md);
-  background: var(--vermelho-claro);
+  padding-top: var(--e-3);
+  border-top: 1px solid var(--linha);
   color: var(--tinta);
   font-size: var(--t-sm);
 }
@@ -745,9 +729,9 @@
 }
 
 .chip-filtro[aria-pressed='true'] {
-  border-color: var(--azul);
-  background: var(--azul);
-  color: #fff;
+  border-color: var(--selecao);
+  background: var(--selecao);
+  color: var(--sobre-selecao);
 }
 
 .chip-contador {
@@ -770,6 +754,16 @@
   flex-direction: column;
   gap: var(--e-1);
   min-width: 0;
+}
+
+.field select,
+.filtro-membro select {
+  appearance: none;
+  padding-right: 28px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23566078' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 18px;
 }
 
 .filtro-membro label {
@@ -835,11 +829,11 @@
 }
 
 .cat-dor { --cat: #c2410c; --cat-claro: #ffedd5; }
-.cat-humor { --cat: #7a4fd6; --cat-claro: #efe8fd; }
+.cat-humor { --cat: #ad1f5b; --cat-claro: #fbe6ee; }
 .cat-alimentacao { --cat: #12825a; --cat-claro: #dff4ea; }
 .cat-medicacao { --cat: #1d63dc; --cat-claro: #e3edfd; }
-.cat-sono { --cat: #3f4c96; --cat-claro: #e6e8f7; }
-.cat-mobilidade { --cat: #b26a00; --cat-claro: #fff0d4; }
+.cat-sono { --cat: #35507a; --cat-claro: #e4ebf5; }
+.cat-mobilidade { --cat: #935600; --cat-claro: #fff0d4; }
 .cat-higiene { --cat: #0e7490; --cat-claro: #dff3f8; }
 .cat-outro { --cat: #4f5d78; --cat-claro: #e9edf4; }
 
@@ -868,17 +862,9 @@
   background: var(--superficie);
 }
 
+/* só o urgente muda a borda; "novo" e "atenção" são selos */
 .relato-urgente .relato-corpo {
-  border-color: #f3c3be;
-  background: var(--vermelho-claro);
-}
-
-.relato-atencao .relato-corpo {
-  border-color: #f5d9a3;
-}
-
-.relato-novo .relato-marcador {
-  box-shadow: 0 0 0 3px var(--azul-claro);
+  border-color: var(--vermelho);
 }
 
 .relato-topo {
@@ -889,7 +875,7 @@
 }
 
 .relato-hora {
-  font-weight: 700;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
@@ -901,7 +887,7 @@
 
 .relato-selos {
   display: flex;
-  gap: 4px;
+  gap: var(--e-2);
   margin-left: auto;
 }
 
@@ -912,7 +898,7 @@
   padding: 2px 8px;
   border-radius: var(--r-pilula);
   font-size: var(--t-xs);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .selo .icon {
@@ -920,10 +906,10 @@
   height: 0.8rem;
 }
 
-.selo-normal { background: var(--verde-claro); color: var(--verde); }
-.selo-atencao { background: var(--ambar-claro); color: var(--ambar); }
+.selo-normal { padding-inline: 0; color: var(--verde); }
+.selo-atencao { padding-inline: 0; color: var(--ambar); }
 .selo-urgente { background: var(--vermelho); color: #fff; }
-.selo-novo { background: var(--azul); color: #fff; }
+.selo-novo { background: var(--azul-suave); color: var(--azul-escuro); }
 
 .relato-texto {
   margin-top: var(--e-1);
@@ -1006,14 +992,12 @@
   width: 2rem;
   height: 2rem;
   flex-shrink: 0;
-  border-radius: var(--r-sm);
-  background: var(--cat-claro);
   color: var(--cat);
 }
 
 .ponto-icone .icon {
-  width: 1rem;
-  height: 1rem;
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .ponto-texto {
@@ -1022,7 +1006,7 @@
 }
 
 .ponto-qtd {
-  font-weight: 700;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
