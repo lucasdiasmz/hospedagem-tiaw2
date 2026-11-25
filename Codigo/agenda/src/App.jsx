@@ -7,7 +7,7 @@ import PainelDia from './components/PainelDia.jsx';
 import Semana from './components/Semana.jsx';
 import Shell from '@ds/Shell.jsx';
 import Toast from '@ds/Toast.jsx';
-import { Estado } from '@ds/Componentes.jsx';
+import { AvisoEspera, Estado } from '@ds/Componentes.jsx';
 import { IconeAgenda, IconeMais } from '@ds/Icones.jsx';
 import { usePermissoes } from '@ds/permissoes.js';
 import { useAgenda } from './hooks/useAgenda.js';
@@ -142,6 +142,7 @@ export default function App() {
         aoHoje={() => agenda.selecionar(hoje())}
         aoNovo={podeCriar ? () => setNovoAberto(true) : null}
       />
+      <AvisoEspera ativo={agenda.carregando} />
       {conteudo}
       {podeCriar && (
         <button type="button" className="fab" onClick={() => setNovoAberto(true)}>

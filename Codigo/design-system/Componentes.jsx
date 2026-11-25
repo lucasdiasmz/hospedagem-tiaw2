@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { IconeAlerta } from './Icones.jsx';
 
 /* Título da tela: h1, frase de apoio e ações (botões) que vão para a direita no computador */
@@ -14,6 +15,22 @@ export function PaginaTopo({ titulo, subtitulo, children, voltar }) {
   );
 }
 
+/* aparece quando o carregamento demora (as APIs gratuitas dormem e levam até 30 s para acordar) */
+export function AvisoEspera({ ativo = true, apos = 4000 }) {
+  const [demorou, setDemorou] = useState(false);
+  useEffect(() => {
+    setDemorou(false);
+    if (!ativo) return;
+    const timer = setTimeout(() => setDemorou(true), apos);
+    return () => clearTimeout(timer);
+  }, [ativo, apos]);
+  return (
+    <p className="aviso-espera" role="status">
+      {ativo && demorou ? 'Está demorando mais que o normal. Pode levar até 30 segundos.' : ''}
+    </p>
+  );
+}
+
 /* Carregando, erro e vazio no mesmo formato em todas as telas */
 export function Estado({ tipo = 'vazio', titulo, children, acao }) {
   if (tipo === 'carregando') {
@@ -21,6 +38,7 @@ export function Estado({ tipo = 'vazio', titulo, children, acao }) {
       <div className="estado estado--carregando" role="status">
         <span className="girando" aria-hidden="true" />
         <p>{titulo || 'Carregando…'}</p>
+        <AvisoEspera />
       </div>
     );
   }

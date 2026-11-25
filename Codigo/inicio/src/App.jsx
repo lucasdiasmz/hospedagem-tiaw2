@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Shell from '@ds/Shell.jsx';
 import Dialogo from '@ds/Dialogo.jsx';
 import Toast from '@ds/Toast.jsx';
-import { Estado } from '@ds/Componentes.jsx';
+import { AvisoEspera, Estado } from '@ds/Componentes.jsx';
 import { IconeAgenda, IconeLapis, IconeMais, IconeTelefone } from '@ds/Icones.jsx';
 import { TELAS } from '@ds/navegacao.js';
 import { useUsuario } from '@ds/preferencias.js';
@@ -131,6 +131,7 @@ export default function App() {
     <Shell tela="inicio" usuario={cuidados.usuario} atalhos={atalhos}>
       <Saudacao nome={usuario?.nome} idoso={simples ? null : cuidados.idoso?.nome} subtitulo={subtitulo} />
 
+      <AvisoEspera ativo={cuidados.carregando} />
       {cuidados.carregando && <div className="esqueleto inicio-esqueleto" aria-hidden="true" />}
 
       {cuidados.erro && (

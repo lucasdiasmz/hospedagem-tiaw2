@@ -1,3 +1,4 @@
+import { AvisoEspera } from "@ds/Componentes.jsx";
 import Icon from "./Icon.jsx";
 
 export function EstadoCarregando({ texto }) {
@@ -5,6 +6,7 @@ export function EstadoCarregando({ texto }) {
     <div className="estado" role="status">
       <span className="spinner" aria-hidden="true"></span>
       <p>{texto}</p>
+      <AvisoEspera />
     </div>
   );
 }

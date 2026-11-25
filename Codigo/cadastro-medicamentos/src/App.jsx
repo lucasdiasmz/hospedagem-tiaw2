@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Shell from '@ds/Shell.jsx';
 import Toast from '@ds/Toast.jsx';
-import { Estado, PaginaTopo } from '@ds/Componentes.jsx';
+import { AvisoEspera, Estado, PaginaTopo } from '@ds/Componentes.jsx';
 import { IconeMais, IconePilula, IconeVoltar } from '@ds/Icones.jsx';
 import { TELAS } from '@ds/navegacao.js';
 import FormMedicamento from './components/FormMedicamento.jsx';
@@ -104,6 +104,7 @@ export default function App() {
         </div>
       )}
 
+      <AvisoEspera ativo={carregando} />
       {erroApi && (
         <Estado tipo="erro" titulo="Não foi possível carregar"
           acao={<button type="button" className="btn" onClick={() => window.location.reload()}>Tentar de novo</button>}>
