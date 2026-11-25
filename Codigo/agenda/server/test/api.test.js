@@ -190,6 +190,12 @@ test('cada usuário só mexe na agenda dos idosos que acompanha', async () => {
   assert.equal((await api('GET', '/idosos/ido-9/agenda/2026-10')).status, 404);
 
   /* evento de outro idoso não é encontrado pela rota deste */
-  assert.equal((await api('DELETE', '/idosos/ido-2/eventos/evt-1')).status, 404);
+  assert.equal((await api('DELETE', '/idosos/ido-2/eventos/evt-1', undefined, 'usr-5')).status, 404);
   assert.equal((await api('GET', '/idosos/ido-1/eventos/evt-1', undefined, 'usr-4')).status, 200);
+  assert.equal((await api('GET', '/idosos', undefined, null)).status, 401);
+
+  /* cuidador só muda a situação */
+  assert.equal((await api('PATCH', '/idosos/ido-1/eventos/evt-1', { status: 'concluido' }, 'usr-1')).status, 200);
+  assert.equal((await api('PATCH', '/idosos/ido-1/eventos/evt-1', { titulo: 'Outro' }, 'usr-1')).status, 403);
+  assert.equal((await api('POST', '/idosos/ido-1/eventos', NOVO, 'usr-1')).status, 403);
 });
