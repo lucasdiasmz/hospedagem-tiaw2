@@ -18,7 +18,7 @@ export const idososIniciais = [
     alergias: ["Dipirona", "Frutos do mar"],
     medicamentos: [
       { nome: "Losartana", dose: "50 mg", horario: "08:00" },
-      { nome: "Metformina", dose: "850 mg", horario: "12:30" },
+      { nome: "Metformina", dose: "850 mg", horario: "12:00" },
       { nome: "Sinvastatina", dose: "20 mg", horario: "21:00" }
     ],
     rotina: [
