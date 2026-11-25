@@ -7,12 +7,6 @@
   margin-top: calc(var(--e-2) * -1);
 }
 
-.seletor-idoso .pilula[aria-checked='true'] {
-  background: var(--azul-suave);
-  border-color: var(--azul);
-  color: var(--azul-escuro);
-}
-
 /* no celular a "Nova tarefa" fica no botão flutuante */
 .botao-nova {
   display: none !important;
@@ -60,25 +54,10 @@
 }
 
 @media (max-width: 39.99rem) {
-  .abas-status {
-    justify-content: space-between;
-  }
-
   .abas-status .pilula {
     padding-inline: var(--e-2);
     font-size: var(--t-xs);
   }
-}
-
-.abas-status [aria-selected='true'] {
-  background: var(--azul-suave);
-  border-color: var(--azul);
-  color: var(--azul-escuro);
-}
-
-.abas-status [aria-selected='true'] .pilula-num {
-  background: var(--azul);
-  color: #fff;
 }
 
 .tarefas-esqueleto {
@@ -106,7 +85,12 @@
   border-radius: var(--r-lg);
   border: 1px solid var(--linha);
   background: var(--superficie);
-  box-shadow: var(--sombra-1);
+  transition: border-color var(--m-sai);
+}
+
+.tarefa:hover {
+  border-color: var(--linha-forte);
+  transition-duration: var(--m-entra);
 }
 
 .tarefa-topo {
@@ -120,19 +104,14 @@
 }
 
 .tarefa-icone {
-  display: grid;
-  place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
   flex-shrink: 0;
-  border-radius: var(--r-md);
-  background: var(--azul-suave);
+  padding-top: 1px;
   color: var(--azul);
 }
 
 .tarefa-icone svg {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .tarefa-texto {
@@ -177,7 +156,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--e-2);
-  padding: 0 var(--e-4) var(--e-4) calc(var(--e-4) + 2.5rem + var(--e-3));
+  padding: 0 var(--e-4) var(--e-4) calc(var(--e-4) + 1.5rem + var(--e-3));
   color: var(--tinta-2);
   font-size: var(--t-sm);
 }
@@ -200,7 +179,6 @@
 }
 
 .tarefa.feita .tarefa-icone {
-  background: var(--verde-claro);
   color: var(--verde);
 }
 
@@ -301,10 +279,11 @@
   height: 2.5rem;
   flex-shrink: 0;
   border-radius: 50%;
-  background: var(--azul-claro);
-  color: var(--azul-escuro);
+  background: var(--superficie-2);
+  border: 1px solid var(--linha);
+  color: var(--tinta-2);
   font-size: var(--t-sm);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .membro-texto {
@@ -337,7 +316,7 @@
 
 .pct {
   min-width: 3ch;
-  font-weight: 700;
+  font-weight: 600;
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
@@ -400,9 +379,9 @@
 }
 
 .opcao.marcada {
-  border-color: var(--azul);
-  background: var(--azul-suave);
-  color: var(--azul-escuro);
+  border-color: var(--selecao);
+  background: var(--selecao);
+  color: var(--sobre-selecao);
 }
 
 .opcao:has(input:focus-visible) {
@@ -508,9 +487,8 @@
   }
 
   .grade--tarefas .paineis .ver-compras {
-    background: var(--superficie);
-    color: var(--azul-escuro);
-    box-shadow: var(--sombra-2);
+    background: var(--selecao);
+    color: var(--sobre-selecao);
   }
 }
 

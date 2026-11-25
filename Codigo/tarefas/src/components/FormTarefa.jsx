@@ -103,7 +103,7 @@ export default function FormTarefa({ idoso, membros, tarefas, aoSalvar, aoFechar
             maxLength="120"
             value={t.observacoes}
             onChange={(e) => alterar('observacoes', e.target.value)}
-            placeholder="Ex.: Tamanho G, comprar na farmácia"
+            placeholder="Ex.: Tamanho G"
           ></textarea>
         </label>
 

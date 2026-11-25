@@ -95,7 +95,7 @@ export default function ListaTarefas({ tarefas, membros, carregando, aba, aoMuda
                         <button
                           key={a.para}
                           type="button"
-                          className={'btn' + (a.para === 'concluido' ? ' btn-primario' : '')}
+                          className="btn"
                           onClick={() => aoMudarStatus(t, a.para)}
                         >
                           {a.rotulo}

@@ -58,7 +58,7 @@ export default function ListaCompras({ tarefas, podeCriar, aoComprar }) {
             <span>Falta comprar: <b>{dinheiro(falta)}</b></span>
             <span>Total: <b>{dinheiro(total)}</b></span>
           </div>
-          <button type="button" className="btn btn-primario btn-bloco" disabled={marcados.length === 0} onClick={comprar}>
+          <button type="button" className="btn btn-bloco" disabled={marcados.length === 0} onClick={comprar}>
             Marcar como comprado
           </button>
         </>
