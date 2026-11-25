@@ -24,7 +24,7 @@
 .cabecalho {
   display: flex;
   flex-direction: column;
-  gap: var(--e-4);
+  gap: var(--e-3);
 }
 
 .cabecalho h1 {
@@ -41,7 +41,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--e-1) var(--e-4);
-  margin-top: var(--e-3);
+  margin-top: var(--e-1);
   font-size: var(--t-sm);
   color: var(--tinta-2);
 }
@@ -58,11 +58,7 @@
 }
 
 .resumo-item.zerado {
-  color: var(--tinta-3);
-}
-
-.resumo-item.zerado .ponto {
-  opacity: 0.4;
+  display: none;
 }
 
 .cabecalho-acoes {
@@ -87,7 +83,7 @@
 }
 
 .quadro {
-  padding: var(--e-4) var(--e-3);
+  padding: var(--e-2) var(--e-3) var(--e-3);
 }
 
 .quadro-topo,
@@ -96,7 +92,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--e-2);
-  margin-bottom: var(--e-3);
+  margin-bottom: var(--e-1);
 }
 
 .quadro-topo h2 {
@@ -127,8 +123,8 @@
   align-items: center;
   gap: 4px;
   width: 100%;
-  min-height: 4.5rem;
-  padding: var(--e-2) 0;
+  min-height: 4.25rem;
+  padding: 6px 0;
   border-radius: var(--r-md);
   color: var(--tinta-2);
   transition: background 0.15s;
@@ -271,6 +267,7 @@
   bottom: 2px;
   width: 6px;
   height: 6px;
+  min-height: 0;
   padding: 0;
   border-radius: 50%;
   background: var(--tipo);
@@ -346,10 +343,17 @@
 }
 
 /* ===== Painel do dia ===== */
-.painel {
+.painel,
+.painel-dia {
   display: flex;
   flex-direction: column;
-  gap: var(--e-4);
+  gap: var(--e-3);
+  min-height: 0;
+}
+
+/* o dia cresce; os próximos ficam embaixo */
+.painel-dia {
+  flex: 1 1 auto;
 }
 
 .painel-topo {
@@ -420,8 +424,8 @@
   display: flex;
   align-items: center;
   gap: var(--e-3);
-  min-height: 3.75rem;
-  padding: var(--e-2) var(--e-3);
+  min-height: 52px;
+  padding: 6px var(--e-3);
   border-radius: var(--r-md);
   border: 1px solid var(--linha);
   background: var(--superficie);
@@ -457,7 +461,8 @@
 }
 
 .tempo-texto strong {
-  line-height: 1.3;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
 .tempo-texto small {
@@ -534,14 +539,15 @@
 
 /* próximos compromissos */
 .proximos {
-  padding-top: var(--e-4);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding-top: var(--e-3);
   border-top: 1px solid var(--linha);
-  outline: none;
-  scroll-margin-top: var(--e-8);
 }
 
 .proximos h3 {
-  margin-bottom: var(--e-2);
+  margin-bottom: var(--e-1);
   font-size: var(--t-md);
 }
 
@@ -617,6 +623,20 @@ fieldset.campo {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--e-3);
+}
+
+.campos-texto {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 40rem) {
+  .campos-texto {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .dialogo-form {
+    width: min(42rem, calc(100% - 2rem));
+  }
 }
 
 .opcoes-tipo {
@@ -784,16 +804,12 @@ fieldset.campo {
 
 /* ===== Tablet ===== */
 @media (min-width: 40rem) {
-  .cabecalho h1 {
-    font-size: var(--t-2xl);
-  }
-
   .quadro {
-    padding: var(--e-5);
+    padding: var(--e-3) var(--e-4) var(--e-4);
   }
 
   .cabecalho-acoes .segmentado {
-    flex: 0 0 14rem;
+    flex: 0 0 11rem;
   }
 
   .btn-novo {
@@ -806,7 +822,7 @@ fieldset.campo {
   }
 }
 
-/* ===== Computador: quadro com os compromissos escritos e painel embaixo ===== */
+/* ===== Computador: quadro e painel do dia lado a lado, preenchendo a janela ===== */
 @media (min-width: 64rem) {
   .cabecalho {
     flex-flow: row wrap;
@@ -814,13 +830,113 @@ fieldset.campo {
     justify-content: space-between;
   }
 
+  .cabecalho-acoes {
+    margin-left: auto;
+  }
+
   .cabecalho-acoes .btn {
     white-space: nowrap;
   }
 
-  /* semana com os compromissos escritos */
+  .agenda-grade {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+}
+
+@media (min-width: 64rem) and (min-height: 35rem) {
+  .painel,
+  .quadro {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .proximos {
+    flex: 0 1 auto;
+    max-height: 45%;
+  }
+
+  .painel-dia {
+    min-height: 8rem;
+  }
+}
+
+/* espaço médio (ou letra maior): a semana é uma faixa de dias, e embaixo o dia e os próximos */
+@container palco (max-width: 63.99rem) {
+  .agenda-grade--semana .quadro {
+    flex: none;
+  }
+
+  .agenda-grade--semana .proximos,
+  .agenda-grade--semana .painel-dia {
+    min-height: 0;
+  }
+
+  .agenda-grade--semana .painel {
+    flex: 1 1 auto;
+    flex-direction: row;
+    gap: var(--e-5);
+  }
+
+  .agenda-grade--semana .painel-dia {
+    flex: 1.5 1 0;
+    min-width: 0;
+  }
+
+  .agenda-grade--semana .proximos {
+    flex: 1 1 0;
+    min-width: 0;
+    max-height: none;
+    padding: 0 0 0 var(--e-5);
+    border-top: 0;
+    border-left: 1px solid var(--linha);
+  }
+}
+
+@container palco (min-width: 46rem) {
+  .agenda-grade--mes {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, min(38%, 20rem));
+    grid-template-rows: minmax(0, 1fr);
+    gap: var(--e-4);
+  }
+
+  .mes {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mes-grade {
+    flex: 1 1 auto;
+    grid-auto-rows: minmax(3rem, 1fr);
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .mes-dia {
+    justify-content: center;
+  }
+}
+
+/* espaço largo: os compromissos aparecem escritos */
+@container palco (min-width: 64rem) {
+  .agenda-grade--semana {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, min(38%, 20rem));
+    grid-template-rows: minmax(0, 1fr);
+    gap: var(--e-4);
+  }
+
+  .semana {
+    display: flex;
+    flex-direction: column;
+  }
+
   .semana-grade {
+    flex: 1 1 auto;
+    grid-template-rows: minmax(0, 1fr);
     gap: 0;
+    min-height: 0;
     border: 1px solid var(--linha);
     border-radius: var(--r-md);
     overflow: hidden;
@@ -829,7 +945,7 @@ fieldset.campo {
   .semana-dia {
     display: flex;
     flex-direction: column;
-    min-height: 12rem;
+    min-height: 0;
   }
 
   .semana-dia + .semana-dia {
@@ -837,6 +953,7 @@ fieldset.campo {
   }
 
   .semana-cabeca {
+    flex: none;
     min-height: auto;
     border-radius: 0;
     border-bottom: 1px solid var(--linha);
@@ -858,25 +975,26 @@ fieldset.campo {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    margin: 0;
     padding: 4px;
   }
 
   .semana-eventos .chip {
     flex-direction: column;
+    flex: none;
     align-items: flex-start;
     gap: 0;
     padding: 4px 6px;
   }
 
-  /* título em até 3 linhas, em vez de cortar com reticências */
   .semana-eventos .chip-titulo {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
+    flex: none;
     width: 100%;
+    overflow: visible;
     white-space: normal;
     overflow-wrap: anywhere;
     hyphens: auto;
+    line-height: 1.25;
   }
 
   .semana-eventos .chip svg {
@@ -890,18 +1008,22 @@ fieldset.campo {
     text-align: center;
   }
 
-  /* mês com chips */
   .mes-grade {
+    grid-auto-rows: minmax(4.25rem, 1fr);
     gap: 0;
     border-top: 1px solid var(--linha);
     border-left: 1px solid var(--linha);
   }
 
   .mes-dia {
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-auto-rows: min-content;
+    align-items: center;
+    justify-content: stretch;
     gap: 3px;
-    min-height: 7rem;
-    padding: 4px;
+    min-height: 0;
+    padding: 3px;
     border-right: 1px solid var(--linha);
     border-bottom: 1px solid var(--linha);
   }
@@ -911,20 +1033,23 @@ fieldset.campo {
   }
 
   .mes-cabeca {
-    justify-items: start;
+    width: auto;
     min-height: auto;
   }
 
   .mes-num {
-    width: 1.875rem;
-    height: 1.875rem;
+    width: 1.75rem;
+    height: 1.75rem;
     font-size: var(--t-sm);
   }
 
+  /* o compromisso ocupa a linha de baixo, com o nome inteiro em até duas linhas */
   .mes-dia .chip {
     position: static;
+    grid-column: 1 / -1;
     width: 100%;
     height: auto;
+    min-height: 0;
     padding: 2px 6px;
     border-radius: 6px;
     background: var(--tipo-claro);
@@ -932,47 +1057,36 @@ fieldset.campo {
     transform: none !important;
   }
 
-  .mes-dia .chip > * {
-    display: initial;
-  }
-
-  .mes-dia .chip svg {
-    display: none;
+  .mes-dia .chip-titulo {
+    display: block;
+    white-space: normal;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
   }
 
   .mes-mais {
-    display: block;
-    padding: 2px 6px;
-    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    grid-row: 1;
+    grid-column: 2;
+    justify-self: end;
+    padding: 0 4px;
     color: var(--tinta-3);
     font-size: var(--t-xs);
     font-weight: 600;
-    text-align: left;
+    line-height: 1.2;
+    text-align: right;
   }
 
   .mes-mais:hover {
-    background: var(--superficie-2);
     color: var(--tinta);
+    text-decoration: underline;
   }
 }
 
-/* ===== Telas largas: painel do dia ao lado do quadro (antes disso os 7 dias ficam espremidos) ===== */
-@media (min-width: 90rem) {
-  .agenda-grade {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 22rem;
-    align-items: start;
-    gap: var(--e-6);
-  }
-
-  .painel {
-    position: sticky;
-    top: var(--e-6);
-    max-height: calc(100dvh - var(--e-12));
-    overflow-y: auto;
-  }
-
-  .semana-dia {
-    min-height: 26rem;
+@container palco (min-width: 84rem) {
+  .mes-dia .chip-hora {
+    display: block;
   }
 }

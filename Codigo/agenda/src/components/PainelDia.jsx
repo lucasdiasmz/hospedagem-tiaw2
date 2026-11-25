@@ -22,7 +22,7 @@ function contagem(eventos) {
 
 /* Painel lateral: o dia selecionado como linha do tempo e os próximos compromissos */
 export default function PainelDia({
-  data, eventos, carregado, proximos, proximosRef, rotuloTipo, statusInfo, aoSelecionar, aoAbrir, aoNovo,
+  data, eventos, carregado, proximos, rotuloTipo, statusInfo, aoSelecionar, aoAbrir, aoNovo,
 }) {
   const agora = useHoraAtual();
   const ehHoje = data === hoje();
@@ -40,66 +40,68 @@ export default function PainelDia({
 
   return (
     <aside className="card painel" aria-labelledby="painel-titulo">
-      <div className="painel-topo">
-        <div>
-          <h2 id="painel-titulo">
-            {relativo && <span className={'tag-relativo' + (ehHoje ? ' hoje' : '')}>{relativo}</span>}
-            {dataCurta(data)}
-          </h2>
-          <p>{carregado ? contagem(eventos) : 'Carregando…'}</p>
+      <div className="painel-dia">
+        <div className="painel-topo">
+          <div>
+            <h2 id="painel-titulo">
+              {relativo && <span className={'tag-relativo' + (ehHoje ? ' hoje' : '')}>{relativo}</span>}
+              {dataCurta(data)}
+            </h2>
+            <p>{carregado ? contagem(eventos) : 'Carregando…'}</p>
+          </div>
+          <div className="setas">
+            <button type="button" className="btn-icone" aria-label="Dia anterior" onClick={() => aoSelecionar(somarDias(data, -1))}>
+              <SetaEsquerda />
+            </button>
+            <button type="button" className="btn-icone" aria-label="Próximo dia" onClick={() => aoSelecionar(somarDias(data, 1))}>
+              <SetaDireita />
+            </button>
+          </div>
         </div>
-        <div className="setas">
-          <button type="button" className="btn-icone" aria-label="Dia anterior" onClick={() => aoSelecionar(somarDias(data, -1))}>
-            <SetaEsquerda />
-          </button>
-          <button type="button" className="btn-icone" aria-label="Próximo dia" onClick={() => aoSelecionar(somarDias(data, 1))}>
-            <SetaDireita />
-          </button>
-        </div>
+
+        {carregado && eventos.length === 0 ? (
+          <div className="painel-vazio">
+            <p>Nenhum compromisso neste dia.</p>
+            {aoNovo && <button type="button" className="link-acao" onClick={aoNovo}>Adicionar compromisso</button>}
+          </div>
+        ) : (
+          <ol className="linha-tempo rolavel">
+            {eventos.map((e, i) => {
+              const status = statusInfo(e.status);
+              const passou = ehHoje && e.horario <= agora;
+              return (
+                <Fragment key={e.chave}>
+                  {i === indiceAgora && linhaAgora}
+                  <li className={`tempo-item ${e.tipo} status-${e.status}` + (passou ? ' passou' : '')}>
+                    <span className="tempo-hora">{e.horario}</span>
+                    <button type="button" className="tempo-cartao" onClick={() => aoAbrir(e)}>
+                      <span className="tipo-icone" aria-hidden="true">{ICONES_TIPO[e.tipo]}</span>
+                      <span className="tempo-texto">
+                        <strong>{e.titulo}</strong>
+                        <small>
+                          {e.recorrencia && <IconeRepetir />}
+                          {e.subtitulo || rotuloTipo(e.tipo)}
+                        </small>
+                      </span>
+                      {e.status !== 'confirmado' && (
+                        <span className="status" style={{ '--status': status.cor }}>{status.rotulo}</span>
+                      )}
+                    </button>
+                  </li>
+                </Fragment>
+              );
+            })}
+            {agoraNoFim && linhaAgora}
+          </ol>
+        )}
       </div>
 
-      {carregado && eventos.length === 0 ? (
-        <div className="painel-vazio">
-          <p>Nenhum compromisso neste dia.</p>
-          {aoNovo && <button type="button" className="link-acao" onClick={aoNovo}>Adicionar compromisso</button>}
-        </div>
-      ) : (
-        <ol className="linha-tempo">
-          {eventos.map((e, i) => {
-            const status = statusInfo(e.status);
-            const passou = ehHoje && e.horario <= agora;
-            return (
-              <Fragment key={e.chave}>
-                {i === indiceAgora && linhaAgora}
-                <li className={`tempo-item ${e.tipo} status-${e.status}` + (passou ? ' passou' : '')}>
-                  <span className="tempo-hora">{e.horario}</span>
-                  <button type="button" className="tempo-cartao" onClick={() => aoAbrir(e)}>
-                    <span className="tipo-icone" aria-hidden="true">{ICONES_TIPO[e.tipo]}</span>
-                    <span className="tempo-texto">
-                      <strong>{e.titulo}</strong>
-                      <small>
-                        {e.recorrencia && <IconeRepetir />}
-                        {e.subtitulo || rotuloTipo(e.tipo)}
-                      </small>
-                    </span>
-                    {e.status !== 'confirmado' && (
-                      <span className="status" style={{ '--status': status.cor }}>{status.rotulo}</span>
-                    )}
-                  </button>
-                </li>
-              </Fragment>
-            );
-          })}
-          {agoraNoFim && linhaAgora}
-        </ol>
-      )}
-
-      <section ref={proximosRef} className="proximos" aria-labelledby="proximos-titulo" tabIndex={-1}>
+      <section className="proximos" aria-labelledby="proximos-titulo">
         <h3 id="proximos-titulo">Próximos compromissos</h3>
         {proximos.length === 0 ? (
           <p className="vazio">{carregado ? 'Nenhuma consulta, exame ou visita marcada.' : 'Carregando…'}</p>
         ) : (
-          <ul>
+          <ul className="rolavel">
             {proximos.map((e) => (
               <li key={e.chave}>
                 <button type="button" className={'proximo ' + e.tipo} onClick={() => aoSelecionar(e.data)}>

@@ -48,7 +48,7 @@ export default function Semana({ dias, selecionado, eventosDoDia, carregado, rot
                   {tipos.map((t) => <span key={t} className={'ponto ' + t} />)}
                 </span>
               </button>
-              <div className="semana-eventos">
+              <div className="semana-eventos rolavel">
                 {eventos.map((e) => (
                   <ChipEvento key={e.chave} evento={e} rotuloTipo={rotuloTipo} aoAbrir={aoAbrir} />
                 ))}

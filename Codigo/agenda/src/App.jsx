@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import Cabecalho from './components/Cabecalho.jsx';
 import DialogoDetalhes from './components/DialogoDetalhes.jsx';
 import DialogoNovo from './components/DialogoNovo.jsx';
@@ -8,7 +8,7 @@ import Semana from './components/Semana.jsx';
 import Shell from '@ds/Shell.jsx';
 import Toast from '@ds/Toast.jsx';
 import { AvisoEspera, Estado } from '@ds/Componentes.jsx';
-import { IconeAgenda, IconeMais } from '@ds/Icones.jsx';
+import { IconeMais } from '@ds/Icones.jsx';
 import { usePermissoes } from '@ds/permissoes.js';
 import { useAgenda } from './hooks/useAgenda.js';
 import { hoje } from './utils/datas.js';
@@ -27,7 +27,6 @@ export default function App() {
   const [novoAberto, setNovoAberto] = useState(false);
   const [aberto, setAberto] = useState(null);
   const [aviso, setAviso] = useState(null);
-  const proximosRef = useRef(null);
 
   /* rótulos, cores e nomes vêm dos catálogos do banco */
   const tipos = catalogos?.tiposEvento || [];
@@ -67,11 +66,6 @@ export default function App() {
     gravar(() => agenda.excluir(evento.eventoId), 'Compromisso excluído');
   }
 
-  function verProximos() {
-    proximosRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    proximosRef.current?.focus({ preventScroll: true });
-  }
-
   const propsQuadro = {
     selecionado: agenda.selecionado,
     eventosDoDia: agenda.eventosDoDia,
@@ -97,7 +91,7 @@ export default function App() {
     );
   } else {
     conteudo = (
-      <div className="agenda-grade">
+      <div className={'agenda-grade agenda-grade--' + agenda.visao}>
         {agenda.visao === 'semana' ? (
           <Semana dias={agenda.semana} {...propsQuadro} />
         ) : (
@@ -114,7 +108,6 @@ export default function App() {
           eventos={agenda.eventosDoDia(agenda.selecionado)}
           carregado={agenda.carregado}
           proximos={agenda.proximos}
-          proximosRef={proximosRef}
           rotuloTipo={rotuloTipo}
           statusInfo={statusInfo}
           aoSelecionar={agenda.selecionar}
@@ -126,13 +119,9 @@ export default function App() {
   }
 
   const idoso = agenda.idosos.find((i) => i.id === agenda.idosoId);
-  const atalhos = [
-    podeCriar && { rotulo: 'Novo compromisso', Icone: IconeMais, aoClicar: () => setNovoAberto(true) },
-    { rotulo: 'Ver próximos compromissos', Icone: IconeAgenda, aoClicar: verProximos },
-  ].filter(Boolean);
 
   return (
-    <Shell tela="agenda" usuario={agenda.usuario} atalhos={atalhos}>
+    <Shell tela="agenda" usuario={agenda.usuario}>
       <Cabecalho
         idoso={idoso}
         mes={agenda.mes}

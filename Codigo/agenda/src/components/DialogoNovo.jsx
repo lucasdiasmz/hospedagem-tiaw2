@@ -98,23 +98,24 @@ export default function DialogoNovo({ aberto, dataInicial, tipos, aoFechar, aoSa
           </div>
         </fieldset>
 
-        <label className="campo">
-          Título
-          <input
-            ref={tituloRef}
-            type="text"
-            maxLength="80"
-            placeholder="Ex.: Consulta com cardiologista"
-            value={f.titulo}
-            onChange={mudar('titulo')}
-            required
-          />
-        </label>
-
-        <label className="campo">
-          <span>Detalhe <span className="opcional">(opcional)</span></span>
-          <input type="text" maxLength="80" placeholder={DICA_DETALHE[f.tipo]} value={f.subtitulo} onChange={mudar('subtitulo')} />
-        </label>
+        <div className="campos-lado campos-texto">
+          <label className="campo">
+            Título
+            <input
+              ref={tituloRef}
+              type="text"
+              maxLength="80"
+              placeholder="Ex.: Consulta com cardiologista"
+              value={f.titulo}
+              onChange={mudar('titulo')}
+              required
+            />
+          </label>
+          <label className="campo">
+            <span>Detalhe <span className="opcional">(opcional)</span></span>
+            <input type="text" maxLength="80" placeholder={DICA_DETALHE[f.tipo]} value={f.subtitulo} onChange={mudar('subtitulo')} />
+          </label>
+        </div>
 
         <div className="campos-lado">
           <label className="campo">

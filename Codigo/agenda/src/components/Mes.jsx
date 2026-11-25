@@ -5,6 +5,13 @@ import { SetaDireita, SetaEsquerda } from './Icones.jsx';
 const ROTINA = ['medicamento', 'tarefa'];
 const MAX_CHIPS = 2;
 
+function textoMais(extras, rotina) {
+  return [
+    extras > 0 && `mais ${extras} ${extras === 1 ? 'compromisso' : 'compromissos'}`,
+    rotina > 0 && `${rotina} ${rotina === 1 ? 'item' : 'itens'} de rotina`,
+  ].filter(Boolean).join(' e ');
+}
+
 /* Mês em grade: cada dia mostra até 2 compromissos escritos; a rotina (remédios e tarefas)
    vira uma contagem, porque acontece quase todo dia. */
 export default function Mes({ mes, nomeMes, diasSemana, selecionado, eventosDoDia, carregado, rotuloTipo, aoSelecionar, aoAbrir }) {
@@ -61,8 +68,10 @@ export default function Mes({ mes, nomeMes, diasSemana, selecionado, eventosDoDi
                 <ChipEvento key={e.chave} evento={e} rotuloTipo={rotuloTipo} aoAbrir={aoAbrir} />
               ))}
               {(extras > 0 || rotina > 0) && (
-                <button type="button" className="mes-mais" onClick={() => aoSelecionar(data)}>
-                  {[extras > 0 && `+${extras}`, rotina > 0 && `${rotina} de rotina`].filter(Boolean).join(' · ')}
+                <button type="button" className="mes-mais" onClick={() => aoSelecionar(data)}
+                  aria-label={textoMais(extras, rotina)} title={textoMais(extras, rotina)}>
+                  {extras > 0 && <span>+{extras}</span>}
+                  {rotina > 0 && <><span className="ponto medicamento" />{rotina}</>}
                 </button>
               )}
             </li>
