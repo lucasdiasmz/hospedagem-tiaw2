@@ -1,13 +1,13 @@
 /* O que cada perfil vê e pode fazer.
    Perfis: 'idoso', 'cliente' (familiar responsável) e 'cuidador' (profissional).
-   O perfil vem das boas-vindas (preferencias.js). Quem ainda não escolheu é tratado como
-   familiar, que tem acesso a tudo.
+   O perfil vem das boas-vindas (preferencias.js). Quem ainda não escolheu é levado para lá pelo
+   Shell; se isso não for possível, vale o perfil com menos permissões.
 
    Atenção: esconder telas e botões no front NÃO é segurança, só organiza a interface.
    Quando o login existir, cada API precisa conferir o papel do usuário antes de gravar. */
 import { usePreferencias } from './preferencias.js';
 
-export const PERFIL_PADRAO = 'cliente';
+export const PERFIL_PADRAO = 'idoso';
 
 /* telas que cada perfil acessa (ids usados no Shell) */
 const TELAS = {

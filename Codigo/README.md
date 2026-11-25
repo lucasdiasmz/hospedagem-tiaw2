@@ -65,7 +65,7 @@ tempo, Cuidadores e Perfil do idoso ficam na aba "Mais".
 ## O que cada perfil acessa
 
 Definido em `design-system/permissoes.js` (o menu e os botões seguem essa tabela). Quem não passou
-pelas boas-vindas é tratado como familiar e vê tudo.
+pelas boas-vindas é levado para elas antes de abrir qualquer tela.
 
 | Tela | Idoso | Familiar responsável | Cuidador |
 |---|---|---|---|

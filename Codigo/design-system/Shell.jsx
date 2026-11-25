@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Dialogo from './Dialogo.jsx';
 import {
   IconeAgenda, IconeContraste, IconeCuidadores, IconeInicio, IconeLetra, IconeLinhaDoTempo,
   IconeMenu, IconePerfis, IconePilula, IconeSair, IconeTarefas, SetaDireita,
 } from './Icones.jsx';
-import { TELAS } from './navegacao.js';
+import { LOCAL, SITE_UNICO, TELAS } from './navegacao.js';
 import { usePreferencias, useUsuario } from './preferencias.js';
 import { NOMES_PERFIL, usePermissoes } from './permissoes.js';
 import { Estado } from './Componentes.jsx';
@@ -16,7 +16,8 @@ import logo from './assets/logo-acessamob.png';
    - computador (≥ 1024 px): menu lateral azul-escuro com tudo à vista.
    Props: tela (id do item ativo), usuario ({ nome, tipo }), atalhos ([{ rotulo, Icone, aoClicar | href }]),
    permissao (id da tela para conferir o acesso, quando difere de "tela"; ex.: cadastro de medicamentos).
-   O menu mostra só as telas do perfil (permissoes.js); uma tela proibida mostra um aviso. */
+   O menu mostra só as telas do perfil (permissoes.js); uma tela proibida mostra um aviso.
+   Quem ainda não escolheu um perfil vai para as boas-vindas. */
 
 const ITENS = [
   { id: 'inicio', rotulo: 'Início', curto: 'Início', Icone: IconeInicio, href: TELAS.inicio, aba: true },
@@ -109,15 +110,27 @@ function CartaoUsuario({ usuario, perfil, escuro = false }) {
   );
 }
 
+/* com um endereço por tela o cookie do perfil não é compartilhado, e redirecionar daria volta sem fim */
+const EXIGE_PERFIL = SITE_UNICO || LOCAL;
+
 export default function Shell({ tela, permissao = tela, usuario: usuarioApi, atalhos = [], children }) {
   const [maisAberto, setMaisAberto] = useState(false);
   const usuario = useUsuario(usuarioApi);
   const { perfil, podeVer } = usePermissoes();
+  const [prefs] = usePreferencias();
+  const semPerfil = EXIGE_PERFIL && !prefs.perfil;
+
+  useEffect(() => {
+    if (semPerfil) window.location.replace(TELAS.boasVindas);
+  }, [semPerfil]);
+
   const itens = ITENS.filter((i) => podeVer(i.id));
   const abas = itens.filter((i) => i.aba);
   const atualNoMais = itens.some((i) => !i.aba && i.id === tela);
   const liberada = podeVer(permissao);
   const visiveis = liberada ? atalhos : [];
+
+  if (semPerfil) return <Estado tipo="carregando" titulo="Abrindo as boas-vindas…" />;
 
   return (
     <div className="shell">
