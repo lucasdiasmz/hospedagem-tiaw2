@@ -312,7 +312,7 @@
   font-weight: 600;
 }
 
-.form-tarefa .campo input,
+.form-tarefa .campo input:where(:not([role='switch'])),
 .form-tarefa .campo select,
 .form-tarefa .campo textarea,
 .item-form input,
@@ -334,6 +334,7 @@
 }
 
 .opcao {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: var(--e-2);
@@ -346,8 +347,12 @@
   cursor: pointer;
 }
 
-.opcao input {
+.opcao > input[type] {
   position: absolute;
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  padding: 0;
   opacity: 0;
   pointer-events: none;
 }

@@ -1002,7 +1002,7 @@
 /* ===== Telas maiores ===== */
 @media (min-width: 40rem) {
   .page-head {
-    flex-direction: row;
+    flex-flow: row wrap;
     align-items: flex-end;
     justify-content: space-between;
   }
@@ -1012,6 +1012,7 @@
   }
 
   .switcher {
+    flex-wrap: wrap;
     margin: 0;
     padding: 0;
     overflow: visible;

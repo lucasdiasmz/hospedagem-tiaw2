@@ -1124,7 +1124,7 @@ input[role='switch']:focus-visible {
   font-size: var(--t-xs);
 }
 
-.campo input,
+.campo input:where(:not([role='switch'])),
 .campo select,
 .campo textarea,
 .entrada {
@@ -1161,14 +1161,14 @@ select.entrada {
   color: var(--tinta-3);
 }
 
-.campo input:hover,
+.campo input:where(:not([role='switch'])):hover,
 .campo select:hover,
 .campo textarea:hover,
 .entrada:hover {
   border-color: var(--tinta-3);
 }
 
-.campo input:focus,
+.campo input:where(:not([role='switch'])):focus,
 .campo select:focus,
 .campo textarea:focus,
 .entrada:focus {
@@ -1230,6 +1230,7 @@ select.entrada {
 }
 
 .pilula {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: var(--e-2);
@@ -1256,8 +1257,13 @@ select.entrada {
   color: var(--azul-escuro);
 }
 
-.pilula input {
+/* .campo input ocupa 100% da largura; o controle invisível não pode vazar da pílula */
+.pilula > input[type] {
   position: absolute;
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  padding: 0;
   opacity: 0;
   pointer-events: none;
 }

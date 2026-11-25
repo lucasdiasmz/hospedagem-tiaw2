@@ -626,6 +626,7 @@ fieldset.campo {
 }
 
 .opcao-tipo {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: var(--e-2);
@@ -637,9 +638,13 @@ fieldset.campo {
   cursor: pointer;
 }
 
-.opcao-tipo input,
-.opcao-dia input {
+.opcao-tipo > input[type],
+.opcao-dia > input[type] {
   position: absolute;
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  padding: 0;
   opacity: 0;
   pointer-events: none;
 }
@@ -661,6 +666,7 @@ fieldset.campo {
 }
 
 .opcao-dia {
+  position: relative;
   display: grid;
   place-items: center;
   height: var(--toque);

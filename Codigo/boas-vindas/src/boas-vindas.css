@@ -50,6 +50,9 @@
 }
 
 .bv-conteudo {
+  /* acima da faixa da marca, senão ela cobre o indicador de passos */
+  position: relative;
+  z-index: 1;
   flex: 1;
   width: 100%;
   max-width: 34rem;
@@ -185,6 +188,7 @@
 }
 
 .bv-dia {
+  position: relative;
   display: grid;
   place-items: center;
   height: var(--toque);
@@ -195,8 +199,12 @@
   cursor: pointer;
 }
 
-.bv-dia input {
+.bv-dia > input[type] {
   position: absolute;
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  padding: 0;
   opacity: 0;
   pointer-events: none;
 }
