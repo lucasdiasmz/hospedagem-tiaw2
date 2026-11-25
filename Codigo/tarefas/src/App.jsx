@@ -116,7 +116,7 @@ export default function App() {
       {IDOSOS.length > 1 && (
         <div className="pilulas seletor-idoso" role="radiogroup" aria-label="Tarefas de">
           {IDOSOS.map((i) => (
-            <button key={i.id} type="button" role="radio" className="pilula" aria-checked={i.id === idosoId} aria-pressed={i.id === idosoId}
+            <button key={i.id} type="button" role="radio" className="pilula" aria-checked={i.id === idosoId}
               onClick={() => setIdosoId(i.id)}>
               {i.nome}
             </button>

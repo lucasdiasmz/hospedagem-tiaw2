@@ -178,7 +178,6 @@ export default function App() {
                             role="radio"
                             className="pilula"
                             aria-checked={idoso.id === idosoId}
-                            aria-pressed={idoso.id === idosoId}
                             disabled={salvandoId !== null}
                             onClick={() => escolherIdoso(idoso.id)}
                         >
