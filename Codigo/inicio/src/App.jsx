@@ -3,10 +3,10 @@ import Shell from '@ds/Shell.jsx';
 import Dialogo from '@ds/Dialogo.jsx';
 import Toast from '@ds/Toast.jsx';
 import { Estado } from '@ds/Componentes.jsx';
-import { IconeAgenda, IconeLapis, IconeMais } from '@ds/Icones.jsx';
+import { IconeAgenda, IconeLapis, IconeMais, IconeTelefone } from '@ds/Icones.jsx';
 import { TELAS } from '@ds/navegacao.js';
 import { useUsuario } from '@ds/preferencias.js';
-import { usePermissoes } from '@ds/permissoes.js';
+import { NOMES_PERFIL, usePermissoes } from '@ds/permissoes.js';
 import AcoesRapidas from './components/AcoesRapidas.jsx';
 import AindaHoje from './components/AindaHoje.jsx';
 import CardCompromisso from './components/CardCompromisso.jsx';
@@ -110,12 +110,16 @@ export default function App() {
 
   function chamarAjuda() {
     setSosAberto(false);
-    gravar(cuidados.chamarAjuda, 'Pedido de ajuda enviado à equipe');
+    /* sem login o servidor não sabe quem tocou no botão: o nome vai na mensagem */
+    const quem = usuario?.nome ? `Pedido feito por ${usuario.nome} (${NOMES_PERFIL[perfil]})` : undefined;
+    gravar(() => cuidados.chamarAjuda(quem?.slice(0, 200)), 'Pedido de ajuda enviado à equipe');
   }
 
   function verHorarios() {
     aindaHojeRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
+
+  const contato = cuidados.idoso?.contatos?.find((c) => c.principal) || cuidados.idoso?.contatos?.[0];
 
   const atalhos = [
     pode('inicio.anotar') && { rotulo: 'Nova anotação', Icone: IconeLapis, aoClicar: () => setNotaAberta(true) },
@@ -176,10 +180,20 @@ export default function App() {
 
       {/* confirmação do pedido de ajuda: protege contra toque sem querer */}
       <Dialogo aberto={sosAberto} aoFechar={() => setSosAberto(false)} titulo="Chamar ajuda agora?"
-        descricao="Toda a rede de apoio recebe um aviso de que você precisa de ajuda.">
+        descricao={cuidados.idoso
+          ? 'A rede de apoio de ' + cuidados.idoso.nome + ' recebe um aviso. Em emergência, ligue para o SAMU.'
+          : 'Em emergência, ligue para o SAMU.'}>
+        <div className="ajuda-ligar">
+          <a className="btn" href="tel:192"><IconeTelefone />SAMU 192</a>
+          {contato && (
+            <a className="btn" href={'tel:' + contato.telefone.replace(/\D/g, '')}>
+              <IconeTelefone />Ligar para {contato.nome.split(' ')[0]}
+            </a>
+          )}
+        </div>
         <div className="dialogo-botoes">
           <button type="button" className="btn" onClick={() => setSosAberto(false)}>Cancelar</button>
-          <button type="button" className="btn btn-perigo" onClick={chamarAjuda}>Sim, chamar ajuda</button>
+          <button type="button" className="btn btn-perigo" onClick={chamarAjuda} disabled={!cuidados.idoso}>Sim, chamar ajuda</button>
         </div>
       </Dialogo>
     </Shell>

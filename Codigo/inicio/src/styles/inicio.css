@@ -497,3 +497,11 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ligações no diálogo de ajuda */
+.ajuda-ligar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--e-2);
+  margin-bottom: var(--e-2);
+}

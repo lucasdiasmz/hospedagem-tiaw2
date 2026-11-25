@@ -90,8 +90,8 @@ export function useCuidadosDoDia() {
     setNotas((atuais) => atuais.filter((n) => n.id !== id));
   }
 
-  async function chamarAjuda() {
-    return api(`/idosos/${idoso.id}/chamados`, { metodo: 'POST', corpo: {} });
+  async function chamarAjuda(mensagem) {
+    return api(`/idosos/${idoso.id}/chamados`, { metodo: 'POST', corpo: { mensagem } });
   }
 
   return {
