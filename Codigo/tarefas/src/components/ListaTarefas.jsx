@@ -16,7 +16,7 @@ const ACOES = {
   concluido: [{ para: 'a_fazer', rotulo: 'Reabrir' }],
 };
 
-export default function ListaTarefas({ tarefas, membros, carregando, aba, aoMudarAba, aoMudarStatus, secaoRef }) {
+export default function ListaTarefas({ tarefas, membros, carregando, aba, aoMudarAba, aoMudarStatus }) {
   const [aberta, setAberta] = useState(null);
   const daAba = tarefas.filter((t) => t.status === aba);
 
@@ -25,15 +25,16 @@ export default function ListaTarefas({ tarefas, membros, carregando, aba, aoMuda
   }
 
   return (
-    <section className="lista-tarefas" ref={secaoRef} aria-labelledby="tarefas-titulo">
+    <section className="lista-tarefas" aria-labelledby="tarefas-titulo">
       <h2 id="tarefas-titulo" className="somente-leitor">Tarefas da rede</h2>
 
-      <div className="segmentado abas-status" role="tablist" aria-label="Status das tarefas">
+      <div className="pilulas abas-status" role="tablist" aria-label="Status das tarefas">
         {ABAS.map((a) => (
           <button
             key={a.status}
             type="button"
             role="tab"
+            className="pilula"
             aria-selected={aba === a.status}
             onClick={() => { aoMudarAba(a.status); setAberta(null); }}
           >
@@ -47,7 +48,7 @@ export default function ListaTarefas({ tarefas, membros, carregando, aba, aoMuda
       ) : daAba.length === 0 ? (
         <p className="vazio">{aba === 'concluido' ? 'Nenhuma tarefa concluída ainda.' : 'Nenhuma tarefa aqui.'}</p>
       ) : (
-        <ul className="tarefas">
+        <ul className="tarefas rolavel">
           {daAba.map((t) => {
             const Icone = ICONE_CATEGORIA[t.categoria];
             const expandida = aberta === t.id;

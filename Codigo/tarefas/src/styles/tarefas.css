@@ -21,7 +21,20 @@
 .grade {
   display: flex;
   flex-direction: column;
-  gap: var(--e-8);
+  gap: var(--e-4);
+}
+
+/* um painel por vez */
+@media (max-width: 63.99rem) {
+  .grade--tarefas .compras,
+  .grade--tarefas .divisao,
+  .grade--tarefas .coluna-lateral,
+  .grade--compras .lista-tarefas,
+  .grade--compras .divisao,
+  .grade--divisao .lista-tarefas,
+  .grade--divisao .compras {
+    display: none;
+  }
 }
 
 .coluna-lateral {
@@ -34,7 +47,33 @@
 .lista-tarefas {
   display: flex;
   flex-direction: column;
-  gap: var(--e-4);
+  gap: var(--e-3);
+}
+
+.abas-status {
+  gap: 6px;
+}
+
+.abas-status .pilula {
+  gap: 4px;
+  padding-inline: 10px;
+}
+
+@media (max-width: 39.99rem) {
+  .abas-status {
+    justify-content: space-between;
+  }
+
+  .abas-status .pilula {
+    padding-inline: var(--e-2);
+    font-size: var(--t-xs);
+  }
+}
+
+.abas-status [aria-selected='true'] {
+  background: var(--azul-suave);
+  border-color: var(--azul);
+  color: var(--azul-escuro);
 }
 
 .abas-status [aria-selected='true'] .pilula-num {
@@ -62,6 +101,7 @@
 }
 
 .tarefa {
+  flex: none;
   overflow: hidden;
   border-radius: var(--r-lg);
   border: 1px solid var(--linha);
@@ -74,7 +114,7 @@
   align-items: flex-start;
   gap: var(--e-3);
   width: 100%;
-  padding: var(--e-4);
+  padding: var(--e-3) var(--e-4);
   text-align: left;
   border-radius: var(--r-lg);
 }
@@ -117,7 +157,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin: 4px 0 2px;
+  margin: 2px 0;
 }
 
 .seta {
@@ -182,8 +222,8 @@
   margin-top: var(--e-4);
 }
 
-.itens-compra {
-  margin: var(--e-4) 0 var(--e-3);
+.compras > ul {
+  margin-block: var(--e-2) var(--e-3);
 }
 
 .itens-compra label {
@@ -224,10 +264,11 @@
 
 .totais {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  gap: var(--e-3);
-  margin-bottom: var(--e-4);
-  padding: var(--e-3);
+  gap: 2px var(--e-3);
+  margin-bottom: var(--e-3);
+  padding: var(--e-2) var(--e-3);
   border-radius: var(--r-sm);
   background: var(--superficie-2);
   font-size: var(--t-sm);
@@ -235,7 +276,8 @@
 }
 
 .divisao-sub {
-  margin: var(--e-1) 0 var(--e-4);
+  margin: var(--e-1) 0 var(--e-3);
+  line-height: 1.35;
   color: var(--tinta-3);
   font-size: var(--t-sm);
 }
@@ -243,7 +285,7 @@
 .membros {
   display: flex;
   flex-direction: column;
-  gap: var(--e-4);
+  gap: var(--e-3);
 }
 
 .membros li {
@@ -409,14 +451,20 @@
   font-size: var(--t-xs);
 }
 
+.form-tarefa .campo textarea {
+  min-height: var(--toque);
+}
+
 .form-tarefa .linha {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--e-2);
 }
 
-.form-tarefa .interruptor + .interruptor {
-  margin-top: var(--e-2);
+.lembretes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: var(--e-2);
 }
 
 /* ===== Telas maiores ===== */
@@ -429,21 +477,114 @@
     display: none;
   }
 
-  .conteudo:has(> .fab) {
-    padding-bottom: calc(var(--abas-altura) + var(--e-8));
+  .form-tarefa {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: var(--e-3) var(--e-4) !important;
+  }
+
+  .form-tarefa > .tudo,
+  .form-tarefa > .dialogo-botoes {
+    grid-column: 1 / -1;
   }
 }
 
-@media (min-width: 72rem) {
+@media (min-width: 40rem) and (max-width: 63.99rem) {
+  .conteudo:has(> .fab) {
+    padding-bottom: calc(var(--abas-altura) + var(--e-6));
+  }
+}
+
+/* computador: tarefas à esquerda; compras e divisão ao lado */
+@media (min-width: 64rem) {
+  .grade {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .paineis .ver-tarefas {
+    display: none;
+  }
+
+  .grade--tarefas .paineis .ver-compras {
+    background: var(--superficie);
+    color: var(--azul-escuro);
+    box-shadow: var(--sombra-2);
+  }
+}
+
+@container palco (min-width: 46rem) {
   .grade {
     display: grid;
-    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
-    align-items: start;
-    gap: var(--e-8);
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: var(--e-3) var(--e-6);
+  }
+
+  .lista-tarefas {
+    grid-row: 1 / span 2;
+  }
+
+  .paineis {
+    grid-column: 2;
   }
 
   .coluna-lateral {
-    position: sticky;
-    top: var(--e-8);
+    grid-column: 2;
+    min-height: 0;
+  }
+}
+
+@container palco (max-width: 74.99rem) {
+  .grade--tarefas .divisao,
+  .grade--compras .divisao,
+  .grade--divisao .compras {
+    display: none;
+  }
+}
+
+@container palco (min-width: 75rem) {
+  .grade {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 2fr);
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .lista-tarefas {
+    grid-row: 1;
+  }
+
+  .paineis {
+    display: none;
+  }
+
+  .coluna-lateral {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+@media (min-width: 64rem) and (min-height: 35rem) {
+  .lista-tarefas,
+  .compras,
+  .divisao {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    max-height: 100%;
+  }
+
+  .lista-tarefas > *,
+  .compras > *,
+  .divisao > * {
+    flex: none;
+  }
+
+  .lista-tarefas > .rolavel,
+  .compras > .rolavel,
+  .divisao > .rolavel {
+    flex: 0 1 auto;
   }
 }

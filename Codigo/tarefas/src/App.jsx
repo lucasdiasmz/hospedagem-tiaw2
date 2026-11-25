@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Shell from '@ds/Shell.jsx';
 import Toast from '@ds/Toast.jsx';
 import { AvisoEspera, Estado, PaginaTopo } from '@ds/Componentes.jsx';
@@ -8,10 +8,17 @@ import DivisaoCuidado from './components/DivisaoCuidado.jsx';
 import FormTarefa from './components/FormTarefa.jsx';
 import ListaCompras from './components/ListaCompras.jsx';
 import ListaTarefas from './components/ListaTarefas.jsx';
-import { IconeCarrinho } from './components/Icones.jsx';
 import { criarTarefa, listarIdosos, listarTarefas, marcarComprados, mudarStatus } from './services/api.js';
 import { ABAS } from './utils/tarefas.js';
 import { usePermissoes } from '@ds/permissoes.js';
+
+/* no celular só um painel aparece por vez; no computador as tarefas ficam sempre à vista e, sem
+   largura para os três, as compras e a divisão se alternam ao lado */
+const PAINEIS = [
+  { id: 'tarefas', rotulo: 'Tarefas' },
+  { id: 'compras', rotulo: 'Compras' },
+  { id: 'divisao', rotulo: 'Divisão' },
+];
 
 export default function App() {
   const [tarefas, setTarefas] = useState([]);
@@ -23,7 +30,7 @@ export default function App() {
   const [aba, setAba] = useState('a_fazer');
   const [criando, setCriando] = useState(false);
   const [aviso, setAviso] = useState(null);
-  const comprasRef = useRef(null);
+  const [painel, setPainel] = useState('tarefas');
 
   const idoso = idosos.find((i) => i.id === idosoId);
   const membros = idoso?.membros || [];
@@ -96,17 +103,8 @@ export default function App() {
 
   const fecharForm = useCallback(() => setCriando(false), []);
 
-  function verCompras() {
-    comprasRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  const atalhos = [
-    podeCriar && { rotulo: 'Nova tarefa', Icone: IconeMais, aoClicar: () => setCriando(true) },
-    { rotulo: 'Lista de compras', Icone: IconeCarrinho, aoClicar: verCompras },
-  ].filter(Boolean);
-
   return (
-    <Shell tela="tarefas" atalhos={idoso ? atalhos : []}>
+    <Shell tela="tarefas">
       <PaginaTopo
         titulo="Tarefas da rede"
         subtitulo={!idoso
@@ -147,7 +145,14 @@ export default function App() {
         </Estado>
       )}
 
-      {(carregando || idoso) && <div className="grade">
+      {(carregando || idoso) && <div className={'grade grade--' + painel}>
+        <div className="segmentado paineis" role="group" aria-label="Mostrar">
+          {PAINEIS.map((p) => (
+            <button key={p.id} type="button" className={'ver-' + p.id} aria-pressed={painel === p.id} onClick={() => setPainel(p.id)}>
+              {p.rotulo}
+            </button>
+          ))}
+        </div>
         <ListaTarefas
           tarefas={doIdoso}
           membros={membros}
@@ -157,7 +162,7 @@ export default function App() {
           aoMudarStatus={alterarStatus}
         />
         <div className="coluna-lateral">
-          <ListaCompras key={idosoId} secaoRef={comprasRef} tarefas={doIdoso} podeCriar={podeCriar} aoComprar={comprar} />
+          <ListaCompras key={idosoId} tarefas={doIdoso} podeCriar={podeCriar} aoComprar={comprar} />
           {/* a divisão conta a rede inteira, senão cada perfil vê uma porcentagem */}
           <DivisaoCuidado membros={membros} tarefas={tarefas.filter((t) => t.idosoId === idosoId)} />
         </div>

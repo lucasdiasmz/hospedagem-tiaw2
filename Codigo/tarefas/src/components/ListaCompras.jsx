@@ -3,7 +3,7 @@ import { dinheiro } from '../utils/tarefas.js';
 import { IconeCarrinho } from './Icones.jsx';
 
 /* junta os itens das compras ainda não concluídas */
-export default function ListaCompras({ tarefas, podeCriar, aoComprar, secaoRef }) {
+export default function ListaCompras({ tarefas, podeCriar, aoComprar }) {
   const [marcados, setMarcados] = useState([]);
 
   const itens = [];
@@ -31,14 +31,14 @@ export default function ListaCompras({ tarefas, podeCriar, aoComprar, secaoRef }
   }
 
   return (
-    <section className="card compras" ref={secaoRef} aria-labelledby="compras-titulo">
+    <section className="card compras" aria-labelledby="compras-titulo">
       <h2 id="compras-titulo"><IconeCarrinho />Lista de compras</h2>
 
       {itens.length === 0 ? (
         <p className="vazio">{podeCriar ? 'Nenhuma compra pendente. Crie uma tarefa da categoria Compra.' : 'Nenhuma compra pendente para você.'}</p>
       ) : (
         <>
-          <ul className="itens-compra">
+          <ul className="itens-compra rolavel">
             {itens.map((i) => (
               <li key={i.chave} className={i.comprado ? 'comprado' : ''}>
                 <label>

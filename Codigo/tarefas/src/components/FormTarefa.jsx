@@ -96,7 +96,18 @@ export default function FormTarefa({ idoso, membros, tarefas, aoSalvar, aoFechar
           {erros.titulo && <span className="campo-erro" role="alert">{erros.titulo}</span>}
         </label>
 
-        <fieldset className="campo">
+        <label className="campo">
+          Observações (opcional)
+          <textarea
+            rows="1"
+            maxLength="120"
+            value={t.observacoes}
+            onChange={(e) => alterar('observacoes', e.target.value)}
+            placeholder="Ex.: Tamanho G, comprar na farmácia"
+          ></textarea>
+        </label>
+
+        <fieldset className="campo tudo">
           <legend>Categoria</legend>
           <div className="opcoes">
             {categoriasTarefaRede.map((c) => (
@@ -115,7 +126,7 @@ export default function FormTarefa({ idoso, membros, tarefas, aoSalvar, aoFechar
         </fieldset>
 
         {t.categoria === 'Compra' && (
-          <fieldset className="campo">
+          <fieldset className="campo tudo">
             <legend>Itens da compra</legend>
             <div className="itens-form">
               {t.itens.map((i, n) => (
@@ -169,9 +180,7 @@ export default function FormTarefa({ idoso, membros, tarefas, aoSalvar, aoFechar
               </option>
             ))}
           </select>
-          <span className="dica">
-            Sugestão: {nomeCurto(sugerido)}, quem tem menos tarefas abertas no momento.
-          </span>
+          <span className="dica">Sugestão: {nomeCurto(sugerido)}, com menos tarefas abertas.</span>
           {erros.responsavelId && <span className="campo-erro" role="alert">{erros.responsavelId}</span>}
         </label>
 
@@ -197,18 +206,7 @@ export default function FormTarefa({ idoso, membros, tarefas, aoSalvar, aoFechar
           {erros.prazo && <span className="campo-erro" role="alert">{erros.prazo}</span>}
         </fieldset>
 
-        <label className="campo">
-          Observações (opcional)
-          <textarea
-            rows="2"
-            maxLength="120"
-            value={t.observacoes}
-            onChange={(e) => alterar('observacoes', e.target.value)}
-            placeholder="Ex.: Tamanho G, comprar na farmácia"
-          ></textarea>
-        </label>
-
-        <fieldset className="campo">
+        <fieldset className="campo tudo lembretes">
           <legend>Lembrete</legend>
           <label className="interruptor">
             <span className="interruptor-texto">

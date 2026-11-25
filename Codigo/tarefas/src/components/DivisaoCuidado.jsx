@@ -12,7 +12,7 @@ export default function DivisaoCuidado({ membros, tarefas }) {
         {concluidas === 1 ? '1 tarefa concluída' : concluidas + ' tarefas concluídas'} até agora. A barra mostra quanto cada pessoa assumiu.
       </p>
 
-      <ul className="membros">
+      <ul className="membros rolavel">
         {divisao.map((m) => (
           <li key={m.id}>
             <span className="avatar-membro" aria-hidden="true">{iniciais(m.nome)}</span>
