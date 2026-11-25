@@ -5,6 +5,7 @@ import Acessibilidade from '@ds/Acessibilidade.jsx';
 import { lerPreferencias } from '@ds/preferencias.js';
 import { cadastrar } from '@ds/sessao.js';
 import logo from '@ds/assets/logo-acessamob.png';
+import foto from '@ds/assets/hero-cuidador.webp';
 import { Campo, CampoSenha, Passos, focarErro } from './componentes.jsx';
 import Entrar from './Entrar.jsx';
 import Passo3 from './Passo3.jsx';
@@ -24,12 +25,19 @@ const PASSO3 = {
   experiencia: '', servicos: [], dias: [], inicio: '08:00', fim: '18:00', consentimento: false,
 };
 
+/* a página inicial abre direto no cadastro: ?criar=1 ou ?perfil=cuidador */
+function lerEndereco() {
+  const q = new URLSearchParams(window.location.search);
+  const perfilPedido = PERFIS.find((x) => x.id === q.get('perfil'))?.id || null;
+  return { sessaoAcabou: q.get('sessao') === 'fim', criar: q.has('criar') || Boolean(perfilPedido), perfilPedido };
+}
+
 export default function App() {
   const [salvo] = useState(lerPreferencias);
-  const [sessaoAcabou] = useState(() => new URLSearchParams(window.location.search).get('sessao') === 'fim');
-  const [criando, setCriando] = useState(false);
-  const [passo, setPasso] = useState(1);
-  const [perfil, setPerfil] = useState(null);
+  const [{ sessaoAcabou, criar, perfilPedido }] = useState(lerEndereco);
+  const [criando, setCriando] = useState(criar);
+  const [passo, setPasso] = useState(perfilPedido ? 2 : 1);
+  const [perfil, setPerfil] = useState(perfilPedido);
   const [dados, setDados] = useState({ nome: '', telefone: '', email: '', senha: '' });
   const [p, setP] = useState(PASSO3);
   const [erros, setErros] = useState({});
@@ -94,13 +102,14 @@ export default function App() {
   return (
     <div className="boas-vindas">
       <header className="bv-marca">
-        <img src={logo} alt="" width="56" height="56" />
-        <div>
+        <a className="bv-logo" href={TELAS.site}>
+          <img src={logo} alt="" width="44" height="44" />
           <span className="bv-nome">AcessaMob</span>
-          <span className="bv-slogan">Mais cuidado, todos os dias.</span>
-        </div>
+        </a>
+        <p className="bv-slogan">Mais cuidado, <span>todos os dias.</span></p>
+        <div className="bv-foto" aria-hidden="true"><img src={foto} alt="" width="960" height="1118" /></div>
         {/* antes a letra maior só aparecia no fim do cadastro */}
-        <div className="bv-acess acess--escuro"><Acessibilidade compacta /></div>
+        <div className="bv-acess"><Acessibilidade compacta /></div>
       </header>
 
       <main className="bv-conteudo">

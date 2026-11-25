@@ -1,8 +1,8 @@
 /* =====================================================
    AcessaMob | Boas-vindas e cadastro inicial (mobile-first)
    Tokens e componentes comuns: Codigo/design-system/acessamob.css
-   No celular: faixa azul da marca em cima e o passo embaixo.
-   No computador: painel azul à esquerda e o passo à direita.
+   No celular: faixa clara da marca em cima e o passo embaixo.
+   No computador: painel menta com a foto à esquerda e o passo à direita.
    ===================================================== */
 
 .boas-vindas {
@@ -12,40 +12,51 @@
 }
 
 .bv-marca {
-  position: relative;
-  overflow: hidden;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--e-3);
-  padding: var(--e-4) var(--e-5) var(--e-10);
-  background: var(--marinho-800);
-  color: #fff;
-  isolation: isolate;
+  gap: var(--e-2) var(--e-3);
+  padding: var(--e-3) var(--e-5) var(--e-10);
+  background: var(--tom-menta);
 }
 
-/* o abraço do logo, ampliado e quase invisível */
-.bv-marca::after {
-  content: '';
-  position: absolute;
-  right: -6rem;
-  bottom: -9rem;
-  z-index: -1;
-  width: 18rem;
-  height: 18rem;
-  border-radius: 50%;
-  border: 3rem solid rgba(111, 151, 227, 0.12);
+.bv-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-2);
+  min-height: var(--toque);
+  border-radius: var(--r-sm);
+  color: var(--tinta);
+  text-decoration: none;
 }
 
-.bv-marca img {
-  width: 2.75rem;
-  height: 2.75rem;
+.bv-logo img {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.bv-nome {
+  font-family: var(--fonte-titulo);
+  font-size: var(--t-lg);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.bv-slogan,
+.bv-foto {
+  display: none;
 }
 
 .bv-acess {
   flex: 1 1 13rem;
   max-width: 20rem;
   margin-left: auto;
+}
+
+@media (max-width: 39.99rem) {
+  .bv-acess {
+    max-width: none;
+  }
 }
 
 .bv-acess .acess-botao {
@@ -58,20 +69,6 @@
 .bv-acess .acess-botao svg {
   width: 1.25rem;
   height: 1.25rem;
-}
-
-.bv-nome {
-  display: block;
-  line-height: 1.2;
-  font-size: var(--t-lg);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-.bv-slogan {
-  display: block;
-  color: var(--sobre-escuro-2);
-  font-size: var(--t-sm);
 }
 
 .bv-conteudo {
@@ -113,11 +110,11 @@
 }
 
 .passos li.feito {
-  background: var(--azul-logo);
+  background: var(--folha);
 }
 
 .passos li.atual {
-  background: var(--azul);
+  background: var(--acao);
 }
 
 /* escolha de perfil */
@@ -141,7 +138,7 @@
 }
 
 .bv-perfil:hover {
-  border-color: var(--azul);
+  border-color: var(--acao);
 }
 
 .bv-perfil:active {
@@ -149,8 +146,8 @@
 }
 
 .bv-perfil.escolhido {
-  border-color: var(--azul);
-  background: var(--azul-suave);
+  border-color: var(--acao);
+  background: var(--acao-suave);
 }
 
 .bv-perfil-icone {
@@ -160,8 +157,8 @@
   height: 3rem;
   flex-shrink: 0;
   border-radius: var(--r-md);
-  background: var(--azul-suave);
-  color: var(--azul);
+  background: var(--acao-suave);
+  color: var(--acao);
 }
 
 .bv-perfil-icone svg {
@@ -187,7 +184,7 @@
 }
 
 .bv-perfil > svg {
-  color: var(--azul);
+  color: var(--acao);
 }
 
 .bv-pular {
@@ -236,8 +233,8 @@
 }
 
 .bv-dia:has(input:checked) {
-  border-color: var(--azul);
-  background: var(--azul);
+  border-color: var(--acao);
+  background: var(--selecao);
   color: #fff;
 }
 
@@ -258,49 +255,85 @@
 @media (min-width: 64rem) {
   .boas-vindas {
     display: grid;
-    grid-template-columns: minmax(18rem, 2fr) 4fr;
+    grid-template-columns: minmax(20rem, 2fr) 3fr;
     height: 100dvh;
     overflow: hidden;
   }
 
   .bv-marca {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     flex-flow: column nowrap;
     align-items: flex-start;
-    justify-content: flex-end;
-    padding: var(--e-8);
+    gap: var(--e-3);
+    height: calc(100dvh - 2 * var(--e-4));
+    margin: var(--e-4) 0 var(--e-4) var(--e-4);
+    padding: var(--e-6) var(--e-8) 0;
+    border-radius: 28px;
   }
 
-  .bv-marca img {
-    width: 5rem;
-    height: 5rem;
-  }
-
-  .bv-nome {
-    margin-top: var(--e-2);
-    font-size: var(--t-2xl);
+  .alto-contraste .bv-marca {
+    border: 2px solid var(--linha-forte);
   }
 
   .bv-slogan {
-    font-size: var(--t-md);
+    display: block;
+    font-family: var(--fonte-titulo);
+    font-size: clamp(1.75rem, 2.6vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    word-spacing: 0.06em;
+    line-height: 1.12;
+  }
+
+  .bv-slogan span {
+    color: #1c7a58;
+    white-space: nowrap;
+  }
+
+  .alto-contraste .bv-slogan span {
+    color: var(--acao);
+  }
+
+  /* a pessoa sobre a forma orgânica, presa no pé do painel */
+  .bv-foto {
+    display: block;
+    flex: 1;
+    align-self: stretch;
+    position: relative;
+    min-height: 0;
+    margin-inline: calc(var(--e-8) * -1);
+  }
+
+  .bv-foto::before {
+    content: '';
+    position: absolute;
+    inset: 12% 8% -14%;
+    z-index: -1;
+    border-radius: 46% 54% 12% 12% / 42% 38% 10% 10%;
+    background: #c3dccf;
+  }
+
+  .bv-foto img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: 50% 100%;
   }
 
   .bv-acess {
-    flex: none;
-    width: 100%;
-    margin: var(--e-4) 0 0;
+    position: absolute;
+    inset: auto var(--e-5) var(--e-5);
+    max-width: none;
+    margin: 0;
   }
 
   .bv-acess .acess-botao {
     min-height: 52px;
-  }
-
-  .bv-marca::after {
-    right: -10rem;
-    bottom: auto;
-    top: -10rem;
-    width: 30rem;
-    height: 30rem;
-    border-width: 5rem;
+    box-shadow: var(--sombra-2);
   }
 
   /* o passo rola aqui dentro se a janela for muito baixa; a marca fica parada */
@@ -409,7 +442,7 @@
   min-height: 0;
   height: 1.5rem;
   padding: 0;
-  accent-color: var(--azul);
+  accent-color: var(--acao);
 }
 
 .bv-outro {
