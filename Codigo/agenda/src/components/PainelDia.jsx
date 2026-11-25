@@ -97,7 +97,7 @@ export default function PainelDia({
       <section ref={proximosRef} className="proximos" aria-labelledby="proximos-titulo" tabIndex={-1}>
         <h3 id="proximos-titulo">Próximos compromissos</h3>
         {proximos.length === 0 ? (
-          <p className="vazio">Nenhuma consulta, exame ou visita marcada.</p>
+          <p className="vazio">{carregado ? 'Nenhuma consulta, exame ou visita marcada.' : 'Carregando…'}</p>
         ) : (
           <ul>
             {proximos.map((e) => (
