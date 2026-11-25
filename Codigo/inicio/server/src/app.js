@@ -1,6 +1,7 @@
 import express from 'express';
 import { rotasIdosos } from './rotas/idosos.js';
 import { rotasAuth } from './rotas/auth.js';
+import { rotasAvisos } from './rotas/avisos.js';
 import { ErroHttp } from './validacao.js';
 import { exigirLogin } from '../../../auth/express.js';
 
@@ -29,6 +30,7 @@ export function criarApp(repo) {
   });
 
   app.use('/api/idosos', rotasIdosos(repo));
+  app.use('/api', rotasAvisos(repo));
 
   app.use('/api', (req, res) => {
     res.status(404).json({ erro: 'Rota não encontrada' });

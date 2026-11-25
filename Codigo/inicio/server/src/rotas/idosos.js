@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import { exigirPapel } from '../../../../auth/express.js';
 import { criarLimite } from '../../../../auth/limite.js';
-import { exigirAcesso, idososDoUsuario, interessados, membrosDaRede } from '../servicos/acesso.js';
+import { exigirAcesso, idososDoUsuario, interessados } from '../servicos/acesso.js';
 import { buscarConvite, criarConvite, usarConvite } from '../servicos/convites.js';
 import { montarDia } from '../servicos/dia.js';
 import { criarIdoso, regrasIdoso } from '../servicos/idoso.js';
+import { redeDetalhada, removerDaRede } from '../servicos/rede.js';
 import { agora, horaAgora } from '../servicos/tempo.js';
 import { ErroHttp, validarCorpo, validarData, validarHora, validarOpcao, validarTexto, validarTextoOpcional } from '../validacao.js';
 import { rotasCadastros } from './cadastros.js';
@@ -52,7 +53,13 @@ export function rotasIdosos(repo) {
   });
 
   r.get('/:idosoId/rede', async (req, res) => {
-    res.json(await membrosDaRede(repo, req.idoso));
+    res.json(await redeDetalhada(repo, req.idoso));
+  });
+
+  /* tira alguém da rede, ou sai dela (o próprio id) */
+  r.delete('/:idosoId/rede/:usuarioId', async (req, res) => {
+    await removerDaRede(repo, req.idoso, req, req.params.usuarioId);
+    res.status(204).end();
   });
 
   /* código para outra pessoa entrar na rede deste idoso; o idoso também pode convidar */
@@ -155,12 +162,19 @@ export function rotasIdosos(repo) {
     res.status(201).json(chamado);
   });
 
+  /* resposta a um pedido de ajuda. corpo: { acao: 'indo' | 'resolvido' } (ou { status } como antes)
+     "indo" avisa quem pediu que alguém está a caminho; "resolvido" encerra o pedido */
   r.patch('/:idosoId/chamados/:id', async (req, res) => {
     const chamado = await repo.buscar('chamadosAjuda', req.params.id);
     if (!chamado || chamado.idosoId !== req.idoso.id) throw new ErroHttp(404, 'Chamado não encontrado');
-    const { statusChamado } = await repo.buscarCatalogos();
-    const status = validarOpcao(req.body?.status, statusChamado, 'Status');
-    res.json(await repo.atualizar('chamadosAjuda', chamado.id, { status }));
+    const acao = req.body?.acao ?? (req.body?.status === 'atendido' ? 'resolvido' : req.body?.status === 'aberto' ? 'reabrir' : undefined);
+    const mudancas = {
+      indo: { indoPor: req.usuario.id, indoEm: agora() },
+      resolvido: { status: 'atendido', atendidoPor: req.usuario.id, atendidoEm: agora() },
+      reabrir: { status: 'aberto', atendidoPor: null, atendidoEm: null },
+    };
+    const mudanca = mudancas[validarOpcao(acao, Object.keys(mudancas), 'Ação')];
+    res.json(await repo.atualizar('chamadosAjuda', chamado.id, mudanca));
   });
 
   return r;

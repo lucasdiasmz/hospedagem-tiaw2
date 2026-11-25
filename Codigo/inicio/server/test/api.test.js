@@ -165,6 +165,64 @@ test('chamado de ajuda avisa cliente e cuidadores, menos quem abriu', async () =
   assert.equal((await api('GET', '/idosos/ido-1/chamados')).corpo.length, 1);
 });
 
+test('pedido de ajuda: aparece nos avisos da rede, alguém vai e depois resolve', async () => {
+  const novo = (await api('POST', '/idosos/ido-1/chamados', { mensagem: 'Caiu' }, 'usr-4')).corpo;
+  const doCuidador = (await api('GET', '/avisos', undefined, 'usr-1')).corpo.chamados.find((c) => c.id === novo.id);
+  assert.equal(doCuidador.status, 'aberto');
+  assert.equal(doCuidador.abertoPorNome, 'Carla Ribeiro');
+  assert.equal(doCuidador.meu, false);
+
+  await api('PATCH', '/idosos/ido-1/chamados/' + novo.id, { acao: 'indo' }, 'usr-1');
+  const deQuemPediu = (await api('GET', '/avisos', undefined, 'usr-4')).corpo.chamados.find((c) => c.id === novo.id);
+  assert.equal(deQuemPediu.status, 'a-caminho');
+  assert.equal(deQuemPediu.indoPorNome, 'Maria Silva');
+  assert.equal(deQuemPediu.meu, true);
+
+  await api('PATCH', '/idosos/ido-1/chamados/' + novo.id, { acao: 'resolvido' }, 'usr-1');
+  const resolvido = (await api('GET', '/avisos', undefined, 'usr-4')).corpo.chamados.find((c) => c.id === novo.id);
+  assert.equal(resolvido.status, 'atendido');
+  assert.equal((await api('PATCH', '/idosos/ido-1/chamados/' + novo.id, { acao: 'sumir' })).status, 400);
+  /* quem não está na rede não vê */
+  assert.equal((await api('GET', '/avisos', undefined, 'usr-5')).corpo.chamados.some((c) => c.id === novo.id), false);
+});
+
+test('solicitação de atendimento: o cuidador aceita e entra na rede', async () => {
+  const recebidas = (await api('GET', '/avisos', undefined, 'usr-2')).corpo.solicitacoes;
+  const sol = recebidas.find((s) => s.id === 'sol-3');
+  assert.equal(sol.recebida, true);
+  assert.equal(sol.status, 'pendente');
+
+  assert.equal((await api('POST', '/solicitacoes/sol-3/resposta', { aceitar: true }, 'usr-1')).status, 404);
+  assert.equal((await api('POST', '/solicitacoes/sol-3/resposta', {}, 'usr-2')).status, 400);
+  const r = await api('POST', '/solicitacoes/sol-3/resposta', { aceitar: true }, 'usr-2');
+  assert.equal(r.corpo.status, 'aceita');
+  assert.equal((await api('POST', '/solicitacoes/sol-3/resposta', { aceitar: false }, 'usr-2')).status, 409);
+  assert.ok((await api('GET', '/idosos', undefined, 'usr-2')).corpo.some((i) => i.id === 'ido-2'));
+
+  const daFamilia = (await api('GET', '/avisos', undefined, 'usr-5')).corpo.solicitacoes.find((s) => s.id === 'sol-3');
+  assert.equal(daFamilia.recebida, false);
+  assert.equal(daFamilia.status, 'aceita');
+  assert.equal(daFamilia.cuidadorNome, 'Ana Souza');
+});
+
+test('rede de apoio: telefones, responsável e remoção', async () => {
+  const rede = (await api('GET', '/idosos/ido-1/rede')).corpo;
+  const carla = rede.find((m) => m.id === 'usr-4');
+  assert.equal(carla.responsavel, true);
+  assert.ok(rede.find((m) => m.id === 'usr-1').telefone);
+
+  /* cuidador não tira outra pessoa; responsável não sai; responsável tira o cuidador */
+  assert.equal((await api('DELETE', '/idosos/ido-1/rede/usr-2', undefined, 'usr-1')).status, 403);
+  assert.equal((await api('DELETE', '/idosos/ido-1/rede/usr-4', undefined, 'usr-4')).status, 400);
+  assert.equal((await api('DELETE', '/idosos/ido-1/rede/usr-2', undefined, 'usr-4')).status, 204);
+  assert.equal((await api('GET', '/idosos/ido-1/rede')).corpo.some((m) => m.id === 'usr-2'), false);
+  assert.equal((await api('GET', '/idosos/ido-1', undefined, 'usr-2')).status, 403);
+
+  /* o cuidador pode sair sozinho */
+  assert.equal((await api('DELETE', '/idosos/ido-1/rede/usr-1', undefined, 'usr-1')).status, 204);
+  assert.equal((await api('DELETE', '/idosos/ido-1/rede/usr-1', undefined, 'usr-4')).status, 404);
+});
+
 test('validações', async () => {
   assert.equal((await api('GET', '/idosos/ido-1/dias/2026-02-30')).status, 400);
   assert.equal((await api('PATCH', DIA + '/itens/med-2', { status: 'tomei' })).status, 400);
