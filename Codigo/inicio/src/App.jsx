@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Shell from '@ds/Shell.jsx';
 import Dialogo from '@ds/Dialogo.jsx';
 import Toast from '@ds/Toast.jsx';
 import { AvisoEspera, Estado } from '@ds/Componentes.jsx';
-import { IconeAgenda, IconeCheck, IconeLapis, IconeMais, IconePerfis, IconeTelefone } from '@ds/Icones.jsx';
-import { TELAS } from '@ds/navegacao.js';
+import { IconeCheck, IconePerfis, IconeTelefone } from '@ds/Icones.jsx';
 import { useUsuario } from '@ds/preferencias.js';
 import { NOMES_PERFIL, usePermissoes } from '@ds/permissoes.js';
 import AcoesRapidas from './components/AcoesRapidas.jsx';
@@ -40,7 +39,6 @@ export default function App() {
   const [codigoAberto, setCodigoAberto] = useState(false);
   const [novaNotaId, setNovaNotaId] = useState(null);
   const [aviso, setAviso] = useState(null);
-  const aindaHojeRef = useRef(null);
 
   const minutos = proximo ? minutosAte(proximo.hora) : 0;
   let subtitulo = 'Tudo em dia por hoje. Que seu dia seja tranquilo!';
@@ -117,16 +115,9 @@ export default function App() {
     gravar(() => cuidados.chamarAjuda(quem?.slice(0, 200)), 'Pedido de ajuda enviado à equipe');
   }
 
-  function verHorarios() {
-    aindaHojeRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
   const contato = cuidados.idoso?.contatos?.find((c) => c.principal) || cuidados.idoso?.contatos?.[0];
 
   const atalhos = [
-    pode('inicio.anotar') && { rotulo: 'Nova anotação', Icone: IconeLapis, aoClicar: () => setNotaAberta(true) },
-    { rotulo: 'Ver o resto do dia', Icone: IconeAgenda, aoClicar: verHorarios },
-    pode('medicamentos.cadastrar') && { rotulo: 'Cadastrar medicamento', Icone: IconeMais, href: TELAS.cadastroMedicamentos },
     pode('rede.convidar') && { rotulo: 'Convidar para a rede', Icone: IconePerfis, aoClicar: () => setConviteAberto(true) },
     { rotulo: 'Usar código de convite', Icone: IconeCheck, aoClicar: () => setCodigoAberto(true) },
   ].filter(Boolean);
@@ -142,7 +133,7 @@ export default function App() {
 
   return (
     <Shell tela="inicio" usuario={cuidados.usuario} atalhos={atalhos}>
-      <Saudacao nome={usuario?.nome} idoso={simples ? null : cuidados.idoso?.nome} subtitulo={subtitulo} />
+      <Saudacao nome={usuario?.nome} idoso={simples ? null : cuidados.idoso?.nome} subtitulo={subtitulo} acoes={atalhos} />
 
       <AvisoEspera ativo={cuidados.carregando} />
       {cuidados.carregando && <div className="esqueleto inicio-esqueleto" aria-hidden="true" />}
@@ -178,7 +169,6 @@ export default function App() {
 
       {!cuidados.erro && (
         <AindaHoje
-          secaoRef={aindaHojeRef}
           entradas={restantes}
           carregando={cuidados.carregando}
           novaNotaId={novaNotaId}

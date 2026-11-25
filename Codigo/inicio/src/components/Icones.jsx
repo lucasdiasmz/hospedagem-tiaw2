@@ -11,7 +11,7 @@ const traco = {
 /* períodos do dia (saudação) — traço, na cor do texto */
 export function IconeSol() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" strokeWidth="2" {...traco}>
+    <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" strokeWidth="2" {...traco}>
       <circle cx="12" cy="12" r="4" /><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4" />
     </svg>
   );
@@ -19,7 +19,7 @@ export function IconeSol() {
 
 export function IconeSolNascente() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" strokeWidth="2" {...traco}>
+    <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" strokeWidth="2" {...traco}>
       <path d="M7 17a5 5 0 0 1 10 0" /><path d="M12 5v3M4.6 10.6l1.8 1.8M19.4 10.6l-1.8 1.8M2.5 17h2M19.5 17h2M3 21h18" />
     </svg>
   );
@@ -27,7 +27,7 @@ export function IconeSolNascente() {
 
 export function IconeLua() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" strokeWidth="2" {...traco}>
+    <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" strokeWidth="2" {...traco}>
       <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5z" />
     </svg>
   );
@@ -36,7 +36,7 @@ export function IconeLua() {
 /* despertador: item atrasado */
 export function IconeDespertador() {
   return (
-    <svg width="40" height="40" viewBox="0 0 24 24" strokeWidth="2" {...traco}>
+    <svg width="2.5rem" height="2.5rem" viewBox="0 0 24 24" strokeWidth="2" {...traco}>
       <circle cx="12" cy="13" r="7.5" /><path d="M12 9.5V13l2.5 1.5" /><path d="M3.5 5.5l3-2.5M20.5 5.5l-3-2.5M6.5 19.5 5 21M17.5 19.5 19 21" />
     </svg>
   );
@@ -45,7 +45,7 @@ export function IconeDespertador() {
 /* sino tocando: está na hora */
 export function IconeSinoTocando() {
   return (
-    <svg width="40" height="40" viewBox="0 0 24 24" strokeWidth="2" {...traco}>
+    <svg width="2.5rem" height="2.5rem" viewBox="0 0 24 24" strokeWidth="2" {...traco}>
       <path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 8 2.5 8h-17S6 15 6 9" /><path d="M10.3 20.5a1.9 1.9 0 0 0 3.4 0" /><path d="M2.5 8.5a9 9 0 0 1 2-4.5M21.5 8.5a9 9 0 0 0-2-4.5" />
     </svg>
   );

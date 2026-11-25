@@ -3,7 +3,7 @@ import { IconeCheck, IconeFechar } from '@ds/Icones.jsx';
 import { ICONES_TIPO, NOMES_TIPO } from './Icones.jsx';
 
 /* o que ainda falta no dia (sem o item em destaque) e as anotações, em ordem de horário */
-export default function AindaHoje({ secaoRef, entradas, carregando, novaNotaId, aoConcluir, aoRemoverNota, aoNovaNota }) {
+export default function AindaHoje({ entradas, carregando, novaNotaId, aoConcluir, aoRemoverNota, aoNovaNota }) {
   const listaRef = useRef(null);
 
   /* rola até a anotação recém-criada */
@@ -14,7 +14,7 @@ export default function AindaHoje({ secaoRef, entradas, carregando, novaNotaId, 
   }, [novaNotaId]);
 
   return (
-    <section className="ainda-hoje" ref={secaoRef} aria-labelledby="ainda-hoje-titulo">
+    <section className="ainda-hoje" aria-labelledby="ainda-hoje-titulo">
       <div className="secao-cabeca">
         <h2 id="ainda-hoje-titulo">Ainda hoje</h2>
         {aoNovaNota && <button type="button" className="btn btn-texto" onClick={aoNovaNota}>Anotar</button>}
