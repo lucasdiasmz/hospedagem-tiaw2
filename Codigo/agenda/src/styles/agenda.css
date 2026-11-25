@@ -806,26 +806,16 @@ fieldset.campo {
   }
 }
 
-/* ===== Computador: quadro + painel lateral ===== */
+/* ===== Computador: quadro com os compromissos escritos e painel embaixo ===== */
 @media (min-width: 64rem) {
   .cabecalho {
-    flex-direction: row;
+    flex-flow: row wrap;
     align-items: flex-end;
     justify-content: space-between;
   }
 
-  .agenda-grade {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 22rem;
-    align-items: start;
-    gap: var(--e-6);
-  }
-
-  .painel {
-    position: sticky;
-    top: var(--e-6);
-    max-height: calc(100dvh - var(--e-12));
-    overflow-y: auto;
+  .cabecalho-acoes .btn {
+    white-space: nowrap;
   }
 
   /* semana com os compromissos escritos */
@@ -839,7 +829,7 @@ fieldset.campo {
   .semana-dia {
     display: flex;
     flex-direction: column;
-    min-height: 26rem;
+    min-height: 12rem;
   }
 
   .semana-dia + .semana-dia {
@@ -868,17 +858,25 @@ fieldset.campo {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    padding: 6px;
+    padding: 4px;
   }
 
   .semana-eventos .chip {
     flex-direction: column;
     align-items: flex-start;
     gap: 0;
+    padding: 4px 6px;
   }
 
+  /* título em até 3 linhas, em vez de cortar com reticências */
   .semana-eventos .chip-titulo {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
     width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    hyphens: auto;
   }
 
   .semana-eventos .chip svg {
@@ -955,5 +953,26 @@ fieldset.campo {
   .mes-mais:hover {
     background: var(--superficie-2);
     color: var(--tinta);
+  }
+}
+
+/* ===== Telas largas: painel do dia ao lado do quadro (antes disso os 7 dias ficam espremidos) ===== */
+@media (min-width: 90rem) {
+  .agenda-grade {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 22rem;
+    align-items: start;
+    gap: var(--e-6);
+  }
+
+  .painel {
+    position: sticky;
+    top: var(--e-6);
+    max-height: calc(100dvh - var(--e-12));
+    overflow-y: auto;
+  }
+
+  .semana-dia {
+    min-height: 26rem;
   }
 }
