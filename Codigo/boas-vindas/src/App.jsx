@@ -5,7 +5,6 @@ import {
 import { TELAS } from '@ds/navegacao.js';
 import { lerPreferencias, usePreferencias } from '@ds/preferencias.js';
 import logo from '@ds/assets/logo-acessamob.png';
-import { explodir, nomeDetona } from '@ds/explosao.js';
 
 /* Boas-vindas e cadastro inicial em 3 passos: perfil → seus dados → acessibilidade (idoso e
    familiar) ou experiência (cuidador). Antes os dados só iam para o console.log; agora o perfil,
@@ -193,11 +192,7 @@ export default function App() {
                   type="text"
                   autoComplete="name"
                   value={dados.nome}
-                  onChange={(e) => {
-                    setDados({ ...dados, nome: e.target.value });
-                    /* easter egg: esse nome explode o site (veja design-system/explosao.js) */
-                    if (nomeDetona(e.target.value)) explodir();
-                  }}
+                  onChange={(e) => setDados({ ...dados, nome: e.target.value })}
                   aria-invalid={erros.nome ? 'true' : undefined}
                   aria-describedby={erros.nome ? 'erro-nome' : undefined}
                 />
