@@ -7,12 +7,6 @@
   margin-top: calc(var(--e-2) * -1);
 }
 
-.seletor-idoso .pilula[aria-checked='true'] {
-  background: var(--azul-suave);
-  border-color: var(--azul);
-  color: var(--azul-escuro);
-}
-
 .grade {
   display: flex;
   flex-direction: column;
@@ -140,7 +134,6 @@ fieldset.campo {
   border-radius: var(--r-lg);
   border: 1px solid var(--linha);
   background: var(--superficie);
-  box-shadow: var(--sombra-1);
 }
 
 .item-med {
@@ -161,16 +154,14 @@ fieldset.campo {
 .item-horarios {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 2px var(--e-2);
 }
 
 .item-horarios time {
-  padding: 2px 8px;
-  border-radius: var(--r-pilula);
-  background: var(--tipo-medicamento-claro);
   color: var(--tipo-medicamento);
-  font-size: var(--t-xs);
-  font-weight: 700;
+  font-size: var(--t-sm);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 .item-texto {

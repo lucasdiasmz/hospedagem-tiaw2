@@ -7,22 +7,15 @@
   margin-top: calc(var(--e-2) * -1);
 }
 
-.seletor-idoso .pilula[aria-checked='true'] {
-  background: var(--azul-suave);
-  border-color: var(--azul);
-  color: var(--azul-escuro);
-}
-
 /* ===== Próxima dose ===== */
 .dose-destaque {
   display: flex;
   flex-direction: column;
-  gap: var(--e-4);
-  padding: var(--e-4);
-  border-radius: var(--r-xl);
+  gap: var(--e-5);
+  padding: var(--e-5);
+  border-radius: var(--r-lg);
   background: var(--marinho-800);
   color: #fff;
-  box-shadow: var(--sombra-2);
 }
 
 .dose-destaque-topo {
@@ -36,20 +29,17 @@
   display: grid;
   place-items: center;
   flex: none;
-  min-width: 5rem;
-  height: 4.5rem;
-  padding: 0 var(--e-3);
-  border-radius: var(--r-lg);
-  background: #fff;
-  color: var(--marinho-800);
-  font-size: var(--t-xl);
-  font-weight: 800;
+  min-height: 4rem;
+  padding-right: var(--e-4);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 2.125rem;
+  font-weight: 600;
   letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
 }
 
 .dose-destaque-ok {
-  color: var(--verde);
+  color: #7fe0ae;
 }
 
 .dose-destaque-ok svg {
@@ -134,7 +124,6 @@
   border-radius: var(--r-lg);
   border: 1px solid var(--linha);
   background: var(--superficie);
-  box-shadow: var(--sombra-1);
 }
 
 .dose {
@@ -154,7 +143,7 @@
 .dose-hora {
   grid-area: hora;
   font-size: var(--t-md);
-  font-weight: 700;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
@@ -184,9 +173,9 @@
 }
 
 .dose-info:hover strong {
-  color: var(--azul);
   text-decoration: underline;
-  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
 }
 
 .dose-acoes {
@@ -199,6 +188,11 @@
 .dose-acoes .btn {
   flex: 1;
   padding-inline: var(--e-3);
+}
+
+/* na lista, "Tomou" é contorno: o botão cheio é o do destaque */
+.dose-acoes .btn svg {
+  color: var(--verde);
 }
 
 .dose-acoes .btn-texto {

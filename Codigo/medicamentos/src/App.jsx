@@ -224,7 +224,7 @@ export default function App() {
 
             {!carregando && !erro && medicamentos.length > 0 && (
                 <>
-                    <section className="dose-destaque" aria-labelledby="titulo-proximo">
+                    <section className="dose-destaque sobre-escuro" aria-labelledby="titulo-proximo">
                         {proximo ? (
                             <>
                                 <div className="dose-destaque-topo">
@@ -314,7 +314,7 @@ export default function App() {
                                                                 </button>
                                                             ) : (
                                                                 <>
-                                                                    <button type="button" className="btn btn-primario" disabled={salvandoId !== null}
+                                                                    <button type="button" className="btn" disabled={salvandoId !== null}
                                                                         aria-label={rotuloTomou + ' ' + m.nome} onClick={() => registrarTomado(m)}>
                                                                         <IconeCheck />
                                                                         <span>{salvando ? 'Salvando…' : rotuloTomou}</span>
