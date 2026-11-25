@@ -49,7 +49,7 @@ function CartaoCuidador({ c }) {
                     </span>
                     {c.resumo && <span className="cuidador-resumo">{c.resumo}</span>}
                     <span className="cuidador-servicos">
-                        {(c.especialidades.length ? c.especialidades : c.servicos.map(s => SERVICOS[s] || s)).slice(0, 3).map(e => (
+                        {(c.especialidades.length ? c.especialidades : c.servicos.map(s => SERVICOS[s] || s)).slice(0, 2).map(e => (
                             <span key={e} className="tag">{e}</span>
                         ))}
                     </span>
@@ -110,25 +110,25 @@ export default function Lista() {
 
     return (
         <Shell tela="cuidadores">
-            <PaginaTopo titulo="Cuidadores" subtitulo="Encontre profissionais pela região, pelo serviço e pelos dias em que você precisa." />
-
-            <div className="busca-linha">
-                <div className="busca">
-                    <IconeBusca />
-                    <input
-                        className="entrada"
-                        type="search"
-                        aria-label="Buscar por nome, bairro ou especialidade"
-                        placeholder="Nome, bairro ou especialidade"
-                        value={busca}
-                        onChange={e => setBusca(e.target.value)}
-                    />
+            <PaginaTopo titulo="Cuidadores" subtitulo="Encontre profissionais pela região, pelo serviço e pelos dias.">
+                <div className="busca-linha">
+                    <div className="busca">
+                        <IconeBusca />
+                        <input
+                            className="entrada"
+                            type="search"
+                            aria-label="Buscar por nome, bairro ou especialidade"
+                            placeholder="Buscar"
+                            value={busca}
+                            onChange={e => setBusca(e.target.value)}
+                        />
+                    </div>
+                    <button type="button" className="btn btn-filtros" onClick={() => setFiltrosAbertos(true)} aria-haspopup="dialog">
+                        <IconeFiltro />
+                        Filtros{ativos > 0 && <span className="pilula-num">{ativos}</span>}
+                    </button>
                 </div>
-                <button type="button" className="btn btn-filtros" onClick={() => setFiltrosAbertos(true)} aria-haspopup="dialog">
-                    <IconeFiltro />
-                    Filtros{ativos > 0 && <span className="pilula-num">{ativos}</span>}
-                </button>
-            </div>
+            </PaginaTopo>
 
             <div className="pilulas servicos-rapidos" role="group" aria-label="Serviço">
                 <button type="button" className="pilula" aria-pressed={!filtros.servico} onClick={() => mudar('servico', '')}>Todos</button>
@@ -150,14 +150,14 @@ export default function Lista() {
             )}
 
             {!carregando && !erro && (
-                <section aria-labelledby="resultado">
+                <section className="resultado" aria-labelledby="resultado">
                     <div className="resultado-topo">
                         <h2 id="resultado" aria-live="polite">
                             {filtrados.length === 1 ? '1 cuidador' : filtrados.length + ' cuidadores'}
                         </h2>
                         <label className="ordenar">
                             <span>Ordenar</span>
-                            <select className="entrada" value={ordem} onChange={e => setOrdem(e.target.value)}>
+                            <select className="entrada" aria-label="Ordenar" value={ordem} onChange={e => setOrdem(e.target.value)}>
                                 {ORDENS.map(o => <option key={o.id} value={o.id}>{o.rotulo}</option>)}
                             </select>
                         </label>
@@ -170,7 +170,7 @@ export default function Lista() {
                             <p>Tente outro dia da semana ou um valor por hora maior.</p>
                         </Estado>
                     ) : (
-                        <ul className="cuidadores">
+                        <ul className="cuidadores rolavel">
                             {filtrados.map(c => <CartaoCuidador key={c.id} c={c} />)}
                         </ul>
                     )}

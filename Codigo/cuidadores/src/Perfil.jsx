@@ -9,8 +9,8 @@ import { DIAS, EXPERIENCIAS, SERVICOS, dinheiro, iniciais, nota } from './textos
 
 const SECOES = [
     { id: 'sobre', rotulo: 'Sobre' },
-    { id: 'avaliacoes', rotulo: 'Avaliações' },
-    { id: 'agenda', rotulo: 'Horários' }
+    { id: 'atendimento', rotulo: 'Atendimento' },
+    { id: 'avaliacoes', rotulo: 'Avaliações' }
 ];
 
 const ROTULOS_NOTA = ['', 'Ruim', 'Regular', 'Bom', 'Muito bom', 'Excelente'];
@@ -241,7 +241,7 @@ export default function Perfil({ id }) {
 
             {!carregando && perfil && (
                 <>
-                    <header className="perfil-topo">
+                    <header className="perfil-topo rolavel">
                         {voltar}
                         <div className="perfil-cartao sobre-escuro">
                             <span className="perfil-foto" aria-hidden="true">{iniciais(perfil.nome)}</span>
@@ -287,7 +287,7 @@ export default function Perfil({ id }) {
                         ))}
                     </div>
 
-                    <section id="painel-perfil" role="tabpanel" aria-labelledby={'aba-' + secao} className="perfil-painel">
+                    <section id="painel-perfil" key={secao} role="tabpanel" aria-labelledby={'aba-' + secao} className="perfil-painel rolavel">
                         {secao === 'sobre' && (
                             <>
                                 <div className="bloco">
@@ -302,6 +302,64 @@ export default function Perfil({ id }) {
                                         </div>
                                     </div>
                                 )}
+                                {perfil.diferenciais.length > 0 && (
+                                    <div className="bloco">
+                                        <h2>Diferenciais</h2>
+                                        <ul className="lista-simples">{perfil.diferenciais.map(d => <li key={d}>{d}</li>)}</ul>
+                                    </div>
+                                )}
+                                <div className="bloco">
+                                    <h2>Qualificações</h2>
+                                    {perfil.qualificacoes.length ? (
+                                        <ul className="lista-simples">{perfil.qualificacoes.map((q, i) => <li key={i}>{q}</li>)}</ul>
+                                    ) : <p>Nenhuma qualificação informada.</p>}
+                                </div>
+                                <div className="bloco">
+                                    <h2>Referências</h2>
+                                    {perfil.referencias.length ? (
+                                        <ul className="referencias">
+                                            {perfil.referencias.map((r, i) => (
+                                                <li key={i}>
+                                                    <strong>{r.nome}</strong>
+                                                    {r.telefone && <a href={'tel:' + r.telefone.replace(/\D/g, '')}><IconeTelefone />{r.telefone}</a>}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    ) : <p>Nenhuma referência informada.</p>}
+                                </div>
+                            </>
+                        )}
+
+                        {secao === 'atendimento' && (
+                            <>
+                                <div className="bloco">
+                                    <h2>Serviços oferecidos</h2>
+                                    <div className="pilulas">
+                                        {perfil.servicos.length ? perfil.servicos.map(s => <span key={s} className="tag tag--azul">{SERVICOS[s] || s}</span>)
+                                            : <p>Nenhum serviço informado.</p>}
+                                    </div>
+                                </div>
+                                <div className="bloco">
+                                    <h2>Dias de atendimento</h2>
+                                    <ul className="dias-semana">
+                                        {Object.entries(DIAS).map(([d, rotulo]) => {
+                                            const atende = perfil.disponibilidade.dias.includes(d);
+                                            return (
+                                                <li key={d} className={atende ? 'atende' : ''}>
+                                                    <abbr title={rotulo}>{rotulo.slice(0, 3)}</abbr>
+                                                    <span className="somente-leitor">{atende ? 'atende' : 'não atende'}</span>
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
+                                    {perfil.disponibilidade.inicio && perfil.disponibilidade.fim && (
+                                        <p className="horario">
+                                            Das <strong>{perfil.disponibilidade.inicio}</strong> às <strong>{perfil.disponibilidade.fim}</strong>
+                                            {perfil.disponibilidade.fim < perfil.disponibilidade.inicio && ' do dia seguinte'}
+                                        </p>
+                                    )}
+                                    {perfil.disponibilidade.descricao && <p className="texto-suave">{perfil.disponibilidade.descricao}</p>}
+                                </div>
                                 {(perfil.fazNoAtendimento.length > 0 || perfil.naoFaz.length > 0) && (
                                     <div className="bloco">
                                         <h2>No atendimento</h2>
@@ -326,38 +384,6 @@ export default function Perfil({ id }) {
                                         </div>
                                     </div>
                                 )}
-                                {perfil.diferenciais.length > 0 && (
-                                    <div className="bloco">
-                                        <h2>Diferenciais</h2>
-                                        <ul className="lista-simples">{perfil.diferenciais.map(d => <li key={d}>{d}</li>)}</ul>
-                                    </div>
-                                )}
-                                <div className="bloco">
-                                    <h2>Serviços oferecidos</h2>
-                                    <div className="pilulas">
-                                        {perfil.servicos.length ? perfil.servicos.map(s => <span key={s} className="tag tag--azul">{SERVICOS[s] || s}</span>)
-                                            : <p>Nenhum serviço informado.</p>}
-                                    </div>
-                                </div>
-                                <div className="bloco">
-                                    <h2>Qualificações</h2>
-                                    {perfil.qualificacoes.length ? (
-                                        <ul className="lista-simples">{perfil.qualificacoes.map((q, i) => <li key={i}>{q}</li>)}</ul>
-                                    ) : <p>Nenhuma qualificação informada.</p>}
-                                </div>
-                                <div className="bloco">
-                                    <h2>Referências</h2>
-                                    {perfil.referencias.length ? (
-                                        <ul className="referencias">
-                                            {perfil.referencias.map((r, i) => (
-                                                <li key={i}>
-                                                    <strong>{r.nome}</strong>
-                                                    {r.telefone && <a href={'tel:' + r.telefone.replace(/\D/g, '')}><IconeTelefone />{r.telefone}</a>}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    ) : <p>Nenhuma referência informada.</p>}
-                                </div>
                             </>
                         )}
 
@@ -391,30 +417,6 @@ export default function Perfil({ id }) {
                                 <button type="button" className="btn btn-suave" onClick={() => setDialogo('avaliar')}>
                                     <IconeEstrela />Escrever avaliação
                                 </button>
-                            </div>
-                        )}
-
-                        {secao === 'agenda' && (
-                            <div className="bloco">
-                                <h2>Dias de atendimento</h2>
-                                <ul className="dias-semana">
-                                    {Object.entries(DIAS).map(([d, rotulo]) => {
-                                        const atende = perfil.disponibilidade.dias.includes(d);
-                                        return (
-                                            <li key={d} className={atende ? 'atende' : ''}>
-                                                <abbr title={rotulo}>{rotulo.slice(0, 3)}</abbr>
-                                                <span className="somente-leitor">{atende ? 'atende' : 'não atende'}</span>
-                                            </li>
-                                        );
-                                    })}
-                                </ul>
-                                {perfil.disponibilidade.inicio && perfil.disponibilidade.fim && (
-                                    <p className="horario">
-                                        Das <strong>{perfil.disponibilidade.inicio}</strong> às <strong>{perfil.disponibilidade.fim}</strong>
-                                        {perfil.disponibilidade.fim < perfil.disponibilidade.inicio && ' do dia seguinte'}
-                                    </p>
-                                )}
-                                {perfil.disponibilidade.descricao && <p className="texto-suave">{perfil.disponibilidade.descricao}</p>}
                             </div>
                         )}
                     </section>
