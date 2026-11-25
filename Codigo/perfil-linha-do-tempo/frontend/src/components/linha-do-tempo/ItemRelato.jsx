@@ -64,11 +64,13 @@ function ItemRelato({ relato, marcando, onMarcarVisto }) {
           </span>
         </div>
         <p className="relato-texto">{relato.descricao}</p>
-        <p className="relato-autor">
-          Registrado por <strong>{getRotuloAutor(relato.registradoPor)}</strong>
-          <span> · {getRotuloPapel(relato.registradoPor.papel)}</span>
-        </p>
-        {acao}
+        <div className="relato-rodape">
+          <p className="relato-autor">
+            Registrado por <strong>{getRotuloAutor(relato.registradoPor)}</strong>
+            <span> · {getRotuloPapel(relato.registradoPor.papel)}</span>
+          </p>
+          {acao}
+        </div>
       </article>
     </li>
   );

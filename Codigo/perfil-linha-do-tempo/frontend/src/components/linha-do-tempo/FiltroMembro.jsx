@@ -5,7 +5,7 @@ function FiltroMembro({ membros, filtroAtual, onFiltrar }) {
     <div className="filtro-membro">
       <label htmlFor="filtroMembro">
         <Icon name="users" />
-        Membro da rede
+        Quem registrou
       </label>
       <select
         id="filtroMembro"
@@ -14,7 +14,7 @@ function FiltroMembro({ membros, filtroAtual, onFiltrar }) {
           onFiltrar(evento.target.value);
         }}
       >
-        <option value="todos">Todos os membros</option>
+        <option value="todos">Todos</option>
         {membros.map(function (membro) {
           return (
             <option key={membro.nome} value={membro.nome}>

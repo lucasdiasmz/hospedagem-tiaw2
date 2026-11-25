@@ -246,34 +246,27 @@ function LinhaDoTempo() {
     <div className="pagina">
       <div className="page-head">
         <div>
-          <nav className="breadcrumb" aria-label="Você está em">
-            <span>Diário de cuidado</span>
-            <Icon name="chevron-right" />
-            <span>{idosoAtual.nome}</span>
-          </nav>
           <h1>Linha do tempo</h1>
-          <p className="subtitle">O que a rede de apoio registrou sobre {nomeIdoso} ao longo do dia.</p>
+          <p className="subtitle">O que a rede registrou sobre {nomeIdoso}.</p>
         </div>
         <SeletorIdoso idosos={idosos} idosoAtualId={idosoAtual.id} onTrocar={handleTrocarIdoso} />
+        <NavegadorData data={data} hoje={hoje} onMudarData={handleMudarData} />
       </div>
 
-      <NavegadorData data={data} hoje={hoje} onMudarData={handleMudarData} />
-
       <div className="ldt-layout">
-        <div className="ldt-stats">
-          <ResumoDia relatos={relatos} carregando={carregandoRelatos} />
-        </div>
-
         <section className="card ldt-main" aria-label="Relatos do dia">
           <div className="ldt-filtros">
             <FiltroTipos relatos={relatosDoMembro} filtroAtual={filtroTipo} onFiltrar={setFiltroTipo} />
             <FiltroMembro membros={membros} filtroAtual={membroEfetivo} onFiltrar={setFiltroMembro} />
           </div>
-          {conteudo}
+          <div className="ldt-relatos rolavel">{conteudo}</div>
         </section>
 
         <aside className="ldt-side">
-          <ResumoSemana resumo={resumo} carregando={carregandoRelatos} />
+          <div className="ldt-resumos rolavel">
+            <ResumoDia relatos={relatos} carregando={carregandoRelatos} />
+            <ResumoSemana resumo={resumo} carregando={carregandoRelatos} />
+          </div>
           {pode("linha.plantao") && <button
             type="button"
             className="btn btn-primario btn-bloco"
