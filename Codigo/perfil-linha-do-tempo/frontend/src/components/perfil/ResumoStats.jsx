@@ -29,9 +29,8 @@ function ResumoStats({ idoso }) {
 
   return (
     <section className="stats" aria-label="Resumo">
-      <Stat icone="accessibility" rotulo="Mobilidade" valor={idoso.mobilidade.nivel} />
       <Stat icone="pill" rotulo="Medicamentos" valor={textoRemedios} />
-      <Stat icone="user" rotulo="Cuidador(a) principal" valor={cuidadorPrincipal} />
+      <Stat icone="user" rotulo="Cuidador(a)" valor={cuidadorPrincipal} />
     </section>
   );
 }

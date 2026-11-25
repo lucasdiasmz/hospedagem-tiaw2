@@ -17,7 +17,7 @@ function CardSobre({ idoso }) {
   }
 
   return (
-    <article className="card card-wide">
+    <article className="card">
       <CardHead icone="file-text" titulo={"Sobre " + getNomeCurto(idoso)} />
       {sobre}
       {observacoes}

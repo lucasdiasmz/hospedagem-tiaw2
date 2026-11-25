@@ -18,12 +18,21 @@ import { useIdosos } from "../hooks/useIdosos.js";
 import { atualizarIdoso } from "../services/api.js";
 import { usePermissoes } from "@ds/permissoes.js";
 
+/* uma seção por vez, em vez de oito cartões empilhados numa página comprida */
+const SECOES = [
+  { id: "saude", rotulo: "Saúde" },
+  { id: "rotina", rotulo: "Rotina" },
+  { id: "rede", rotulo: "Contatos" },
+  { id: "dados", rotulo: "Dados" }
+];
+
 function PerfilIdoso() {
   const { idosos, setIdosos, idosoAtual, setIdosoAtualId, carregando, erro, recarregar } = useIdosos();
   const [modalAberto, setModalAberto] = useState(false);
   /* só o familiar responsável edita o perfil; idoso e cuidador consultam */
   const { pode } = usePermissoes();
   const [toast, setToast] = useState(null);
+  const [secao, setSecao] = useState("saude");
 
   useEffect(function () {
     document.title = "AcessaMob | Perfil do idoso";
@@ -67,7 +76,6 @@ function PerfilIdoso() {
 
   function handleTrocarIdoso(id) {
     setIdosoAtualId(id);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   async function handleSalvar(dados) {
@@ -119,24 +127,63 @@ function PerfilIdoso() {
   return (
     <div className="pagina">
       <PerfilHeader idosos={idosos} idosoAtual={idosoAtual} onTrocarIdoso={handleTrocarIdoso} />
-      <HeroIdoso
-        idoso={idosoAtual}
-        onEditar={pode("perfil.editar") ? function () {
-          setModalAberto(true);
-        } : null}
-      />
-      <ResumoStats idoso={idosoAtual} />
-      <AlertaAlergias alergias={idosoAtual.alergias} />
 
-      <div className="grid">
-        <CardSobre idoso={idosoAtual} />
-        <CardInfoPessoal idoso={idosoAtual} />
-        <CardMobilidade mobilidade={idosoAtual.mobilidade} />
-        <CardSaude condicoes={idosoAtual.condicoes} />
-        <CardMedicamentos medicamentos={idosoAtual.medicamentos} />
-        <CardRotina rotina={idosoAtual.rotina} />
-        <CardContatos contatos={idosoAtual.contatos} />
-        <CardEquipe cuidadores={idosoAtual.cuidadores} />
+      <div className="perfil-layout">
+        <div className="perfil-fixo rolavel">
+          <HeroIdoso
+            idoso={idosoAtual}
+            onEditar={pode("perfil.editar") ? function () {
+              setModalAberto(true);
+            } : null}
+          />
+          <AlertaAlergias alergias={idosoAtual.alergias} />
+          <ResumoStats idoso={idosoAtual} />
+        </div>
+
+        <div className="perfil-detalhes">
+          <div className="segmentado" role="tablist" aria-label="Seções do perfil">
+            {SECOES.map(function (item) {
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="tab"
+                  id={"aba-" + item.id}
+                  aria-selected={secao === item.id}
+                  aria-controls="secao-perfil"
+                  onClick={function () {
+                    setSecao(item.id);
+                  }}
+                >
+                  {item.rotulo}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="grid rolavel" key={secao} id="secao-perfil" role="tabpanel" aria-labelledby={"aba-" + secao}>
+            {secao === "saude" && (
+              <>
+                <CardMedicamentos medicamentos={idosoAtual.medicamentos} />
+                <CardSaude condicoes={idosoAtual.condicoes} />
+                <CardMobilidade mobilidade={idosoAtual.mobilidade} />
+              </>
+            )}
+            {secao === "rotina" && (
+              <>
+                <CardRotina rotina={idosoAtual.rotina} />
+                <CardSobre idoso={idosoAtual} />
+              </>
+            )}
+            {secao === "rede" && (
+              <>
+                <CardContatos contatos={idosoAtual.contatos} />
+                <CardEquipe cuidadores={idosoAtual.cuidadores} />
+              </>
+            )}
+            {secao === "dados" && <CardInfoPessoal idoso={idosoAtual} />}
+          </div>
+        </div>
       </div>
 
       {modal}

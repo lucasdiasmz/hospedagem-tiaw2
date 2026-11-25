@@ -27,7 +27,7 @@ function CardMedicamentos({ medicamentos }) {
 
   return (
     <article className="card">
-      <CardHead icone="pill" titulo="Medicamentos em uso" extra={ordenados.length + " ativos"} />
+      <CardHead icone="pill" titulo="Remédios em uso" extra={ordenados.length + " ativos"} />
       {conteudo}
     </article>
   );
