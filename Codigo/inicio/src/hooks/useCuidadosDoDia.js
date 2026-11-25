@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api } from '../api.js';
-import { compararHora, diaDeHoje } from '../utils/hora.js';
+import { compararHora, diaDeHoje, horaAgora } from '../utils/hora.js';
 
 /* tipos do backend → tipos usados nos ícones da tela */
 const TIPO_NA_TELA = { medicamento: 'med', consulta: 'consulta', tarefa: 'tarefa', agendamento: 'visita' };
@@ -55,8 +55,10 @@ export function useCuidadosDoDia() {
 
   const ordenados = [...itens].sort(compararHora);
   const pendentes = ordenados.filter((i) => !i.status);
-  const proximo = pendentes[0] || null;
   const medAtual = pendentes.find((i) => i.tipo === 'med') || null;
+  /* remédio atrasado vem antes de qualquer outro cuidado atrasado */
+  const medAtrasado = medAtual && medAtual.hora <= horaAgora() ? medAtual : null;
+  const proximo = medAtrasado || pendentes[0] || null;
 
   /* itens e anotações juntos, em ordem de horário */
   const linhaDoTempo = [

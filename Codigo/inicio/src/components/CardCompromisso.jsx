@@ -71,8 +71,7 @@ export default function CardCompromisso({ item, minutos, linhaDoTempo, simples, 
         <div className="destaque-texto">
           <p className="destaque-rotulo">
             <IconeRelogio />
-            <span>Próximo cuidado · <time>{item.hora}</time></span>
-            {c.alerta === 'atrasado' && <span className="somente-leitor">, atrasado</span>}
+            <span>{c.alerta === 'atrasado' ? 'Cuidado atrasado' : 'Próximo cuidado'} · <time>{item.hora}</time></span>
           </p>
           <h2 id="destaque-titulo">{item.titulo}</h2>
           <p className="destaque-info">
